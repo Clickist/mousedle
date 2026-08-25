@@ -36,7 +36,16 @@ function attachClientEvents(client: Client, label: string, affectsAvailability =
 
 function makeClient(label: string): Client {
   return attachClientEvents(
-    createClient({ url: config.redisUrl, RESP: 2 }) as Client,
+    // 连不上时快速失败(默认策略无限重试,会把无 Redis 的开发环境卡死在启动阶段)
+    createClient({
+      url: config.redisUrl,
+      RESP: 2,
+      socket: {
+        connectTimeout: 1500,
+        reconnectStrategy: (retries) =>
+          retries >= 3 ? new Error('REDIS_UNREACHABLE') : Math.min(retries * 200, 800),
+      },
+    }) as Client,
     label,
     true
   );
@@ -183,7 +192,9 @@ export async function closeRedis(): Promise<void> {
   const clients = [subscriberClient, publisherClient, stateClient, commandClient].filter(
     (client): client is Client => Boolean(client)
   );
-  await Promise.allSettled(clients.map((client) => (client.isOpen ? client.quit() : undefined)));
+  // 用 disconnect() 强断而非 quit():quit() 要等优雅握手,
+  // 对连不上的客户端(开发环境无 Redis)会永久挂起,拖死启动的 fallback 路径
+  await Promise.allSettled(clients.map((client) => (client.isOpen ? client.disconnect() : undefined)));
   commandClient = null;
   stateClient = null;
   publisherClient = null;
