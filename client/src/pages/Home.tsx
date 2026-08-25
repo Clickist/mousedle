@@ -1,0 +1,202 @@
+import { useEffect, useSyncExternalStore, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  Search,
+  Gamepad2,
+  Globe,
+  BarChart3,
+  Trophy,
+  Megaphone,
+  MailWarning,
+  LogIn,
+  LogOut,
+  Wrench,
+  CalendarDays,
+} from 'lucide-react';
+import MenuCard from '../components/MenuCard';
+import GameRules from '../components/GameRules';
+import { useAuth } from '../store/auth';
+import { getGuestName, subscribeGuestName } from '../store/guest';
+import { api, errMsg } from '../api/client';
+import { clearAuthenticated } from '../api/session';
+import { markGuestSession } from '../api/session';
+import { useConfirm } from '../components/ConfirmDialog';
+import ThemeToggle from '../components/ThemeToggle';
+import { toast } from '../components/Toast';
+import { useTranslation } from 'react-i18next';
+import LanguageSelect from '../components/LanguageSelect';
+import PersonalSettings from '../components/PersonalSettings';
+
+export default function Home() {
+  const { t } = useTranslation();
+  const { user, initialized, setUser } = useAuth();
+  const navigate = useNavigate();
+  const confirm = useConfirm();
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(true);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const guestName = useSyncExternalStore(subscribeGuestName, getGuestName, () => '访客');
+
+  useEffect(() => {
+    document.title = `${t('common.brand')} - ${t('home.subtitle')}`;
+  }, [t]);
+
+  useEffect(() => {
+    void fetch('/api/health', { credentials: 'include' })
+      .then((response) => response.ok ? response.json() : null)
+      .then((data: { features?: { leaderboard?: boolean } } | null) => {
+        setShowLeaderboard(typeof data?.features?.leaderboard === 'boolean' ? data.features.leaderboard : true);
+      })
+      .catch(() => setShowLeaderboard(true));
+  }, []);
+
+  const logout = async () => {
+    if (!await confirm({
+      title: t('home.logoutTitle'),
+      message: t('home.logoutMessage'),
+      confirmLabel: t('home.logoutConfirm'),
+      tone: 'warning',
+    })) return;
+    setLoggingOut(true);
+    try {
+      await api.post('/auth/logout');
+      const { closeSocket } = await import('../api/socket');
+      closeSocket();
+      clearAuthenticated();
+      markGuestSession();
+      setUser(null);
+      const { getSocket } = await import('../api/socket');
+      getSocket();
+      navigate('/');
+    } catch (error) {
+      toast.error(errMsg(error));
+    } finally {
+      setLoggingOut(false);
+    }
+  };
+
+  return (
+    <div className="page home-page">
+      <a className="skip-link" href="#main-content">
+        {t('common.skipToContent')}
+      </a>
+      <div className="header-bar">
+        <div className="home-brand">
+          <span className="title">{t('common.brand')}</span>
+        </div>
+        <span className="btns">
+          <LanguageSelect />
+          <span className="personal-settings-anchor">
+            <PersonalSettings open={settingsOpen} onOpenChange={setSettingsOpen} />
+            {initialized && user?.email && !user.emailVerified && (
+              <button
+                type="button"
+                className="email-verification-reminder"
+                onClick={() => setSettingsOpen(true)}
+                aria-label={t('home.emailVerificationReminder')}
+                data-umami-event="home-email-verification-reminder"
+              >
+                <MailWarning size={15} aria-hidden="true" />
+                <span>{t('home.emailVerificationReminder')}</span>
+              </button>
+            )}
+          </span>
+          <ThemeToggle />
+          {!initialized ? (
+            <span className="auth-pending" aria-label={t('home.restoring')} />
+          ) : user ? (
+            <>
+              <span className="muted">
+                {user.username}
+                {user.role === 'admin' && ` · ${t('home.admin')}`}
+              </span>
+              {user.role === 'admin' && (
+                <Link className="btn btn-ghost btn-sm" to="/admin" aria-label={t('home.adminPanel')}>
+                  <Wrench size={15} />
+                  <span className="btn-text">{t('home.manage')}</span>
+                </Link>
+              )}
+              <button
+                className="btn btn-ghost btn-sm"
+                aria-label={t('home.logout')}
+                onClick={() => void logout()}
+                disabled={loggingOut}
+              >
+                <LogOut size={15} />
+                <span className="btn-text">{t('home.logout')}</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <span className="muted">{guestName === '访客' ? t('common.guest') : guestName}</span>
+              <Link className="btn btn-sm" to="/login" aria-label={t('home.loginRegister')}>
+                <LogIn size={15} />
+                <span className="btn-text">{t('home.loginRegister')}</span>
+              </Link>
+            </>
+          )}
+        </span>
+      </div>
+      <main className="page-scroll" id="main-content">
+        <div className="home-hero">
+          <span className="hero-kicker">CS MAJOR // PLAYER GUESSING</span>
+          <h1>{t('common.brand')}</h1>
+          <p className="hero-subtitle">{t('home.subtitle')}</p>
+          <GameRules />
+          {initialized && !user && (
+            <p className="muted" style={{ marginTop: 6 }}>
+              {t('home.guestHint')}
+            </p>
+          )}
+        </div>
+        <div className="menu-grid">
+          <MenuCard
+            to="/daily"
+            icon={<CalendarDays size={22} />}
+            label={t('home.dailyChallenge')}
+            description={t('home.dailyChallengeDescription')}
+            color="#f25f5c"
+            eventName="home-daily-challenge"
+          />
+          <MenuCard
+            to="/single"
+            icon={<Gamepad2 size={22} />}
+            label={t('home.singleMode')}
+            description={t('home.singleModeDescription')}
+            color="#74e38f"
+          />
+          <MenuCard
+            to="/multi"
+            icon={<Globe size={22} />}
+            label={t('home.multiplayer')}
+            description={t('home.multiplayerDescription')}
+            color="#ffb64e"
+          />
+          <MenuCard
+            to="/search"
+            icon={<Search size={22} />}
+            label={t('home.search')}
+            description={t('home.searchDescription')}
+            color="#65a8ff"
+          />
+        </div>
+        <div className="bottom-bar">
+          <Link to="/stats" className="btn">
+            <BarChart3 size={15} />
+            {t('home.stats')}
+          </Link>
+          {showLeaderboard && (
+            <Link to="/leaderboard" className="btn btn-warning">
+              <Trophy size={15} />
+              {t('home.leaderboard')}
+            </Link>
+          )}
+          <Link to="/announcement" className="btn btn-success">
+            <Megaphone size={15} />
+            {t('home.announcements')}
+          </Link>
+        </div>
+      </main>
+    </div>
+  );
+}

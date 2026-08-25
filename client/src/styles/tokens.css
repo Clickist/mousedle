@@ -1,0 +1,236 @@
+/* =====================================================================
+   Mousedle token 层 —— 完整搬运 Aiming Cookie 设计语言
+   (DESIGN-cursor.md 色板 + docs/design-system.md 尺度合同)。
+
+   - 语义 token 用 AC 原名: background / surface 阶梯 / on-surface / primary 等
+   - 尺度 token:六阶字号、六阶间距、三阶圆角、两档控件高、动效三时长
+   - 双主题::root = Light,html[data-theme='dark'] = Dark
+   - 文件底部是旧类名兼容桥,仅供尚未重写的旧 CSS 过渡,新代码禁止使用
+   ===================================================================== */
+
+:root {
+  /* surfaces / text */
+  --background: #f7f5f0;
+  --on-background: #24211d;
+  --surface: #fffdf8;
+  --surface-dim: #ebe7df;
+  --surface-bright: #ffffff;
+  --surface-variant: #e8e1d7;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f1ede6;
+  --surface-container: #ebe6de;
+  --surface-container-high: #e4ded5;
+  --surface-container-highest: #dcd5cb;
+  --on-surface: #24211d;
+  --on-surface-variant: #625c54;
+
+  /* primary(唯一高压行动色,克制使用) */
+  --primary: #c83d00;
+  --on-primary: #ffffff;
+  --primary-container: #ffe1d5;
+  --on-primary-container: #4a1300;
+  --surface-tint: #c83d00;
+
+  /* secondary / tertiary / error */
+  --secondary: #5f625c;
+  --on-secondary: #ffffff;
+  --secondary-container: #e3e3dd;
+  --on-secondary-container: #2c2f2a;
+  --tertiary: #005fae;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #d7e7ff;
+  --on-tertiary-container: #003461;
+  --error: #ba1a1a;
+  --on-error: #ffffff;
+  --error-container: #ffdad6;
+  --on-error-container: #410002;
+
+  /* hairline */
+  --outline: #7b746b;
+  --outline-variant: #cec6bc;
+
+  /* 事件色:只用于数据反馈(猜测格、图表、标记),不做界面装饰 */
+  --event-kill: #16875b;
+  --event-miss: #c53442;
+  --event-corrective: #1769c2;
+  --event-peak: #c83d00;
+
+  /* inverse */
+  --inverse-surface: #312b25;
+  --inverse-on-surface: #f9eee8;
+  --inverse-primary: #ffb59d;
+
+  /* ===== 尺度合同(design-system.md) ===== */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  --text-micro: 11px;
+  --text-caption: 12px;
+  --text-ui: 13px;
+  --text-body: 14px;
+  --text-title: 15px;
+  --text-display: 20px;
+
+  --control-height: 36px;
+  --control-height-compact: 32px;
+
+  --duration-fast: 150ms;
+  --duration-surface: 200ms;
+  --duration-reduced-motion: 120ms;
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --ease-drawer: cubic-bezier(0.2, 0, 0, 1);
+
+  --shadow-overlay: 0 8px 24px rgba(20, 20, 19, 0.14);
+  --ring: 0 0 0 2px var(--background), 0 0 0 4px var(--primary);
+
+  /* 字体 */
+  --font-ui: 'Inter', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif;
+  --font-display: 'Outfit', 'Inter', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --font-mono: 'JetBrains Mono', Consolas, 'PingFang SC', monospace;
+
+  /* 版心与流式小字号(沿用原工程的缩放系统) */
+  --content-max: 73.75rem;
+  --page-inline: clamp(1rem, 4vw, 3.25rem);
+  --fs-3xs: clamp(0.66rem, 0.56rem + 0.45vw, 0.8rem);
+  --fs-2xs: clamp(0.72rem, 0.62rem + 0.45vw, 0.86rem);
+  --fs-xs: clamp(0.78rem, 0.7rem + 0.4vw, 0.92rem);
+}
+
+html[data-theme='dark'] {
+  --background: #141413;
+  --on-background: #eae8e3;
+  --surface: #1c1c1a;
+  --surface-dim: #181816;
+  --surface-bright: #2a2a27;
+  --surface-variant: #33332f;
+  --surface-container-lowest: #181816;
+  --surface-container-low: #181816;
+  --surface-container: #222220;
+  --surface-container-high: #2a2a27;
+  --surface-container-highest: #33332f;
+  --on-surface: #eae8e3;
+  --on-surface-variant: #9e9a92;
+
+  --primary: #ff8a5c;
+  --on-primary: #1f0a00;
+  --primary-container: #4a220f;
+  --on-primary-container: #ffd9c7;
+  --surface-tint: #ff8a5c;
+
+  --secondary: #c7c7c2;
+  --on-secondary: #30312e;
+  --secondary-container: #494946;
+  --on-secondary-container: #e3e2dd;
+  --tertiary: #8ab4f2;
+  --on-tertiary: #003061;
+  --tertiary-container: #1c3a5c;
+  --on-tertiary-container: #d2e4ff;
+  --error: #ff9aa2;
+  --on-error: #690005;
+  --error-container: #5c1a20;
+  --on-error-container: #ffdce0;
+
+  --outline: #6b6660;
+  --outline-variant: #3a3833;
+
+  --event-kill: #4fdca0;
+  --event-miss: #ff8792;
+  --event-corrective: #85c2ff;
+  --event-peak: #ff8a5c;
+
+  --inverse-surface: #e9e4dd;
+  --inverse-on-surface: #3e2c26;
+  --inverse-primary: #ac3400;
+
+  --shadow-overlay: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* =====================================================================
+   基底
+   ===================================================================== */
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* 全站唯一的缩放刻度(1920px 设计基准,详见原工程注释) */
+html { font-size: clamp(100%, 0.833333vw, 400%); }
+html[data-theme='dark'] { background-color: var(--background); }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100dvh;
+  font-family: var(--font-ui);
+  color: var(--on-background);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background: var(--background);
+}
+
+button, input, select, textarea { font: inherit; }
+button, a { touch-action: manipulation; }
+::selection { background: color-mix(in srgb, var(--primary) 24%, transparent); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: var(--duration-reduced-motion) !important;
+    transition-duration: var(--duration-reduced-motion) !important;
+  }
+}
+
+/* =====================================================================
+   旧类名兼容桥 —— 只服务尚未按新体系重写的旧 CSS,新代码禁止引用。
+   值与上方 AC token 一一对应,不引入第二套色彩。
+   ===================================================================== */
+:root,
+html[data-theme='dark'] {
+  --bg: var(--background);
+  --card: var(--surface);
+  --card-soft: var(--surface-dim);
+  --border: var(--outline-variant);
+  --border-strong: var(--outline);
+  --text: var(--on-background);
+  --text-sec: var(--on-surface-variant);
+  --text-light: var(--outline);
+  --input-bg: var(--surface-container-lowest);
+  --primary-hover: color-mix(in srgb, var(--primary) 90%, #000000);
+  --primary-soft: color-mix(in srgb, var(--primary) 12%, transparent);
+  --primary-strong: #832600;
+  --success: var(--event-kill);
+  --warning: #8a5800;
+  --danger: var(--error);
+  --accent: var(--tertiary);
+  --correct: #16875b;
+  --close: #c2410c;
+  --wrong: #7b746b;
+  --shadow-sm: 0 1px 2px rgba(20, 20, 19, 0.05);
+  --shadow: var(--shadow-overlay);
+  --shadow-lg: var(--shadow-overlay);
+  --selection: color-mix(in srgb, var(--primary) 24%, transparent);
+}
+
+html[data-theme='dark'] {
+  --primary-hover: color-mix(in srgb, var(--primary) 90%, #ffffff);
+  --primary-strong: var(--on-primary-container);
+  --warning: #ffb86b;
+  --correct: #1e7d54;
+  --close: #c2410c;
+  --wrong: #565149;
+}
