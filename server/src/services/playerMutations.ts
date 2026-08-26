@@ -5,8 +5,8 @@ import { isKnownDifficultyKey } from '../difficulties';
 import { HttpError } from '../middleware/common';
 import { invalidatePlayerCache } from './playerCache';
 
-const mouseShapes = ['对称', '人体工学'] as const;
-const mouseSizes = ['小型', '中型', '大型'] as const;
+const mouseShapes = ['对称', '人体工学', '非对称', '垂直'] as const;
+const mouseSizes = ['小型', '中型', '大型', '指尖'] as const;
 const difficultyKeySchema = z.string().trim().regex(/^[a-z0-9][a-z0-9_-]{0,31}$/);
 const difficultyListSchema = z.array(difficultyKeySchema)
   .min(1)

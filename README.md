@@ -199,7 +199,7 @@ curl -X POST 'https://example.com/api/external/player-change-submissions' \
 
 有实际差异时返回 `201 { "submissionId": number, "submitted": number, "unchanged": number }`；所有值均未变化时返回 `200`，其中 `submissionId` 为 `null`。`submitted` 与 `unchanged` 统计的是字段数，不是鼠标数。管理员在 **鼠标变更审核** 页逐项批准或拒绝；批准前若该字段已被其他操作改动，该项会标记为 `conflict`，不会覆盖新值。
 
-可写字段为 `name`、`brand`、`country`、`continent`、`shape`、`size`、`weight`、`length_mm`、`side_buttons`、`wireless`、`is_enabled`、`difficulties`。其中 `shape` 仅接受 `对称`、`人体工学`，`size` 仅接受 `小型`、`中型`、`大型`，`difficulties` 当前仅接受 `beginner`、`easy`、`normal`。
+可写字段为 `name`、`brand`、`country`、`continent`、`shape`、`size`、`weight`、`length_mm`、`side_buttons`、`wireless`、`is_enabled`、`difficulties`。其中 `shape` 仅接受 `对称`、`人体工学`、`非对称`、`垂直`，`size` 仅接受 `小型`、`指尖`、`中型`、`大型`，`difficulties` 当前仅接受 `beginner`、`easy`、`normal`。
 
 直接写入端点用于受信任的完整同步任务。新增鼠标至少需要 `name`、`brand` 和 `weight`；批量导入应按完整记录提交。更新已有鼠标时，导入项省略 `difficulties` 或 `is_enabled` 会保留原值，其他带默认值的字段若省略则可能写入默认值。部分更新接口只修改显式传入的字段。
 
