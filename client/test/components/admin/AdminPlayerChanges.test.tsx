@@ -18,8 +18,8 @@ describe('AdminPlayerChanges', () => {
     vi.mocked(api.get).mockResolvedValue({
       data: {
         items: [
-          { id: 11, submissionId: 3, playerId: 7, playerNickname: 'device', field: 'team', oldValue: 'Astralis', newValue: 'Falcons', status: 'pending', source: 'sync job', createdAt: '2026-08-05T00:00:00.000Z', handledAt: null, handledBy: null },
-          { id: 12, submissionId: 3, playerId: 7, playerNickname: 'device', field: 'age', oldValue: 30, newValue: 31, status: 'pending', source: 'sync job', createdAt: '2026-08-05T00:00:00.000Z', handledAt: null, handledBy: null },
+          { id: 11, submissionId: 3, mouseId: 7, playerNickname: 'device', field: 'brand', oldValue: 'Astralis', newValue: 'Falcons', status: 'pending', source: 'sync job', createdAt: '2026-08-05T00:00:00.000Z', handledAt: null, handledBy: null },
+          { id: 12, submissionId: 3, mouseId: 7, playerNickname: 'device', field: 'weight', oldValue: 30, newValue: 31, status: 'pending', source: 'sync job', createdAt: '2026-08-05T00:00:00.000Z', handledAt: null, handledBy: null },
         ],
         total: 2, page: 1, pageSize: 50, totalPages: 1,
       },

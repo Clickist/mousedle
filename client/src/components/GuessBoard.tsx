@@ -6,20 +6,18 @@ import {
   HiddenAttributeFeedback,
   MultiplayerGuessFeedback,
 } from '../types';
-import { playerRoleLabel } from '../utils/playerRoles';
-import { countryLabel } from '../utils/playerGeography';
 import { useTranslation } from 'react-i18next';
 
 function Cell({
   attr,
   label,
   bool,
-  format,
+  suffix,
 }: {
   attr: AttributeFeedback | HiddenAttributeFeedback;
   label: string;
   bool?: boolean;
-  format?: (value: string) => string;
+  suffix?: string;
 }) {
   const { t } = useTranslation();
   if (!('value' in attr)) {
@@ -36,11 +34,9 @@ function Cell({
   const text =
     typeof attr.value === 'boolean' || bool
       ? attr.value
-        ? t('common.active')
-        : t('common.retired')
-      : format
-        ? format(String(attr.value))
-        : String(attr.value);
+        ? t('common.wireless')
+        : t('common.wired')
+      : `${String(attr.value)}${suffix ?? ''}`;
   return (
     <td className={attr.level} data-label={label}>
       {text}
@@ -53,7 +49,7 @@ function Cell({
   );
 }
 
-/** 猜测反馈表:原版 game-table 布局,每行一次猜测的逐属性对比 */
+/** 猜测反馈表:每行一次猜测的逐属性对比 */
 function GuessBoard({
   guesses,
   rowAnnotations,
@@ -63,14 +59,15 @@ function GuessBoard({
 }) {
   const { t } = useTranslation();
   const columns = [
-    t('guess.columns.nickname'),
-    t('guess.columns.team'),
-    t('guess.columns.nationality'),
-    t('guess.columns.age'),
-    t('guess.columns.role'),
-    t('guess.columns.majorChampionships'),
-    t('guess.columns.majorAppearances'),
-    t('guess.columns.status'),
+    t('guess.columns.name'),
+    t('guess.columns.brand'),
+    t('guess.columns.country'),
+    t('guess.columns.shape'),
+    t('guess.columns.size'),
+    t('guess.columns.weight'),
+    t('guess.columns.length'),
+    t('guess.columns.sideButtons'),
+    t('guess.columns.wireless'),
   ];
   return (
     <div className="game-table-wrap">
@@ -87,7 +84,7 @@ function GuessBoard({
             const annotation = rowAnnotations?.[i];
             return (
               <tr
-                key={'hidden' in g ? `hidden-${i}` : `${g.playerId}-${i}`}
+                key={'hidden' in g ? `hidden-${i}` : `${g.mouseId}-${i}`}
                 className={`${i === guesses.length - 1 ? 'row-latest' : ''} ${g.correct ? 'row-correct' : ''}`}
               >
                 <td
@@ -102,19 +99,16 @@ function GuessBoard({
                       {annotation.content}
                     </span>
                   )}
-                  {'hidden' in g ? null : g.nickname}
+                  {'hidden' in g ? null : g.name}
                 </td>
-                <Cell attr={g.attributes.team} label={columns[1]} />
-                <Cell
-                  attr={g.attributes.nationality}
-                  label={columns[2]}
-                  format={(value) => countryLabel(t, value)}
-                />
-                <Cell attr={g.attributes.age} label={columns[3]} />
-                <Cell attr={g.attributes.role} label={columns[4]} format={playerRoleLabel} />
-                <Cell attr={g.attributes.majorChampionships} label={columns[5]} />
-                <Cell attr={g.attributes.majorAppearances} label={columns[6]} />
-                <Cell attr={g.attributes.isActive} label={columns[7]} bool />
+                <Cell attr={g.attributes.brand} label={columns[1]} />
+                <Cell attr={g.attributes.country} label={columns[2]} />
+                <Cell attr={g.attributes.shape} label={columns[3]} />
+                <Cell attr={g.attributes.size} label={columns[4]} />
+                <Cell attr={g.attributes.weight} label={columns[5]} suffix="g" />
+                <Cell attr={g.attributes.lengthMm} label={columns[6]} suffix="mm" />
+                <Cell attr={g.attributes.sideButtons} label={columns[7]} />
+                <Cell attr={g.attributes.wireless} label={columns[8]} bool />
               </tr>
             );
           })}

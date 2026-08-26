@@ -10,7 +10,7 @@ describe('GameRules', () => {
     await i18n.changeLanguage('zh');
   });
 
-  it('explains historical-team yellow feedback and current-team priority', async () => {
+  it('explains historical-brand yellow feedback and current-brand priority', async () => {
     const user = userEvent.setup();
     renderWithProviders(<GameRules />);
 

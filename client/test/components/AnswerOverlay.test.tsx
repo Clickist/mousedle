@@ -1,16 +1,16 @@
 import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import AnswerOverlay, { PlayerInfoTable } from '../../src/components/AnswerOverlay';
+import AnswerOverlay, { MouseInfoTable } from '../../src/components/AnswerOverlay';
 import { renderWithProviders } from '../render';
 
 const answer = {
-  nickname: 'friberg',
-  team: 'NIP',
-  nationality: '瑞典',
-  role: 'Rifler',
-  majorChampionships: 1,
-  majorAppearances: 12,
+  name: 'friberg',
+  brand: 'NIP',
+  country: '瑞典',
+  shape: 'Rifler',
+  lengthMm: 1,
+  sideButtons: 12,
 };
 
 describe('AnswerOverlay', () => {
@@ -58,7 +58,7 @@ describe('AnswerOverlay', () => {
 
   it('shows a player\'s difficulty memberships when provided', () => {
     renderWithProviders(
-      <PlayerInfoTable answer={{ ...answer, difficulties: ['beginner', 'normal'] }} />
+      <MouseInfoTable answer={{ ...answer, difficulties: ['beginner', 'normal'] }} />
     );
 
     expect(screen.getByText('所属难度')).toBeInTheDocument();

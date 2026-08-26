@@ -135,10 +135,10 @@ export default function SingleGame() {
     await start(true);
   };
 
-  const guess = async (playerId: number) => {
+  const guess = async (mouseId: number) => {
     if (!gameId || status !== 'playing' || busy) return false;
     try {
-      const res = await api.post(`/game/${gameId}/guess`, { playerId });
+      const res = await api.post(`/game/${gameId}/guess`, { mouseId });
       setGuesses((g) => [...g, res.data.feedback]);
       setStatus(res.data.status);
       if (res.data.answer) {

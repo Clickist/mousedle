@@ -1,40 +1,83 @@
 import { ReactNode, useEffect } from 'react';
-import { Globe, Crosshair, Calendar, Shield, Trophy, Layers3 } from 'lucide-react';
-import { playerRoleLabel } from '../utils/playerRoles';
-import { countryLabel, regionLabel } from '../utils/playerGeography';
+import { Globe, Crosshair, Factory, Weight, Ruler, Cpu, Zap, Layers3, MousePointer2 } from 'lucide-react';
 import ModalPortal from './ModalPortal';
 import { useTranslation } from 'react-i18next';
 import { difficultyLabel } from '../utils/difficulty';
 
+export interface MouseDisplay {
+  sensor?: string | null;
+  dpi?: number | null;
+  polling_rate?: number | null;
+  hump?: string | null;
+  hand?: string | null;
+  width?: number | null;
+  height?: number | null;
+  connection?: string | null;
+  image?: string | null;
+}
+
 export interface AnswerInfo {
-  nickname: string;
-  team: string;
-  nationality: string;
-  region?: string;
-  role?: string;
-  majorChampionships?: number;
-  majorAppearances?: number;
+  name: string;
+  brand: string;
+  country: string;
+  continent?: string;
+  shape?: string;
+  size?: string;
+  weight?: number;
+  lengthMm?: number;
+  sideButtons?: number;
+  wireless?: boolean;
+  display?: string | null;
   difficulties?: string[];
 }
 
-/** 选手信息表(答案卡片/查询结果共用) */
-export function PlayerInfoTable({ answer }: { answer: AnswerInfo }) {
+function parseDisplay(raw: string | null | undefined): MouseDisplay | null {
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as MouseDisplay;
+  } catch {
+    return null;
+  }
+}
+
+/** 鼠标信息表(答案卡片/查询结果共用):8 猜测属性 + 硬核参数揭晓 */
+export function MouseInfoTable({ answer }: { answer: AnswerInfo }) {
   const { t } = useTranslation();
-  const nationality = countryLabel(t, answer.nationality);
-  const geography = answer.region
-    ? `${nationality} (${regionLabel(t, answer.region)})`
-    : nationality;
+  const display = parseDisplay(answer.display);
+  const geography = answer.continent
+    ? `${answer.country || '-'} (${answer.continent})`
+    : answer.country || '-';
   const rows: [ReactNode, string, ReactNode][] = [
-    [<Shield size={14} key="i" />, t('player.team'), answer.team || '-'],
-    [<Globe size={14} key="i" />, t('player.nationality'), geography],
-    [<Crosshair size={14} key="i" />, t('player.role'), answer.role ? playerRoleLabel(answer.role) : '-'],
-    [<Trophy size={14} key="i" />, t('player.majorChampionships'), answer.majorChampionships ?? 0],
-    [<Calendar size={14} key="i" />, t('player.majorAppearances'), answer.majorAppearances ?? '-'],
+    [<Factory size={14} key="i" />, t('mouse.brand'), answer.brand || '-'],
+    [<Globe size={14} key="i" />, t('mouse.country'), geography],
+    [<Crosshair size={14} key="i" />, t('mouse.shape'), answer.shape || '-'],
+    [<Layers3 size={14} key="i" />, t('mouse.size'), answer.size || '-'],
+    [<Weight size={14} key="i" />, t('mouse.weight'), answer.weight != null ? `${answer.weight} g` : '-'],
+    [<Ruler size={14} key="i" />, t('mouse.length'), answer.lengthMm != null ? `${answer.lengthMm} mm` : '-'],
+    [<Zap size={14} key="i" />, t('mouse.wireless'), answer.wireless ? t('common.wireless') : t('common.wired')],
   ];
+  if (display?.sensor) {
+    rows.push([<Cpu size={14} key="i" />, t('mouse.sensor'), display.sensor]);
+  }
+  if (display?.dpi) {
+    rows.push([<Cpu size={14} key="i" />, t('mouse.dpi'), `${display.dpi} DPI`]);
+  }
+  if (display?.polling_rate) {
+    rows.push([<Cpu size={14} key="i" />, t('mouse.pollingRate'), `${display.polling_rate} Hz`]);
+  }
+  if (display?.connection) {
+    rows.push([<Zap size={14} key="i" />, t('mouse.connection'), display.connection]);
+  }
+  if (display?.hump) {
+    rows.push([<MousePointer2 size={14} key="i" />, t('mouse.hump'), display.hump]);
+  }
+  if (display?.hand) {
+    rows.push([<MousePointer2 size={14} key="i" />, t('mouse.hand'), display.hand]);
+  }
   if (answer.difficulties) {
     rows.push([
       <Layers3 size={14} key="i" />,
-      t('player.difficulties'),
+      t('mouse.difficulties'),
       answer.difficulties.length
         ? answer.difficulties.map((key) => difficultyLabel(t, key)).join(', ')
         : '-',
@@ -99,8 +142,8 @@ export default function AnswerOverlay({ title, answer, extra, actions, onClose, 
           {extra}
           {answer && (
             <>
-              <p className="answer-name">{answer.nickname}</p>
-              <PlayerInfoTable answer={answer} />
+              <p className="answer-name">{answer.name}</p>
+              <MouseInfoTable answer={answer} />
             </>
           )}
           <div className="btns">{actions}</div>

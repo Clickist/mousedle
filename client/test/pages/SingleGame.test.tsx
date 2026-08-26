@@ -19,10 +19,10 @@ vi.mock('../../src/api/client', async () => {
 });
 
 vi.mock('../../src/api/playerList', () => ({
-  getPlayerList: vi.fn(async () => [{ id: 1, nickname: 's1mple' }]),
+  getPlayerList: vi.fn(async () => [{ id: 1, name: 's1mple' }]),
   subscribePlayerList: vi.fn(() => () => undefined),
-  searchPlayerList: (list: Array<{ id: number; nickname: string }>, query: string) =>
-    list.filter((item) => item.nickname.toLowerCase().includes(query.trim().toLowerCase())),
+  searchPlayerList: (list: Array<{ id: number; name: string }>, query: string) =>
+    list.filter((item) => item.name.toLowerCase().includes(query.trim().toLowerCase())),
 }));
 
 const post = vi.mocked(api.post);
@@ -54,7 +54,7 @@ function renderGame(mode = 'easy') {
 }
 
 async function waitForReadyInput() {
-  const input = await screen.findByPlaceholderText('输入选手昵称...');
+  const input = await screen.findByPlaceholderText('输入鼠标名称...');
   await waitFor(() => expect(input).not.toBeDisabled());
   return input;
 }
@@ -81,12 +81,12 @@ describe('SingleGame UX', () => {
 
     expect(await screen.findByText('正在开始新对局…', { selector: 'p' })).toBeInTheDocument();
     expect(document.querySelector('.spinner')).toBeTruthy();
-    expect(screen.getByPlaceholderText('输入选手昵称...')).toBeDisabled();
+    expect(screen.getByPlaceholderText('输入鼠标名称...')).toBeDisabled();
     expect(document.querySelector('.guess-input-feedback')).toBeNull();
 
     start.resolve({ data: { gameId: 'g1', guesses: [], maxGuesses: 8 } });
     await waitForReadyInput();
-    expect(screen.getByText('在下方输入选手昵称开始猜测')).toBeInTheDocument();
+    expect(screen.getByText('在下方输入鼠标名称开始猜测')).toBeInTheDocument();
     expect(localStorage.getItem('csgofriberg.single-difficulty')).toBe('easy');
   });
 
@@ -116,7 +116,7 @@ describe('SingleGame UX', () => {
     await user.click(within(dialog).getByRole('button', { name: '重新开始' }));
 
     expect(await screen.findByText('正在开始新对局…', { selector: 'p' })).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('输入选手昵称...')).toBeDisabled();
+    expect(screen.getByPlaceholderText('输入鼠标名称...')).toBeDisabled();
     expect(screen.getByRole('button', { name: '重新开始' })).toBeDisabled();
   });
 
@@ -136,7 +136,7 @@ describe('SingleGame UX', () => {
     renderGame('easy');
     await waitForReadyInput();
 
-    const giveup = deferred<{ data: { answer: { nickname: string; team: string; nationality: string } } }>();
+    const giveup = deferred<{ data: { answer: { name: string; brand: string; country: string } } }>();
     post.mockReturnValueOnce(giveup.promise as never);
 
     const user = userEvent.setup();
@@ -150,11 +150,11 @@ describe('SingleGame UX', () => {
       expect(revealButton).toHaveTextContent('处理中');
     });
     expect(document.querySelector('.status-bar')).toHaveTextContent('处理中');
-    expect(screen.getByPlaceholderText('输入选手昵称...')).toBeDisabled();
+    expect(screen.getByPlaceholderText('输入鼠标名称...')).toBeDisabled();
 
     giveup.resolve({
       data: {
-        answer: { nickname: 'friberg', team: 'NIP', nationality: '瑞典' },
+        answer: { name: 'friberg', brand: 'NIP', country: '瑞典' },
       },
     });
     expect(await screen.findByRole('dialog')).toHaveTextContent('friberg');
@@ -167,7 +167,7 @@ describe('SingleGame UX', () => {
         data: {
           status: 'lost',
           recorded: false,
-          answer: { nickname: 'friberg', team: 'NIP', nationality: '瑞典' },
+          answer: { name: 'friberg', brand: 'NIP', country: '瑞典' },
         },
       } as never);
     renderGame('easy');

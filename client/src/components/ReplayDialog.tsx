@@ -2,9 +2,9 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { BarChart3, ChevronLeft, ChevronRight, Clock3, Swords, User, X } from 'lucide-react';
 import Badge from './Badge';
 import GuessBoard from './GuessBoard';
-import { PlayerInfoTable } from './AnswerOverlay';
+import { MouseInfoTable } from './AnswerOverlay';
 import ModalPortal from './ModalPortal';
-import type { GuessFeedback, MatchReplay, MatchReplayRound, PlayerInfo, PlayerPerformanceStats } from '../types';
+import type { GuessFeedback, MatchReplay, MatchReplayRound, MouseInfo, PlayerPerformanceStats } from '../types';
 import { useTranslation } from 'react-i18next';
 import { difficultyLabel } from '../utils/difficulty';
 import PlayerStatsDialog from './PlayerStatsDialog';
@@ -17,7 +17,7 @@ export interface SingleReplay {
   guessCount: number;
   createdAt: string;
   finishedAt: string;
-  answer: PlayerInfo;
+  answer: MouseInfo;
   guesses: GuessFeedback[];
 }
 
@@ -27,20 +27,23 @@ export interface MultiReplay extends MatchReplay {
 
 export type Replay = SingleReplay | MultiReplay;
 
-function AnswerSection({ answer }: { answer: PlayerInfo }) {
+function AnswerSection({ answer }: { answer: MouseInfo }) {
   const { t } = useTranslation();
   return (
     <section className="replay-answer" aria-label={t('replay.answerLabel')}>
-      <h3>{t('replay.correctAnswer', { name: answer.nickname })}</h3>
-      <PlayerInfoTable
+      <h3>{t('replay.correctAnswer', { name: answer.name })}</h3>
+      <MouseInfoTable
         answer={{
-          nickname: answer.nickname,
-          team: answer.team,
-          nationality: answer.nationality,
-          region: answer.region,
-          role: answer.role,
-          majorChampionships: answer.majorChampionships,
-          majorAppearances: answer.majorAppearances,
+          name: answer.name,
+          brand: answer.brand,
+          country: answer.country,
+          continent: answer.continent,
+          shape: answer.shape,
+          size: answer.size,
+          weight: answer.weight,
+          lengthMm: answer.lengthMm,
+          sideButtons: answer.sideButtons,
+          wireless: answer.wireless,
         }}
       />
     </section>

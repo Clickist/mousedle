@@ -7,17 +7,18 @@ export interface AttributeFeedback {
 }
 
 export interface GuessFeedback {
-  playerId: number;
-  nickname: string;
+  mouseId: number;
+  name: string;
   correct: boolean;
   attributes: {
-    nationality: AttributeFeedback;
-    team: AttributeFeedback;
-    age: AttributeFeedback;
-    role: AttributeFeedback;
-    majorChampionships: AttributeFeedback;
-    majorAppearances: AttributeFeedback;
-    isActive: AttributeFeedback;
+    brand: AttributeFeedback;
+    country: AttributeFeedback;
+    shape: AttributeFeedback;
+    size: AttributeFeedback;
+    weight: AttributeFeedback;
+    lengthMm: AttributeFeedback;
+    sideButtons: AttributeFeedback;
+    wireless: AttributeFeedback;
   };
 }
 
@@ -27,13 +28,14 @@ export interface HiddenGuessFeedback {
   hidden: true;
   correct: boolean;
   attributes: {
-    nationality: HiddenAttributeFeedback;
-    team: HiddenAttributeFeedback;
-    age: HiddenAttributeFeedback;
-    role: HiddenAttributeFeedback;
-    majorChampionships: HiddenAttributeFeedback;
-    majorAppearances: HiddenAttributeFeedback;
-    isActive: HiddenAttributeFeedback;
+    brand: HiddenAttributeFeedback;
+    country: HiddenAttributeFeedback;
+    shape: HiddenAttributeFeedback;
+    size: HiddenAttributeFeedback;
+    weight: HiddenAttributeFeedback;
+    lengthMm: HiddenAttributeFeedback;
+    sideButtons: HiddenAttributeFeedback;
+    wireless: HiddenAttributeFeedback;
   };
 }
 
@@ -47,18 +49,21 @@ export interface UserInfo {
   emailVerified?: boolean;
 }
 
-export interface PlayerInfo {
+export interface MouseInfo {
   id: number;
-  nickname: string;
-  nationality: string;
-  region: string;
-  team: string;
-  age: number;
-  role: string;
-  majorChampionships: number;
-  majorAppearances: number;
+  name: string;
+  brand: string;
+  country: string;
+  continent: string;
+  shape: string;
+  size: string;
+  weight: number;
+  lengthMm: number;
+  sideButtons: number;
+  wireless: boolean;
+  /** 揭晓卡片展示字段(JSON 字符串):sensor/dpi/polling_rate/hump/hand/width/height/connection/image */
+  display?: string | null;
   difficulties?: string[];
-  isActive: boolean;
 }
 
 export interface RoomPlayer {
@@ -113,7 +118,7 @@ export interface MatchReplayRound {
   reason: string;
   winner: 'me' | 'opponent' | null;
   winnerTeam?: 'a' | 'b' | null;
-  answer: PlayerInfo;
+  answer: MouseInfo;
   me: { guesses: GuessFeedback[]; guessTimes?: Array<number | null> };
   opponent: { guesses: GuessFeedback[]; guessTimes?: Array<number | null> };
   winnerParticipantId?: string | null;
@@ -214,13 +219,14 @@ export interface RoomState {
     reason: string;
     nextRoundAt: number | null;
     answer: {
-      nickname: string;
-      team: string;
-      nationality: string;
-      region: string;
-      role: string;
-      majorChampionships: number;
-      majorAppearances: number;
+      name: string;
+      brand: string;
+      country: string;
+      continent: string;
+      shape: string;
+      size: string;
+      weight: number;
+      lengthMm: number;
     } | null;
   } | null;
   matchResult: {
@@ -229,13 +235,14 @@ export interface RoomState {
     winnerKeys?: string[];
     reason: string;
     answer: {
-      nickname: string;
-      team: string;
-      nationality: string;
-      region: string;
-      role: string;
-      majorChampionships: number;
-      majorAppearances: number;
+      name: string;
+      brand: string;
+      country: string;
+      continent: string;
+      shape: string;
+      size: string;
+      weight: number;
+      lengthMm: number;
     } | null;
   } | null;
   reportSubmitted: boolean;

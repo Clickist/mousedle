@@ -200,10 +200,10 @@ export default function DailyChallenge() {
     }
   };
 
-  const guess = async (playerId: number) => {
+  const guess = async (mouseId: number) => {
     if (!challenge?.gameId || challenge.status !== 'playing' || busy) return false;
     try {
-      const response = await api.post(`/daily-challenge/${challenge.gameId}/guess`, { playerId });
+      const response = await api.post(`/daily-challenge/${challenge.gameId}/guess`, { mouseId });
       const finished = response.data.status === 'won' || response.data.status === 'lost';
       const solveOrder = response.data.solveOrder == null ? null : Number(response.data.solveOrder);
       patchChallenge({
@@ -396,7 +396,7 @@ export default function DailyChallenge() {
                       {t('daily.solveOrder', { order: challenge.solveOrder })}
                     </span>
                   )}
-                  <span>{challenge.answer?.nickname}</span>
+                  <span>{challenge.answer?.name}</span>
                 </div>
                 <button type="button" className="btn btn-ghost btn-sm" onClick={showStoredAnswer}>
                   {t('daily.viewAnswer')}

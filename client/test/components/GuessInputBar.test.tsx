@@ -6,8 +6,8 @@ import { renderWithProviders } from '../render';
 import { getPlayerList } from '../../src/api/playerList';
 
 const players = [
-  { id: 1, nickname: 's1mple' },
-  { id: 2, nickname: 'ZywOo' },
+  { id: 1, name: 's1mple' },
+  { id: 2, name: 'ZywOo' },
 ];
 let playerListListener: ((list: typeof players) => void) | null = null;
 
@@ -20,7 +20,7 @@ vi.mock('../../src/api/playerList', () => ({
     };
   }),
   searchPlayerList: (list: typeof players, query: string) =>
-    list.filter((item) => item.nickname.toLowerCase().includes(query.trim().toLowerCase())),
+    list.filter((item) => item.name.toLowerCase().includes(query.trim().toLowerCase())),
 }));
 
 describe('GuessInputBar', () => {
@@ -38,7 +38,7 @@ describe('GuessInputBar', () => {
 
     renderWithProviders(<GuessInputBar onPick={onPick} />);
 
-    await user.type(screen.getByPlaceholderText('输入选手昵称...'), 's1');
+    await user.type(screen.getByPlaceholderText('输入鼠标名称...'), 's1');
     await screen.findByText('s1mple');
     await user.click(screen.getByRole('button', { name: '提交猜测' }));
 
@@ -57,7 +57,7 @@ describe('GuessInputBar', () => {
     const onPick = vi.fn(async () => false);
     renderWithProviders(<GuessInputBar onPick={onPick} />);
 
-    const input = screen.getByPlaceholderText('输入选手昵称...');
+    const input = screen.getByPlaceholderText('输入鼠标名称...');
     await user.type(input, 's1');
     await screen.findByText('s1mple');
     await user.click(screen.getByRole('button', { name: '提交猜测' }));
@@ -68,14 +68,14 @@ describe('GuessInputBar', () => {
 
   it('disables input while parent marks the dock busy (desktop and mobile)', () => {
     renderWithProviders(<GuessInputBar onPick={vi.fn()} disabled />);
-    expect(screen.getByPlaceholderText('输入选手昵称...')).toBeDisabled();
+    expect(screen.getByPlaceholderText('输入鼠标名称...')).toBeDisabled();
     expect(screen.getByRole('button', { name: '提交猜测' })).toBeDisabled();
   });
 
   it('clears focus and closes suggestions when disabled', async () => {
     const onFocusChange = vi.fn();
     const view = renderWithProviders(<GuessInputBar onPick={vi.fn()} onFocusChange={onFocusChange} />);
-    const input = screen.getByPlaceholderText('输入选手昵称...');
+    const input = screen.getByPlaceholderText('输入鼠标名称...');
     fireEvent.focus(input);
     fireEvent.change(input, { target: { value: 's1' } });
     await screen.findByText('s1mple');
@@ -96,14 +96,14 @@ describe('GuessInputBar', () => {
     const user = userEvent.setup();
     renderWithProviders(<GuessInputBar onPick={vi.fn()} />);
 
-    const input = screen.getByPlaceholderText('输入选手昵称...');
+    const input = screen.getByPlaceholderText('输入鼠标名称...');
     await user.type(input, 's1');
     await screen.findByText('s1mple');
 
     act(() => {
       playerListListener?.([
         ...players,
-        { id: 3, nickname: 's1ren' },
+        { id: 3, name: 's1ren' },
       ]);
     });
 
@@ -117,7 +117,7 @@ describe('GuessInputBar', () => {
     renderWithProviders(<GuessInputBar onPick={vi.fn()} />);
     act(() => playerListListener?.(players));
 
-    const input = screen.getByPlaceholderText('输入选手昵称...');
+    const input = screen.getByPlaceholderText('输入鼠标名称...');
     fireEvent.focus(input);
     fireEvent.change(input, { target: { value: 's1' } });
 
@@ -129,7 +129,7 @@ describe('GuessInputBar', () => {
   it('does not revalidate the player list on every input change', async () => {
     renderWithProviders(<GuessInputBar onPick={vi.fn()} />);
     await waitFor(() => expect(getPlayerList).toHaveBeenCalled());
-    const input = screen.getByPlaceholderText('输入选手昵称...');
+    const input = screen.getByPlaceholderText('输入鼠标名称...');
     fireEvent.focus(input);
     const callsAfterFocus = vi.mocked(getPlayerList).mock.calls.length;
 
@@ -143,12 +143,12 @@ describe('GuessInputBar', () => {
     const user = userEvent.setup();
     renderWithProviders(<GuessInputBar onPick={vi.fn()} />);
 
-    const input = screen.getByPlaceholderText('输入选手昵称...');
+    const input = screen.getByPlaceholderText('输入鼠标名称...');
     await user.type(input, 's1');
     act(() => {
       playerListListener?.([
-        { id: 1, nickname: 's1mple' },
-        { id: 3, nickname: 's1ren' },
+        { id: 1, name: 's1mple' },
+        { id: 3, name: 's1ren' },
       ]);
     });
 

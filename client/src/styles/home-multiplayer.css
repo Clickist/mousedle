@@ -1247,21 +1247,15 @@
    在任何缩放档下都成立,不会像固定 px 那样在某个宽度上突然放不下。
    数字列原先各占 12%(Major 冠军只有 1 位数),把富余让给选手名与战队。 */
 .player-board .game-table th:nth-child(1),
-.player-board .game-table td:nth-child(1) { width: 21%; }
-.player-board .game-table th:nth-child(2),
-.player-board .game-table td:nth-child(2) { width: 16%; }
-.player-board .game-table th:nth-child(3),
-.player-board .game-table td:nth-child(3) { width: 14%; }
-.player-board .game-table th:nth-child(4),
+.player-board .game-table td:nth-child(1) { width: 20%; }
+.player-board .game-table td:nth-child(2) { width: 14%; }
+.player-board .game-table td:nth-child(3) { width: 11%; }
 .player-board .game-table td:nth-child(4) { width: 9%; }
-.player-board .game-table th:nth-child(5),
-.player-board .game-table td:nth-child(5) { width: 13%; }
-.player-board .game-table th:nth-child(6),
-.player-board .game-table td:nth-child(6) { width: 8%; }
-.player-board .game-table th:nth-child(7),
-.player-board .game-table td:nth-child(7) { width: 9%; }
-.player-board .game-table th:nth-child(8),
-.player-board .game-table td:nth-child(8) { width: 10%; }
+.player-board .game-table td:nth-child(5) { width: 9%; }
+.player-board .game-table td:nth-child(6) { width: 9%; }
+.player-board .game-table td:nth-child(7) { width: 10%; }
+.player-board .game-table td:nth-child(8) { width: 8%; }
+.player-board .game-table td:nth-child(9) { width: 10%; }
 .player-board .game-table td.masked-cell:empty::after {
   width: 0.42em;
   height: 0.42em;

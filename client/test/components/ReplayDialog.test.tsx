@@ -5,17 +5,18 @@ import ReplayDialog, { type MultiReplay } from '../../src/components/ReplayDialo
 import type { PlayerPerformanceStats } from '../../src/types';
 
 const guess = {
-  playerId: 2,
-  nickname: 'Guess',
+  mouseId: 2,
+  name: 'Guess',
   correct: false,
   attributes: {
-    nationality: { value: 'CN', level: 'wrong' as const },
-    team: { value: 'Team', level: 'wrong' as const },
-    age: { value: 20, level: 'wrong' as const },
-    role: { value: 'Rifler', level: 'wrong' as const },
-    majorChampionships: { value: 0, level: 'wrong' as const },
-    majorAppearances: { value: 1, level: 'wrong' as const },
-    isActive: { value: true, level: 'wrong' as const },
+    country: { value: 'CN', level: 'wrong' as const },
+    brand: { value: 'Team', level: 'wrong' as const },
+    weight: { value: 20, level: 'wrong' as const },
+    shape: { value: 'Rifler', level: 'wrong' as const },
+    size: { value: '中型', level: 'wrong' as const },
+    lengthMm: { value: 0, level: 'wrong' as const },
+    sideButtons: { value: 1, level: 'wrong' as const },
+    wireless: { value: true, level: 'wrong' as const },
   },
 };
 
@@ -34,15 +35,16 @@ const replay: MultiReplay = {
     winner: 'me',
     answer: {
       id: 1,
-      nickname: 'Answer',
-      nationality: 'CN',
-      region: 'Asia',
-      team: 'Team',
-      age: 20,
-      role: 'Rifler',
-      majorChampionships: 0,
-      majorAppearances: 1,
-      isActive: true,
+      name: 'Answer',
+      country: 'CN',
+      continent: 'Asia',
+      brand: 'Team',
+      weight: 20,
+      shape: 'Rifler',
+      size: '中型',
+      lengthMm: 0,
+      sideButtons: 1,
+      wireless: true,
     },
     me: { guesses: [] },
     opponent: { guesses: [] },
@@ -85,7 +87,7 @@ describe('ReplayDialog', () => {
     expect(screen.getByText('Teammate C')).toBeInTheDocument();
   });
 
-  it('groups 2v2 replay guesses and scores by team', () => {
+  it('groups 2v2 replay guesses and scores by brand', () => {
     const relay2v2Replay: MultiReplay = {
       ...replay,
       gameMode: 'relay2v2',
@@ -102,8 +104,8 @@ describe('ReplayDialog', () => {
         winnerTeam: 'a',
         teamScores: { a: 1, b: 0 },
         teamGuesses: {
-          a: [{ actor: 'me', actorDisplayId: 'Me', feedback: { ...guess, nickname: 'A Guess' }, guessTime: 800 }],
-          b: [{ actor: null, actorDisplayId: 'B1', feedback: { ...guess, playerId: 3, nickname: 'B Guess' }, guessTime: 1_400 }],
+          a: [{ actor: 'me', actorDisplayId: 'Me', feedback: { ...guess, name: 'A Guess' }, guessTime: 800 }],
+          b: [{ actor: null, actorDisplayId: 'B1', feedback: { ...guess, mouseId: 3, name: 'B Guess' }, guessTime: 1_400 }],
         },
       }],
     };

@@ -2,7 +2,7 @@ import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event';
 import { Route } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { GuessFeedback, PlayerInfo, RoomState } from '../../src/types';
+import type { GuessFeedback, MouseInfo, RoomState } from '../../src/types';
 import { renderAtRoute } from '../render';
 import MultiLobby from '../../src/pages/MultiLobby';
 import MultiRoom, { relayStateProbeNeedsSync, resolveGuessCooldownMs } from '../../src/pages/MultiRoom';
@@ -14,44 +14,46 @@ const socket = vi.hoisted(() => ({
   connect: vi.fn(),
   disconnect: vi.fn(),
 }));
-const playerList = vi.hoisted(() => [{ id: 99, nickname: 's1mple' }]);
+const playerList = vi.hoisted(() => [{ id: 99, name: 's1mple' }]);
 
 vi.mock('../../src/api/socket', () => ({ getSocket: () => socket }));
 vi.mock('../../src/api/playerList', () => ({
   getPlayerList: vi.fn(async () => playerList),
   subscribePlayerList: vi.fn(() => () => undefined),
   searchPlayerList: (list: typeof playerList, query: string) => list.filter(
-    (item) => item.nickname.toLowerCase().includes(query.trim().toLowerCase())
+    (item) => item.name.toLowerCase().includes(query.trim().toLowerCase())
   ),
 }));
 
-const answer: PlayerInfo = {
+const answer: MouseInfo = {
   id: 1,
-  nickname: 'Answer',
-  nationality: 'CN',
-  region: 'Asia',
-  team: 'Team',
-  age: 24,
-  role: 'Rifler',
-  majorChampionships: 1,
-  majorAppearances: 4,
-  isActive: true,
+  name: 'Answer',
+  country: 'CN',
+  continent: 'Asia',
+  brand: 'Team',
+  weight: 24,
+  shape: 'Rifler',
+  size: '中型',
+  lengthMm: 1,
+  sideButtons: 4,
+  wireless: true,
 };
 
-function guess(playerId: number, nickname: string, correct = false): GuessFeedback {
+function guess(mouseId: number, name: string, correct = false): GuessFeedback {
   const attribute = { value: 'value', level: correct ? 'correct' as const : 'wrong' as const };
   return {
-    playerId,
-    nickname,
+    mouseId,
+    name,
     correct,
     attributes: {
-      nationality: attribute,
-      team: attribute,
-      age: { value: 24, level: attribute.level },
-      role: attribute,
-      majorChampionships: { value: 1, level: attribute.level },
-      majorAppearances: { value: 4, level: attribute.level },
-      isActive: { value: true, level: attribute.level },
+      country: attribute,
+      brand: attribute,
+      shape: attribute,
+      size: attribute,
+      weight: { value: 24, level: attribute.level },
+      lengthMm: { value: 1, level: attribute.level },
+      sideButtons: { value: 4, level: attribute.level },
+      wireless: { value: true, level: attribute.level },
     },
   };
 }
@@ -89,13 +91,14 @@ const room: RoomState = {
     winnerKey: 'g:me',
     reason: 'score',
     answer: {
-      nickname: answer.nickname,
-      team: answer.team,
-      nationality: answer.nationality,
-      region: answer.region,
-      role: answer.role,
-      majorChampionships: answer.majorChampionships,
-      majorAppearances: answer.majorAppearances,
+      name: answer.name,
+      brand: answer.brand,
+      country: answer.country,
+      continent: answer.continent,
+      shape: answer.shape,
+      size: answer.size,
+      weight: answer.weight,
+      lengthMm: answer.lengthMm,
     },
   },
   reportSubmitted: false,
@@ -159,7 +162,7 @@ describe('MultiRoom replay', () => {
     expect(screen.queryByText('Opponent Round 1')).not.toBeInTheDocument();
   });
 
-  it('replays 2v2 rounds in team boards with actor labels and team scores', async () => {
+  it('replays 2v2 rounds in brand boards with actor labels and brand scores', async () => {
     const user = userEvent.setup();
     const relay2v2Room: RoomState = {
       ...room,
@@ -324,7 +327,7 @@ describe('MultiRoom replay', () => {
       players: [
         { ...room.players[0], score: 1, guesses: [guess(10, 'My guess')], guessCount: 1 },
         { ...room.players[1], guesses: [guess(11, 'Opponent guess')], guessCount: 1 },
-        { key: 'g:third', name: 'Third Player', ready: true, connected: true, score: 0, skipped: false, guessCount: 1, guesses: [guess(12, 'Third player guess')] },
+        { key: 'g:third', name: 'Third Mouse', ready: true, connected: true, score: 0, skipped: false, guessCount: 1, guesses: [guess(12, 'Third player guess')] },
       ],
     };
     socket.emit.mockImplementation((event: string, ...args: unknown[]) => {
@@ -341,10 +344,10 @@ describe('MultiRoom replay', () => {
     expect(screen.getByText('1 分')).toBeInTheDocument();
     const otherPlayers = screen.getByRole('region', { name: '其他玩家' });
     expect(within(otherPlayers).getByRole('button', { name: /Opponent/ })).toHaveAttribute('aria-expanded', 'false');
-    expect(within(otherPlayers).getByRole('button', { name: /Third Player/ })).toBeInTheDocument();
+    expect(within(otherPlayers).getByRole('button', { name: /Third Mouse/ })).toBeInTheDocument();
     await user.click(within(otherPlayers).getByRole('button', { name: /Opponent/ }));
     expect(within(otherPlayers).getByText('Opponent guess')).toBeInTheDocument();
-    await user.click(within(otherPlayers).getByRole('button', { name: /Third Player/ }));
+    await user.click(within(otherPlayers).getByRole('button', { name: /Third Mouse/ }));
     expect(within(otherPlayers).getByText('Opponent guess')).toBeInTheDocument();
     expect(within(otherPlayers).getByText('Third player guess')).toBeInTheDocument();
   });
@@ -361,7 +364,7 @@ describe('MultiRoom replay', () => {
       players: [
         { ...room.players[0], guesses: [guess(20, 'Me spectator guess')], guessCount: 1 },
         { ...room.players[1], guesses: [guess(21, 'Opponent spectator guess')], guessCount: 1 },
-        { key: 'g:third', name: 'Third Player', ready: true, connected: true, score: 0, skipped: false, guessCount: 1, guesses: [guess(22, 'Third spectator guess')] },
+        { key: 'g:third', name: 'Third Mouse', ready: true, connected: true, score: 0, skipped: false, guessCount: 1, guesses: [guess(22, 'Third spectator guess')] },
       ],
     };
     socket.emit.mockImplementation((event: string, ...args: unknown[]) => {
@@ -437,8 +440,8 @@ describe('MultiRoom replay', () => {
       players: [
         { ...room.players[0], score: 1 },
         { ...room.players[1], score: 2 },
-        { key: 'g:third', name: 'Third Player', ready: true, connected: true, score: 0, skipped: false, guessCount: 0, guesses: [] },
-        { key: 'g:fourth', name: 'Fourth Player', ready: true, connected: true, score: 0, skipped: false, guessCount: 0, guesses: [] },
+        { key: 'g:third', name: 'Third Mouse', ready: true, connected: true, score: 0, skipped: false, guessCount: 0, guesses: [] },
+        { key: 'g:fourth', name: 'Fourth Mouse', ready: true, connected: true, score: 0, skipped: false, guessCount: 0, guesses: [] },
       ],
     };
     const largePlayingRoom: RoomState = {
@@ -464,7 +467,7 @@ describe('MultiRoom replay', () => {
 
     const settlement = await screen.findByRole('dialog');
     expect(within(settlement).getByRole('heading', { name: 'Opponent 获胜' })).toBeInTheDocument();
-    expect(within(settlement).queryByText(/Third Player/)).not.toBeInTheDocument();
+    expect(within(settlement).queryByText(/Third Mouse/)).not.toBeInTheDocument();
     expect(within(settlement).queryByText(/Me 2.*Opponent 0/)).not.toBeInTheDocument();
   });
 
@@ -525,7 +528,7 @@ describe('MultiRoom replay', () => {
 
     renderAtRoute(<MultiRoom />, { route: '/multi/room', path: '/multi/room' });
 
-    expect(await screen.findByPlaceholderText('输入选手昵称...')).toBeInTheDocument();
+    expect(await screen.findByPlaceholderText('输入鼠标名称...')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: '举报对方' })).not.toBeInTheDocument();
   });
 
@@ -561,7 +564,7 @@ describe('MultiRoom replay', () => {
     const relayBoard = heading.closest('.relay-board');
     expect(relayBoard).not.toBeNull();
     const table = within(relayBoard as HTMLElement).getByRole('table');
-    expect(within(table).getAllByRole('columnheader')).toHaveLength(8);
+    expect(within(table).getAllByRole('columnheader')).toHaveLength(9);
     expect(within(table).getAllByRole('row')).toHaveLength(3);
     expect(within(table).getByText('Me')).toHaveClass('guess-row-actor-self');
     expect(within(table).getByText('Opponent')).toHaveClass('guess-row-actor-other');
@@ -598,7 +601,7 @@ describe('MultiRoom replay', () => {
     });
 
     renderAtRoute(<MultiRoom />, { route: '/multi/room', path: '/multi/room' });
-    expect(await screen.findByPlaceholderText('输入选手昵称...')).toBeEnabled();
+    expect(await screen.findByPlaceholderText('输入鼠标名称...')).toBeEnabled();
 
     const handler = socket.on.mock.calls.find(([event]) => event === 'round:over')?.[1];
     expect(handler).toEqual(expect.any(Function));
@@ -654,7 +657,7 @@ describe('MultiRoom replay', () => {
     });
 
     renderAtRoute(<MultiRoom />, { route: '/multi/room', path: '/multi/room' });
-    expect(await screen.findByPlaceholderText('输入选手昵称...')).toBeEnabled();
+    expect(await screen.findByPlaceholderText('输入鼠标名称...')).toBeEnabled();
 
     const handler = socket.on.mock.calls.find(([event]) => event === 'round:over')?.[1];
     act(() => handler({
@@ -705,7 +708,7 @@ describe('MultiRoom replay', () => {
     });
 
     renderAtRoute(<MultiRoom />, { route: '/multi/room', path: '/multi/room' });
-    expect(await screen.findByPlaceholderText('输入选手昵称...')).toBeEnabled();
+    expect(await screen.findByPlaceholderText('输入鼠标名称...')).toBeEnabled();
     const handler = socket.on.mock.calls.find(([event]) => event === 'relay:aborted')?.[1];
     expect(handler).toEqual(expect.any(Function));
 
@@ -720,7 +723,7 @@ describe('MultiRoom replay', () => {
     expect(dialog).toHaveTextContent('接力对局已结束');
     expect(dialog).toHaveTextContent('有玩家退出了房间，本次接力对局已中止且不会保存记录。');
     expect(within(dialog).getByRole('button', { name: '返回大厅' })).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('输入选手昵称...')).toBeDisabled();
+    expect(screen.getByPlaceholderText('输入鼠标名称...')).toBeDisabled();
   });
 
   it('lets the matchmaking host ready up instead of showing a host start button', async () => {
@@ -930,7 +933,7 @@ describe('MultiRoom replay', () => {
 
     renderAtRoute(<MultiRoom />, { route: '/multi/room', path: '/multi/room' });
 
-    const input = await screen.findByPlaceholderText('输入选手昵称...');
+    const input = await screen.findByPlaceholderText('输入鼠标名称...');
     for (let attempt = 1; attempt <= 2; attempt += 1) {
       await user.type(input, 's1');
       await screen.findByRole('option', { name: 's1mple' });
@@ -989,7 +992,7 @@ describe('MultiRoom replay', () => {
       }
     });
     renderAtRoute(<MultiRoom />, { route: '/multi/room', path: '/multi/room' });
-    await screen.findByPlaceholderText('输入选手昵称...');
+    await screen.findByPlaceholderText('输入鼠标名称...');
     const syncCallsBefore = socket.emit.mock.calls.filter(([event]) => event === 'room:sync').length;
     const handler = socket.on.mock.calls.find(([event]) => event === 'game:guess:applied')?.[1];
     expect(handler).toEqual(expect.any(Function));
@@ -1043,7 +1046,7 @@ describe('MultiRoom replay', () => {
       });
 
       const view = renderAtRoute(<MultiRoom />, { route: '/multi/room', path: '/multi/room' });
-      expect(screen.getByPlaceholderText('输入选手昵称...')).toBeEnabled();
+      expect(screen.getByPlaceholderText('输入鼠标名称...')).toBeEnabled();
       const initialSyncCalls = socket.emit.mock.calls.filter(([event]) => event === 'room:sync').length;
 
       await act(async () => vi.advanceTimersByTime(3_000));
@@ -1092,7 +1095,7 @@ describe('MultiRoom replay', () => {
     });
 
     renderAtRoute(<MultiRoom />, { route: '/multi/room', path: '/multi/room' });
-    const input = await screen.findByPlaceholderText('输入选手昵称...');
+    const input = await screen.findByPlaceholderText('输入鼠标名称...');
     const initialSyncCalls = socket.emit.mock.calls.filter(([event]) => event === 'room:sync').length;
     await user.type(input, 's1');
     await screen.findByRole('option', { name: 's1mple' });

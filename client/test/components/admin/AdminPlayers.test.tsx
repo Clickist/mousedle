@@ -32,13 +32,13 @@ describe('AdminPlayers', () => {
 
   it('downloads the complete import-compatible player JSON', async () => {
     const exportedPlayers = [{
-      nickname: 'export-player',
-      nationality: '中国',
-      region: '亚洲',
-      team: 'Test',
+      name: 'export-player',
+      country: '中国',
+      continent: '亚洲',
+      brand: 'Test',
       team_history: ['Old Test'],
-      age: 24,
-      role: 'Rifler',
+      weight: 24,
+      shape: 'Rifler',
       major_championships: 0,
       major_appearances: 1,
       difficulties: ['easy', 'normal'],

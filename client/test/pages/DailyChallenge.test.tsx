@@ -14,10 +14,10 @@ vi.mock('../../src/api/client', async () => {
 });
 
 vi.mock('../../src/api/playerList', () => ({
-  getPlayerList: vi.fn(async () => [{ id: 1, nickname: 's1mple' }]),
+  getPlayerList: vi.fn(async () => [{ id: 1, name: 's1mple' }]),
   subscribePlayerList: vi.fn(() => () => undefined),
-  searchPlayerList: (list: Array<{ id: number; nickname: string }>, query: string) =>
-    list.filter((item) => item.nickname.toLowerCase().includes(query.trim().toLowerCase())),
+  searchPlayerList: (list: Array<{ id: number; name: string }>, query: string) =>
+    list.filter((item) => item.name.toLowerCase().includes(query.trim().toLowerCase())),
 }));
 
 const get = vi.mocked(api.get);
@@ -40,7 +40,7 @@ function detail(status: 'not_started' | 'won' = 'not_started', serverNow = 100_0
         solveOrder: status === 'won' ? 1 : null,
         guesses: [],
         answer: status === 'won'
-          ? { nickname: 'friberg', team: 'NIP', nationality: '瑞典' }
+          ? { name: 'friberg', brand: 'NIP', country: '瑞典' }
           : null,
       },
     },
@@ -83,7 +83,7 @@ describe('DailyChallenge', () => {
 
     await userEvent.click(screen.getByRole('button', { name: '开始挑战' }));
     await waitFor(() => expect(post).toHaveBeenCalledWith('/daily-challenge/start', { difficulty: 'beginner' }));
-    expect(await screen.findByPlaceholderText('输入选手昵称...')).not.toBeDisabled();
+    expect(await screen.findByPlaceholderText('输入鼠标名称...')).not.toBeDisabled();
   });
 
   it('calibrates the refresh countdown from server time instead of the system clock', async () => {

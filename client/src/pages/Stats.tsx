@@ -18,7 +18,7 @@ interface SingleStats {
   winRate: number;
   avgGuesses: number | null;
   bestGuesses: number | null;
-  firstGuess: { playerId: number; nickname: string; percentage: number } | null;
+  firstGuess: { mouseId: number; name: string; percentage: number } | null;
 }
 
 interface StatsResponse {
@@ -78,7 +78,7 @@ function formatAverage(value: number | null): string {
 }
 
 function formatFirstGuess(value: SingleStats['firstGuess']): string {
-  return value ? `${value.nickname} ${(value.percentage * 100).toFixed(1)}%` : '-';
+  return value ? `${value.name} ${(value.percentage * 100).toFixed(1)}%` : '-';
 }
 
 function StatTable({ rows }: { rows: [string, string | number][] }) {

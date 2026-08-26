@@ -2,7 +2,7 @@ import { api } from './client';
 
 export interface PlayerSuggestion {
   id: number;
-  nickname: string;
+  name: string;
 }
 
 interface CachedPlayerList {
@@ -153,8 +153,8 @@ function leetIncludes(value: string, query: string): boolean {
   return false;
 }
 
-function matchScore(nickname: string, query: string): number {
-  const name = normalizeSearch(nickname);
+function matchScore(subject: string, query: string): number {
+  const name = normalizeSearch(subject);
   if (name === query) return 0;
   if (name.length === query.length && leetMatchesAt(name, query, 0)) return 1;
   if (name.startsWith(query)) return 2;
@@ -168,9 +168,9 @@ export function searchPlayerList(players: PlayerSuggestion[], query: string): Pl
   const normalized = normalizeSearch(query);
   if (!normalized) return [];
   return players
-    .map((player) => ({ player, score: matchScore(player.nickname, normalized) }))
+    .map((player) => ({ player, score: matchScore(player.name, normalized) }))
     .filter((entry) => Number.isFinite(entry.score))
-    .sort((a, b) => a.score - b.score || a.player.nickname.localeCompare(b.player.nickname))
+    .sort((a, b) => a.score - b.score || a.player.name.localeCompare(b.player.name))
     .map((entry) => entry.player)
     .slice(0, 10);
 }

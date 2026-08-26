@@ -13,7 +13,7 @@ type ChangeStatus = 'pending' | 'approved' | 'rejected' | 'conflict';
 interface PlayerChangeItem {
   id: number;
   submissionId: number;
-  playerId: number | null;
+  mouseId: number | null;
   playerNickname: string;
   field: string;
   oldValue: unknown;
@@ -140,7 +140,7 @@ export default function AdminPlayerChanges() {
       title: <input ref={selectAllRef} type="checkbox" aria-label={t('admin.selectAllPlayerChanges')} checked={allVisibleSelected} disabled={!selectableItems.length} onChange={(event) => toggleAll(event.target.checked)} />,
       render: (item) => <input type="checkbox" aria-label={t('admin.selectPlayerChange', { player: item.playerNickname, field: t(`admin.playerChangeFields.${item.field}`) })} checked={selectedIds.has(item.id)} disabled={item.status !== 'pending'} onChange={(event) => toggleSelected(item.id, event.target.checked)} />,
     },
-    { key: 'playerNickname', title: t('admin.nickname') },
+    { key: 'playerNickname', title: t('admin.name') },
     { key: 'field', title: t('admin.playerChangeField'), render: (item) => t(`admin.playerChangeFields.${item.field}`) },
     { key: 'oldValue', title: t('admin.playerChangeOldValue'), render: (item) => <code>{valueText(item.oldValue)}</code> },
     { key: 'newValue', title: t('admin.playerChangeNewValue'), render: (item) => <code>{valueText(item.newValue)}</code> },

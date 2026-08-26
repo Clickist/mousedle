@@ -139,7 +139,7 @@ export default function Home() {
       </div>
       <main className="page-scroll" id="main-content">
         <div className="home-hero">
-          <span className="hero-kicker">CS MAJOR // PLAYER GUESSING</span>
+          <span className="hero-kicker">MOUSE // SHAPE GUESSING</span>
           <h1>{t('common.brand')}</h1>
           <p className="hero-subtitle">{t('home.subtitle')}</p>
           <GameRules />

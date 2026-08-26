@@ -1,18 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, Download, Plus, Search } from 'lucide-react';
 import DataTable, { Column } from '../DataTable';
-import PlayerEditForm, { PlayerForm, emptyPlayer } from './PlayerEditForm';
+import PlayerEditForm, { MouseForm, emptyMouse } from './PlayerEditForm';
 import { api, errMsg } from '../../api/client';
 import { useConfirm } from '../ConfirmDialog';
-import { playerRoleLabel } from '../../utils/playerRoles';
 import { clearPlayerListCache } from '../../api/playerList';
 import { toast } from '../Toast';
 import { useTranslation } from 'react-i18next';
 import { difficultyLabel } from '../../utils/difficulty';
 import { AVAILABLE_DIFFICULTIES } from '../../config/difficulties';
-import { countryLabel, regionLabel } from '../../utils/playerGeography';
 
-interface AdminPlayer extends PlayerForm {
+interface AdminPlayer extends MouseForm {
   id: number;
 }
 
@@ -35,7 +33,7 @@ export default function AdminPlayers() {
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
-  const [editing, setEditing] = useState<PlayerForm | null>(null);
+  const [editing, setEditing] = useState<MouseForm | null>(null);
   const [importText, setImportText] = useState('');
   const [exporting, setExporting] = useState(false);
   const requestId = useRef(0);
@@ -50,9 +48,8 @@ export default function AdminPlayers() {
       if (currentRequest !== requestId.current) return;
       setPlayers(res.data.players.map((p) => ({
         ...p,
-        team_history: p.team_history ?? [],
         difficulties: p.difficulties ?? [],
-        is_active: Boolean(p.is_active),
+        wireless: Boolean(p.wireless),
         is_enabled: Boolean(p.is_enabled),
       })));
       setTotal(res.data.total);
@@ -77,7 +74,7 @@ export default function AdminPlayers() {
     return () => window.clearTimeout(timer);
   }, [searchInput]);
 
-  const save = async (form: PlayerForm) => {
+  const save = async (form: MouseForm) => {
     try {
       const { id, ...body } = form;
       if (id) {
@@ -97,7 +94,7 @@ export default function AdminPlayers() {
 
   const setEnabled = async (p: AdminPlayer, isEnabled: boolean) => {
     if (!isEnabled && !await confirm({
-      title: t('admin.disableTitle', { player: p.nickname }),
+      title: t('admin.disableTitle', { player: p.name }),
       message: t('admin.disableMessage'),
       confirmLabel: t('admin.disableConfirm'),
       tone: 'warning',
@@ -105,7 +102,7 @@ export default function AdminPlayers() {
     try {
       await api.put(`/admin/players/${p.id}`, { is_enabled: isEnabled });
       clearPlayerListCache();
-      toast.success(isEnabled ? t('admin.enabledSuccess', { player: p.nickname }) : t('admin.disabledSuccess', { player: p.nickname }));
+      toast.success(isEnabled ? t('admin.enabledSuccess', { player: p.name }) : t('admin.disabledSuccess', { player: p.name }));
       await load();
     } catch (err) {
       toast.error(errMsg(err));
@@ -114,7 +111,7 @@ export default function AdminPlayers() {
 
   const remove = async (p: AdminPlayer) => {
     if (!await confirm({
-      title: t('admin.deleteTitle', { player: p.nickname }),
+      title: t('admin.deleteTitle', { player: p.name }),
       message: t('admin.deleteMessage'),
       confirmLabel: t('admin.deleteConfirm'),
       tone: 'danger',
@@ -122,7 +119,7 @@ export default function AdminPlayers() {
     try {
       await api.delete(`/admin/players/${p.id}`);
       clearPlayerListCache();
-      toast.success(t('admin.deleted', { player: p.nickname }));
+      toast.success(t('admin.deleted', { player: p.name }));
       await load();
     } catch (err) {
       toast.error(errMsg(err));
@@ -147,7 +144,7 @@ export default function AdminPlayers() {
   const doExport = async () => {
     setExporting(true);
     try {
-      const res = await api.get<PlayerForm[]>('/admin/players/export');
+      const res = await api.get<MouseForm[]>('/admin/players/export');
       const blob = new Blob([`${JSON.stringify(res.data, null, 2)}\n`], {
         type: 'application/json;charset=utf-8',
       });
@@ -171,16 +168,17 @@ export default function AdminPlayers() {
   };
 
   const columns: Column<AdminPlayer>[] = [
-    { key: 'nickname', title: t('admin.nickname') },
-    { key: 'nationality', title: t('admin.nationality'), render: (p) => countryLabel(t, p.nationality) },
-    { key: 'region', title: t('admin.region'), render: (p) => regionLabel(t, p.region) },
-    { key: 'team', title: t('admin.team') },
-    { key: 'age', title: t('admin.age') },
-    { key: 'role', title: t('admin.role'), render: (p) => playerRoleLabel(p.role) },
-    { key: 'major_championships', title: t('admin.majorTitles') },
-    { key: 'major_appearances', title: t('admin.major') },
+    { key: 'name', title: t('admin.name') },
+    { key: 'brand', title: t('mouse.brand') },
+    { key: 'country', title: t('mouse.country') },
+    { key: 'continent', title: t('admin.region') },
+    { key: 'shape', title: t('mouse.shape') },
+    { key: 'size', title: t('mouse.size') },
+    { key: 'weight', title: t('mouse.weight') },
+    { key: 'length_mm', title: t('mouse.length') },
+    { key: 'side_buttons', title: t('admin.sideButtons') },
     { key: 'difficulties', title: t('admin.difficulties'), render: (p) => p.difficulties.map((key) => difficultyLabel(t, key)).join(', ') },
-    { key: 'is_active', title: t('admin.status'), render: (p) => (p.is_active ? t('common.active') : t('common.retired')) },
+    { key: 'wireless', title: t('admin.status'), render: (p) => (p.wireless ? t('common.wireless') : t('common.wired')) },
     { key: 'is_enabled', title: t('admin.pool'), render: (p) => (p.is_enabled ? t('admin.available') : t('admin.disabled')) },
     {
       key: 'actions',
@@ -230,7 +228,7 @@ export default function AdminPlayers() {
             <button
               type="button"
               className="btn btn-green admin-player-add"
-              onClick={() => setEditing({ ...emptyPlayer })}
+              onClick={() => setEditing({ ...emptyMouse })}
             >
               <Plus size={16} />
               {t('admin.addPlayer')}

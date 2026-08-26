@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 interface Suggestion {
   id: number;
-  nickname: string;
+  name: string;
 }
 
 interface Props {
@@ -161,7 +161,7 @@ export default function GuessInputBar({
                 void pick(item);
               }}
             >
-              {item.nickname}
+              {item.name}
             </li>
           ))}
         </ul>
@@ -214,7 +214,7 @@ export default function GuessInputBar({
                 setOpen(false);
               }
             } else if (e.key === 'Tab' && open) {
-              if (items.length === 1 && tabCycling.current && text === items[0].nickname) {
+              if (items.length === 1 && tabCycling.current && text === items[0].name) {
                 tabCycling.current = false;
                 setOpen(false);
                 return;
@@ -226,7 +226,7 @@ export default function GuessInputBar({
                 : e.shiftKey
                   ? (active - 1 + items.length) % items.length
                   : active;
-              const completed = items[nextActive].nickname;
+              const completed = items[nextActive].name;
               tabCycling.current = true;
               setActive(nextActive);
               textRef.current = completed;

@@ -268,13 +268,14 @@ function PlayerBoard({
 function CompactFeedback({ feedback }: { feedback: MultiplayerGuessFeedback | undefined }) {
   const attributes = feedback ? [
     { level: feedback.correct ? 'correct' : 'wrong' },
-    feedback.attributes.team,
-    feedback.attributes.nationality,
-    feedback.attributes.age,
-    feedback.attributes.role,
-    feedback.attributes.majorChampionships,
-    feedback.attributes.majorAppearances,
-    feedback.attributes.isActive,
+    feedback.attributes.brand,
+    feedback.attributes.country,
+    feedback.attributes.shape,
+    feedback.attributes.size,
+    feedback.attributes.weight,
+    feedback.attributes.lengthMm,
+    feedback.attributes.sideButtons,
+    feedback.attributes.wireless,
   ] : [];
   return (
     <span className="compact-feedback" aria-hidden="true">
@@ -788,7 +789,7 @@ export default function MultiRoom() {
     });
   };
 
-  const submitGuess = (playerId: number): Promise<boolean> => new Promise((resolve) => {
+  const submitGuess = (mouseId: number): Promise<boolean> => new Promise((resolve) => {
     const current = roomRef.current;
     if (!current || current.status !== 'playing' || roundExpired) return resolve(false);
     const remaining = guessCooldownUntil - performance.now();
@@ -809,7 +810,7 @@ export default function MultiRoom() {
       syncRoom(socket);
     }, 5_000);
     socket.emit('game:guess', {
-      playerId,
+      mouseId,
       roundId: current.roundId,
       eventId: crypto.randomUUID(),
     }, (res: any) => {
@@ -1382,7 +1383,7 @@ export default function MultiRoom() {
           </button>
           <div className="multi-inline-replay-meta">
             <strong>{t('replay.roundPage', { current: replayRoundIndex + 1, total: replay.rounds.length })}</strong>
-            <span>{t('replay.correctAnswer', { name: replayRound.answer.nickname })}</span>
+            <span>{t('replay.correctAnswer', { name: replayRound.answer.name })}</span>
             <span className="badge">
               {room.gameMode === 'relay'
                 ? t(replayRound.reason === 'guessed' ? 'multi.relayRoundSolved' : 'multi.relayRoundMissed')

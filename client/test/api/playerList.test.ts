@@ -31,8 +31,8 @@ describe('playerList cache', () => {
   });
 
   it('returns stored players immediately and revalidates once in the background', async () => {
-    const cached = [{ id: 1, nickname: 'cached' }];
-    const updated = [{ id: 2, nickname: 'updated' }];
+    const cached = [{ id: 1, name: 'cached' }];
+    const updated = [{ id: 2, name: 'updated' }];
     localStorage.setItem('player-list-v1', JSON.stringify({ version: '1', players: cached }));
     const request = deferred<any>();
     get.mockReturnValue(request.promise);
@@ -56,28 +56,28 @@ describe('playerList cache', () => {
 
   it('matches leet nicknames while keeping direct matches ahead of equivalents', () => {
     const players = [
-      { id: 1, nickname: 's1mple' },
-      { id: 2, nickname: 'simplex' },
-      { id: 3, nickname: 'B1t' },
-      { id: 4, nickname: 'bitwise' },
-      { id: 5, nickname: 'f0rest' },
-      { id: 6, nickname: 'fl1t' },
-      { id: 7, nickname: 'lucky' },
+      { id: 1, name: 's1mple' },
+      { id: 2, name: 'simplex' },
+      { id: 3, name: 'B1t' },
+      { id: 4, name: 'bitwise' },
+      { id: 5, name: 'f0rest' },
+      { id: 6, name: 'fl1t' },
+      { id: 7, name: 'lucky' },
     ];
 
-    expect(searchPlayerList(players, 'simple').map((player) => player.nickname))
+    expect(searchPlayerList(players, 'simple').map((player) => player.name))
       .toEqual(['s1mple', 'simplex']);
-    expect(searchPlayerList(players, 'bit').map((player) => player.nickname))
+    expect(searchPlayerList(players, 'bit').map((player) => player.name))
       .toEqual(['B1t', 'bitwise']);
-    expect(searchPlayerList(players, 'forest').map((player) => player.nickname))
+    expect(searchPlayerList(players, 'forest').map((player) => player.name))
       .toEqual(['f0rest']);
-    expect(searchPlayerList(players, 'slmple').map((player) => player.nickname))
+    expect(searchPlayerList(players, 'slmple').map((player) => player.name))
       .toEqual(['s1mple']);
-    expect(searchPlayerList(players, 'fllt').map((player) => player.nickname))
+    expect(searchPlayerList(players, 'fllt').map((player) => player.name))
       .toEqual(['fl1t']);
-    expect(searchPlayerList(players, '1ucky').map((player) => player.nickname))
+    expect(searchPlayerList(players, '1ucky').map((player) => player.name))
       .toEqual(['lucky']);
-    expect(searchPlayerList([{ id: 8, nickname: 'lily' }], 'iily'))
+    expect(searchPlayerList([{ id: 8, name: 'lily' }], 'iily'))
       .toEqual([]);
   });
 });
