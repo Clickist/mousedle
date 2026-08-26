@@ -9,6 +9,7 @@ target/
 *.tsbuildinfo
 origin/
 data/pgdata/
+data/eloshapes/
 .docker-runtime-test/
 compose.override.yaml
 .pnpm-store/

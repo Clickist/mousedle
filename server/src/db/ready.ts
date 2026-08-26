@@ -18,6 +18,7 @@ const REQUIRED_COLUMNS: Record<string, string[]> = {
     'length_mm',
     'side_buttons',
     'wireless',
+    'display',
     'is_enabled',
   ],
   difficulty_levels: ['key', 'sort_order', 'is_enabled'],

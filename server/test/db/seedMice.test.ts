@@ -1,7 +1,7 @@
 import knex from 'knex';
 import { afterEach, describe, expect, it } from 'vitest';
 import { ensureSchema } from '../../src/db/schema';
-import { insertMissingSeedMice } from '../../src/db/seedMice';
+import { insertMissingSeedMice, upsertSeedMice } from '../../src/db/seedMice';
 import miceData from '../../src/db/seeds/mice.json';
 
 const instances: ReturnType<typeof knex>[] = [];
@@ -32,5 +32,32 @@ describe('baseline mice seeds', () => {
       .orderBy('difficulty_key')
       .pluck('difficulty_key'))
       .toEqual(['beginner', 'easy', 'normal']);
+  });
+
+  it('upserts existing seed mice so display/country stay in sync', async () => {
+    const instance = knex({
+      client: 'better-sqlite3',
+      connection: { filename: ':memory:' },
+      useNullAsDefault: true,
+    });
+    instances.push(instance);
+    await ensureSchema(instance);
+    await insertMissingSeedMice(instance);
+
+    await instance('mice')
+      .where({ name: 'Logitech G Pro X Superlight 2' })
+      .update({ country: '旧产地', display: null, wireless: false });
+
+    const result = await upsertSeedMice(instance);
+    expect(result.inserted).toBe(0);
+    expect(result.updated).toBe((miceData as unknown[]).length);
+
+    const gpx = await instance('mice').where({ name: 'Logitech G Pro X Superlight 2' }).first();
+    expect(gpx.country).toBe('瑞士');
+    expect(Boolean(gpx.wireless)).toBe(true);
+    const display = JSON.parse(String(gpx.display));
+    expect(display.width).toBeGreaterThan(0);
+    expect(display.height).toBeGreaterThan(0);
+    expect(display.sensor).toBeTruthy();
   });
 });
