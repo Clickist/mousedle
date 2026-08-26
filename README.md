@@ -1,8 +1,9 @@
 <div align="center">
 
-# 弗一把 (csgofriberg)
+# 鼠一把 (mousedle)
 
-**CS:GO / CS2 Major 选手猜测游戏 —— 类 Wordle 玩法 + 实时多人对战**
+**猜鼠标游戏 —— 类 Wordle 玩法 + 实时多人对战(基于 csgofriberg 框架重构建)**
+
 
 [![CI and Docker](https://github.com/shnlfriberg/csgofriberg/actions/workflows/docker.yml/badge.svg)](https://github.com/shnlfriberg/csgofriberg/actions/workflows/docker.yml)
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
@@ -23,6 +24,27 @@
 </div>
 
 ---
+
+## 本地开发
+
+```bash
+pnpm install
+
+# Redis >= 6.2 必需(XAUTOCLAIM;PoW 与开局服务依赖)
+# Windows 推荐 redis-windows 7.4 便携版,跑起来即可:
+#   redis-server.exe --port 6379 --save "" --appendonly no
+
+pnpm --filter server migrate   # SQLite 建表
+pnpm --filter server seed      # 导入 1609 只鼠标种子(server/src/db/seeds/mice.json)
+pnpm --filter server dev       # 后端 http://localhost:3000
+pnpm --filter client dev       # 前端 http://localhost:5173 (代理 /api -> 3000)
+
+pnpm test                      # 全量测试,需要 Redis 在跑
+```
+
+- 无 Redis 时后端可以 degraded 启动,但开局/PoW/多人不可用。
+- `scripts/build-mouse-dataset.mjs` 可从 eloshapes 快照重新生成种子数据集。
+- Node 24 可运行(会有 engines>=26 警告);`data/*.sqlite3` 已被 gitignore。
 
 ## 玩法
 
