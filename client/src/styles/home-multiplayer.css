@@ -1172,7 +1172,7 @@
 .compact-player-row > svg.expanded { transform: rotate(90deg); }
 .compact-feedback {
   display: grid;
-  grid-template-columns: repeat(8, minmax(5px, 1fr));
+  grid-template-columns: repeat(11, minmax(4px, 1fr));
   gap: 2px;
   min-width: 0;
 }
@@ -1181,6 +1181,7 @@
 .compact-feedback i.correct { background: var(--correct); }
 .compact-feedback i.close { background: var(--close); }
 .compact-feedback i.wrong { background: var(--danger); }
+.compact-feedback i.unknown { background: transparent; border: 1px dashed var(--border); }
 .compact-feedback i.empty { opacity: 0.55; }
 .compact-player-detail { padding: 0.25rem 0.35rem 0.4rem; border-top: 1px solid var(--border); container-type: inline-size; }
 .compact-player-detail .game-table { font-size: clamp(0.58rem, 2.7cqw, 0.78rem); border-spacing: 0.16em; }
@@ -1212,18 +1213,16 @@
    写在 .player-board 上会去解析它的祖先容器(或小视口),得到错误的值。 */
 .player-board { container-type: inline-size; }
 .player-board .game-table {
-  /* 唯一的刻度旋钮 —— 想整体改大小只动上界 0.95rem。
+  /* 唯一的刻度旋钮 —— 想整体改大小只动上界。
      三项的分工:
-     - 上界 0.95rem 是常规宽度下真正生效的那一项。视口 <1920px 时 root 固定,
+     - 上界是常规宽度下真正生效的那一项。视口 <1920px 时 root 固定,
        用户放大页面能 1:1 拿到放大;视口 ≥1920px 时 root 等比补偿,缩小页面物理尺寸不变。
-     - 中间的 3.2cqw 只在容器真的窄到放不下时才接管(手机竖屏/高倍缩放)。
-       系数有硬上限:按下面的列宽比例和 0.38em 横向留白,字号超过容器宽的
-       3.29% 就必然有列换行。3.6 越过了这条线,手机上首当其冲。改列宽或留白
-       时要一起复算,否则窄容器会整片折行。
-     - 下界 0.66rem 是可读性底线。
-     注意别让 cqw 在常规宽度下就生效:容器宽度会随放大页面而变窄,cqw 主导时
-     会反过来抵消缩放 —— 之前 200% 缩放只放大到 1.46 倍就是这个原因。 */
-  font-size: clamp(0.66rem, 3.2cqw, 0.95rem);
+     - 中间的容器宽度系数只在容器真的窄到放不下时才接管(手机竖屏/高倍缩放)。
+       11 列后数字列只剩约 7%,系数超过约 2.2 数字列就会换行。改列宽或留白时要一起复算。
+     - 下界是可读性底线。
+     注意别让容器宽度系数在常规宽度下就生效:容器宽度会随放大页面而变窄,它主导时
+     会反过来抵消缩放。 */
+  font-size: clamp(0.58rem, 2.2cqw, 0.82rem);
   border-spacing: 0.3em;
 }
 .player-board .game-table th {
@@ -1247,15 +1246,17 @@
    在任何缩放档下都成立,不会像固定 px 那样在某个宽度上突然放不下。
    数字列原先各占 12%(Major 冠军只有 1 位数),把富余让给选手名与战队。 */
 .player-board .game-table th:nth-child(1),
-.player-board .game-table td:nth-child(1) { width: 20%; }
-.player-board .game-table td:nth-child(2) { width: 14%; }
-.player-board .game-table td:nth-child(3) { width: 11%; }
-.player-board .game-table td:nth-child(4) { width: 9%; }
-.player-board .game-table td:nth-child(5) { width: 9%; }
-.player-board .game-table td:nth-child(6) { width: 9%; }
-.player-board .game-table td:nth-child(7) { width: 10%; }
-.player-board .game-table td:nth-child(8) { width: 8%; }
-.player-board .game-table td:nth-child(9) { width: 10%; }
+.player-board .game-table td:nth-child(1) { width: 14%; }
+.player-board .game-table td:nth-child(2) { width: 10%; }
+.player-board .game-table td:nth-child(3) { width: 8%; }
+.player-board .game-table td:nth-child(4) { width: 7%; }
+.player-board .game-table td:nth-child(5) { width: 7%; }
+.player-board .game-table td:nth-child(6) { width: 7%; }
+.player-board .game-table td:nth-child(7) { width: 7%; }
+.player-board .game-table td:nth-child(8) { width: 7%; }
+.player-board .game-table td:nth-child(9) { width: 7%; }
+.player-board .game-table td:nth-child(10) { width: 8%; }
+.player-board .game-table td:nth-child(11) { width: 18%; }
 .player-board .game-table td.masked-cell:empty::after {
   width: 0.42em;
   height: 0.42em;

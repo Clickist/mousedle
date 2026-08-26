@@ -5,7 +5,7 @@ import { optionalAuth, userNameFromUsername } from '../middleware/auth';
 import { asyncHandler, HttpError, validateBody, validateParams } from '../middleware/common';
 import { rateLimit, requestIdentity } from '../middleware/rateLimit';
 import type { GuessFeedback, Mouse } from '../types';
-import { compareGuess, MAX_GUESSES } from '../services/gameService';
+import { compareGuess, MAX_GUESSES, mouseAnswerView } from '../services/gameService';
 import { getEnabledPlayer, getPlayer } from '../services/playerCache';
 import { withKeyLock } from '../services/keyLock';
 import {
@@ -83,17 +83,7 @@ function ownerFor(req: {
 }
 
 function answerView(target: Mouse) {
-  return {
-    id: target.id,
-    name: target.name,
-    brand: target.brand,
-    country: target.country,
-    continent: target.continent,
-    shape: target.shape,
-        size: target.size,
-    lengthMm: target.length_mm,
-    sideButtons: target.side_buttons,
-  };
+  return mouseAnswerView(target);
 }
 
 function publicGuesses(game: SingleGameState): GuessFeedback[] {

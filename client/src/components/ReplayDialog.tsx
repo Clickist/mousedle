@@ -44,6 +44,7 @@ function AnswerSection({ answer }: { answer: MouseInfo }) {
           lengthMm: answer.lengthMm,
           sideButtons: answer.sideButtons,
           wireless: answer.wireless,
+          display: answer.display,
         }}
       />
     </section>

@@ -1,4 +1,4 @@
-export type FeedbackLevel = 'correct' | 'close' | 'wrong';
+export type FeedbackLevel = 'correct' | 'close' | 'wrong' | 'unknown';
 
 export interface AttributeFeedback {
   value: string | number | boolean;
@@ -17,8 +17,10 @@ export interface GuessFeedback {
     size: AttributeFeedback;
     weight: AttributeFeedback;
     lengthMm: AttributeFeedback;
-    sideButtons: AttributeFeedback;
     wireless: AttributeFeedback;
+    width: AttributeFeedback;
+    height: AttributeFeedback;
+    sensor: AttributeFeedback;
   };
 }
 
@@ -34,8 +36,10 @@ export interface HiddenGuessFeedback {
     size: HiddenAttributeFeedback;
     weight: HiddenAttributeFeedback;
     lengthMm: HiddenAttributeFeedback;
-    sideButtons: HiddenAttributeFeedback;
     wireless: HiddenAttributeFeedback;
+    width: HiddenAttributeFeedback;
+    height: HiddenAttributeFeedback;
+    sensor: HiddenAttributeFeedback;
   };
 }
 
@@ -218,32 +222,14 @@ export interface RoomState {
     winnerTeam?: 'a' | 'b' | null;
     reason: string;
     nextRoundAt: number | null;
-    answer: {
-      name: string;
-      brand: string;
-      country: string;
-      continent: string;
-      shape: string;
-      size: string;
-      weight: number;
-      lengthMm: number;
-    } | null;
+    answer: MouseInfo | null;
   } | null;
   matchResult: {
     winnerKey: string | null;
     winnerTeam?: 'a' | 'b' | null;
     winnerKeys?: string[];
     reason: string;
-    answer: {
-      name: string;
-      brand: string;
-      country: string;
-      continent: string;
-      shape: string;
-      size: string;
-      weight: number;
-      lengthMm: number;
-    } | null;
+    answer: MouseInfo | null;
   } | null;
   reportSubmitted: boolean;
   matchReplay?: MatchReplay;

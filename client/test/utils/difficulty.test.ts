@@ -24,9 +24,9 @@ describe('difficulty helpers', () => {
   it('resolves localized labels and descriptions', () => {
     const t = i18n.t.bind(i18n);
     expect(difficultyLabel(t, 'beginner')).toBe('入门版');
-    expect(difficultyDescription(t, 'beginner')).toBe('最大众选手池 · 熟悉规则');
+    expect(difficultyDescription(t, 'beginner')).toBe('最大众鼠标池 · 熟悉规则');
     expect(difficultyLabel(t, 'easy')).toBe('简单版');
-    expect(difficultyDescription(t, 'easy')).toBe('知名选手池 · 快速上手');
+    expect(difficultyDescription(t, 'easy')).toBe('知名鼠标池 · 快速上手');
     expect(difficultyDescription(t, 'missing')).toBe('');
   });
 });

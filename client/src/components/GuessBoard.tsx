@@ -31,6 +31,17 @@ function Cell({
       </td>
     );
   }
+  if (attr.level === 'unknown') {
+    const unknownText =
+      'value' in attr && attr.value !== '' && attr.value != null
+        ? `${String(attr.value)}${suffix ?? ''}`
+        : t('common.unknown');
+    return (
+      <td className="unknown" data-label={label}>
+        {unknownText}
+      </td>
+    );
+  }
   const text =
     typeof attr.value === 'boolean' || bool
       ? attr.value
@@ -66,8 +77,10 @@ function GuessBoard({
     t('guess.columns.size'),
     t('guess.columns.weight'),
     t('guess.columns.length'),
-    t('guess.columns.sideButtons'),
+    t('guess.columns.width'),
+    t('guess.columns.height'),
     t('guess.columns.wireless'),
+    t('guess.columns.sensor'),
   ];
   return (
     <div className="game-table-wrap">
@@ -107,8 +120,10 @@ function GuessBoard({
                 <Cell attr={g.attributes.size} label={columns[4]} />
                 <Cell attr={g.attributes.weight} label={columns[5]} suffix="g" />
                 <Cell attr={g.attributes.lengthMm} label={columns[6]} suffix="mm" />
-                <Cell attr={g.attributes.sideButtons} label={columns[7]} />
-                <Cell attr={g.attributes.wireless} label={columns[8]} bool />
+                <Cell attr={g.attributes.width} label={columns[7]} suffix="mm" />
+                <Cell attr={g.attributes.height} label={columns[8]} suffix="mm" />
+                <Cell attr={g.attributes.wireless} label={columns[9]} bool />
+                <Cell attr={g.attributes.sensor} label={columns[10]} />
               </tr>
             );
           })}

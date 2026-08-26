@@ -4,7 +4,7 @@ import { db } from '../db/knex';
 import { guestNameFromKey, optionalAuth, userNameFromUsername } from '../middleware/auth';
 import { asyncHandler, HttpError, validateParams, validateQuery } from '../middleware/common';
 import { cached } from '../services/queryCache';
-import { compareGuess, MAX_GUESSES } from '../services/gameService';
+import { compareGuess, MAX_GUESSES, mouseAnswerView } from '../services/gameService';
 import { getPlayer, isDifficultyAvailable } from '../services/playerCache';
 import { getPlayerPerformance } from '../services/playerPerformance';
 import { GuessFeedback, Mouse } from '../types';
@@ -107,19 +107,7 @@ async function firstGuessSummary(query: ReturnType<typeof db>) {
 }
 
 function answerView(target: Mouse) {
-  return {
-    id: target.id,
-    name: target.name,
-    brand: target.brand,
-    country: target.country,
-    continent: target.continent,
-    weight: target.weight,
-    shape: target.shape,
-        size: target.size,
-    lengthMm: target.length_mm,
-    sideButtons: target.side_buttons,
-    wireless: Boolean(target.wireless),
-  };
+  return mouseAnswerView(target);
 }
 
 async function globalStats(difficulties: string[]) {

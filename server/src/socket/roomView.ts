@@ -1,6 +1,6 @@
 import { Server, Socket } from 'socket.io';
 import { guestNameFromKey, userNameFromUsername } from '../middleware/auth';
-import { compareGuess } from '../services/gameService';
+import { compareGuess, mouseAnswerView } from '../services/gameService';
 import { getPlayer } from '../services/playerCache';
 import { StoredIdentity, StoredRoom } from '../services/roomStore';
 import { GuessFeedback, Mouse } from '../types';
@@ -42,8 +42,10 @@ export function hiddenGuess(feedback: GuessFeedback) {
       size: hideAttribute(feedback.attributes.size),
       weight: hideAttribute(feedback.attributes.weight),
       lengthMm: hideAttribute(feedback.attributes.lengthMm),
-      sideButtons: hideAttribute(feedback.attributes.sideButtons),
       wireless: hideAttribute(feedback.attributes.wireless),
+      width: hideAttribute(feedback.attributes.width),
+      height: hideAttribute(feedback.attributes.height),
+      sensor: hideAttribute(feedback.attributes.sensor),
     },
   };
 }
@@ -67,19 +69,7 @@ export function identityDisplayName(identity: StoredIdentity): string {
 }
 
 function replayAnswer(target: Mouse) {
-  return {
-    id: target.id,
-    name: target.name,
-    brand: target.brand,
-    country: target.country,
-    continent: target.continent,
-    shape: target.shape,
-    size: target.size,
-    weight: target.weight,
-    lengthMm: target.length_mm,
-    sideButtons: target.side_buttons,
-    wireless: Boolean(target.wireless),
-  };
+  return mouseAnswerView(target);
 }
 
 function replayGuesses(target: Mouse, playerIds: number[], maxGuesses: number) {
@@ -200,19 +190,7 @@ function buildMatchReplay(room: StoredRoom, viewerKey: string) {
 
 function answerView(targetMouseId: number | null) {
   const target = targetMouseId ? getPlayer(targetMouseId) : null;
-  return target
-    ? {
-        name: target.name,
-        brand: target.brand,
-        country: target.country,
-        continent: target.continent,
-        shape: target.shape,
-        size: target.size,
-        weight: target.weight,
-        lengthMm: target.length_mm,
-        sideButtons: target.side_buttons,
-      }
-    : null;
+  return target ? mouseAnswerView(target) : null;
 }
 
 export function buildPublicRoom(room: StoredRoom, viewerKey: string) {

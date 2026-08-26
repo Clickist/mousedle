@@ -4,7 +4,7 @@ import { db } from '../db/knex';
 import { optionalAuth } from '../middleware/auth';
 import { validateBody, validateParams, asyncHandler, HttpError } from '../middleware/common';
 import { GuessFeedback, Mouse } from '../types';
-import { compareGuess, MAX_GUESSES } from '../services/gameService';
+import { compareGuess, MAX_GUESSES, mouseAnswerView } from '../services/gameService';
 import { getEnabledPlayer, getPlayer, isDifficultyAvailable } from '../services/playerCache';
 import { rateLimit, requestIdentity } from '../middleware/rateLimit';
 import { withKeyLock } from '../services/keyLock';
@@ -41,17 +41,7 @@ function identity(req: { user?: { id: number }; guestKey?: string }) {
 }
 
 function answerView(target: Mouse) {
-  return {
-    id: target.id,
-    name: target.name,
-    brand: target.brand,
-    country: target.country,
-    continent: target.continent,
-    shape: target.shape,
-        size: target.size,
-    lengthMm: target.length_mm,
-    sideButtons: target.side_buttons,
-  };
+  return mouseAnswerView(target);
 }
 
 function publicGuesses(game: SingleGameState): GuessFeedback[] {

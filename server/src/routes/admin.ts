@@ -22,7 +22,7 @@ import { currentDailyLeaderboardCacheKeys } from '../services/dailyChallenge';
 import { rateLimit, requestIdentity } from '../middleware/rateLimit';
 import { publishResourceVersion } from '../services/resourceVersion';
 import { getPlayerPerformance } from '../services/playerPerformance';
-import { compareGuess, MAX_GUESSES } from '../services/gameService';
+import { compareGuess, MAX_GUESSES, mouseAnswerView } from '../services/gameService';
 import { getPlayer } from '../services/playerCache';
 import type { GuessFeedback, Mouse } from '../types';
 import { DIFFICULTY_LEVELS } from '../difficulties';
@@ -177,19 +177,7 @@ function matchPlayerDisplayId(row: { key?: unknown; name?: unknown; username?: u
 }
 
 function replayAnswer(target: Mouse) {
-  return {
-    id: target.id,
-    name: target.name,
-    brand: target.brand,
-    country: target.country,
-    continent: target.continent,
-    weight: target.weight,
-    shape: target.shape,
-        size: target.size,
-    lengthMm: target.length_mm,
-    sideButtons: target.side_buttons,
-    wireless: Boolean(target.wireless),
-  };
+  return mouseAnswerView(target);
 }
 
 function replayGuessesWithTimes(target: Mouse, guessIds: unknown, guessTimes: unknown) {

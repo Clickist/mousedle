@@ -10,13 +10,13 @@ describe('GameRules', () => {
     await i18n.changeLanguage('zh');
   });
 
-  it('explains historical-brand yellow feedback and current-brand priority', async () => {
+  it('explains origin-continent yellow feedback and exact/brand matching', async () => {
     const user = userEvent.setup();
     renderWithProviders(<GameRules />);
 
     await user.click(screen.getByRole('button', { name: '游戏规则' }));
 
-    expect(screen.getByText('命中历史队伍、赛区相同或数值接近')).toBeInTheDocument();
-    expect(screen.getByText(/当前队伍相同显示绿色/)).toHaveTextContent('当前队伍判定优先');
+    expect(screen.getByText('产地同大洲或数值接近')).toBeInTheDocument();
+    expect(screen.getByText(/产地不同但同大洲显示黄色/)).toHaveTextContent('产地相同显示绿色');
   });
 });

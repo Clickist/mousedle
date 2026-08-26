@@ -66,6 +66,6 @@ describe('AdminPlayers', () => {
     expect(createObjectURL).toHaveBeenCalledWith(expect.any(Blob));
     expect(click).toHaveBeenCalledTimes(1);
     expect(revokeObjectURL).toHaveBeenCalledWith('blob:players');
-    expect(toast.success).toHaveBeenCalledWith('已导出 1 名选手');
+    expect(toast.success).toHaveBeenCalledWith('已导出 1 只鼠标');
   });
 });

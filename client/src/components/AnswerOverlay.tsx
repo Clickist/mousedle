@@ -40,7 +40,7 @@ function parseDisplay(raw: string | null | undefined): MouseDisplay | null {
   }
 }
 
-/** 鼠标信息表(答案卡片/查询结果共用):8 猜测属性 + 硬核参数揭晓 */
+/** 鼠标信息表(答案卡片/查询结果共用):完整猜测字段 + 揭晓补充(hump/握持) */
 export function MouseInfoTable({ answer }: { answer: AnswerInfo }) {
   const { t } = useTranslation();
   const display = parseDisplay(answer.display);
@@ -54,19 +54,20 @@ export function MouseInfoTable({ answer }: { answer: AnswerInfo }) {
     [<Layers3 size={14} key="i" />, t('mouse.size'), answer.size || '-'],
     [<Weight size={14} key="i" />, t('mouse.weight'), answer.weight != null ? `${answer.weight} g` : '-'],
     [<Ruler size={14} key="i" />, t('mouse.length'), answer.lengthMm != null ? `${answer.lengthMm} mm` : '-'],
-    [<Zap size={14} key="i" />, t('mouse.wireless'), answer.wireless ? t('common.wireless') : t('common.wired')],
   ];
+  if (display?.width != null) {
+    rows.push([<Ruler size={14} key="i" />, t('mouse.width'), `${display.width} mm`]);
+  }
+  if (display?.height != null) {
+    rows.push([<Ruler size={14} key="i" />, t('mouse.height'), `${display.height} mm`]);
+  }
+  rows.push([
+    <Zap size={14} key="i" />,
+    t('mouse.wireless'),
+    answer.wireless ? t('common.wireless') : t('common.wired'),
+  ]);
   if (display?.sensor) {
     rows.push([<Cpu size={14} key="i" />, t('mouse.sensor'), display.sensor]);
-  }
-  if (display?.dpi) {
-    rows.push([<Cpu size={14} key="i" />, t('mouse.dpi'), `${display.dpi} DPI`]);
-  }
-  if (display?.polling_rate) {
-    rows.push([<Cpu size={14} key="i" />, t('mouse.pollingRate'), `${display.polling_rate} Hz`]);
-  }
-  if (display?.connection) {
-    rows.push([<Zap size={14} key="i" />, t('mouse.connection'), display.connection]);
   }
   if (display?.hump) {
     rows.push([<MousePointer2 size={14} key="i" />, t('mouse.hump'), display.hump]);

@@ -194,10 +194,10 @@ describe('desktop/mobile layout contracts', () => {
     );
 
     const multiplayer = readCss('../../src/styles/home-multiplayer.css');
-    // 唯一的刻度旋钮。上界必须是常规宽度下生效的那一项(0.95rem ≈ 15.2px),
+    // 唯一的刻度旋钮。上界必须是常规宽度下生效的那一项,
     // 否则 cqw 会在放大页面时因容器变窄而抵消掉缩放
     expect(multiplayer).toMatch(
-      /\.player-board\s+\.game-table\s*\{[^}]*font-size:\s*clamp\(0\.66rem,\s*3\.2cqw,\s*0\.95rem\)/s
+      /\.player-board\s+\.game-table\s*\{[^}]*font-size:\s*clamp\(0\.58rem,\s*2\.2cqw,\s*0\.82rem\)/s
     );
     // cqw 系数不能超过「不换行」上限,否则手机竖屏等窄容器会整片折行
     const cqw = Number(
@@ -210,10 +210,9 @@ describe('desktop/mobile layout contracts', () => {
     );
     // 列宽% ÷ (字符数 × 字宽 + 箭头 + 2×横向留白),取最紧的一列
     const demand = [
-      { w: 21, n: 11, cjk: false }, { w: 16, n: 8, cjk: false },
-      { w: 14, n: 7, cjk: false }, { w: 9, n: 2, cjk: false, arrow: true },
-      { w: 13, n: 3, cjk: true }, { w: 8, n: 1, cjk: false, arrow: true },
-      { w: 9, n: 2, cjk: false, arrow: true }, { w: 10, n: 2, cjk: true },
+      { w: 7, n: 3, cjk: false, arrow: true },
+      { w: 7, n: 2, cjk: true },
+      { w: 8, n: 2, cjk: true },
     ];
     const ceiling = Math.min(
       ...demand.map(
@@ -237,17 +236,17 @@ describe('desktop/mobile layout contracts', () => {
     // 多人棋盘自己的列宽比例必须正好占满 100%,否则 table-layout: fixed 会自行分配余量
     const widths = [
       ...multiplayer.matchAll(
-        /\.player-board\s+\.game-table\s+td:nth-child\(\d\)\s*\{\s*width:\s*(\d+)%/g
+        /\.player-board\s+\.game-table\s+(?:th|td):nth-child\((\d+)\)\s*\{\s*width:\s*(\d+)%/g
       ),
-    ].map((m) => Number(m[1]));
-    expect(widths).toHaveLength(9);
+    ].map((m) => Number(m[2]));
+    expect(widths).toHaveLength(11);
     expect(widths.reduce((a, b) => a + b, 0)).toBe(100);
   });
 
   it('keeps mobile multiplayer tables compact without truncating content or changing desktop sizing', () => {
     const responsive = readCss('../../src/styles/responsive.css');
     expect(responsive).toMatch(
-      /@media\s*\(max-width:\s*640px\)\s*\{[\s\S]*\.player-board\s+\.game-table\s*\{[^}]*font-size:\s*clamp\(0\.6rem,\s*2\.75cqw,\s*0\.78rem\)/
+      /@media\s*\(max-width:\s*640px\)\s*\{[\s\S]*\.player-board\s+\.game-table\s*\{[^}]*font-size:\s*clamp\(0\.54rem,\s*2\.2cqw,\s*0\.7rem\)/
     );
     expect(responsive).toMatch(
       /\.player-board\s+\.game-table\s+td\s*\{[^}]*white-space:\s*normal;[^}]*overflow-wrap:\s*anywhere;[^}]*word-break:\s*normal/s
@@ -263,7 +262,7 @@ describe('desktop/mobile layout contracts', () => {
 
     const multiplayer = readCss('../../src/styles/home-multiplayer.css');
     expect(multiplayer).toMatch(
-      /\.player-board\s+\.game-table\s*\{[^}]*font-size:\s*clamp\(0\.66rem,\s*3\.2cqw,\s*0\.95rem\)/s
+      /\.player-board\s+\.game-table\s*\{[^}]*font-size:\s*clamp\(0\.58rem,\s*2\.2cqw,\s*0\.82rem\)/s
     );
   });
 });

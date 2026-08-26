@@ -274,8 +274,10 @@ function CompactFeedback({ feedback }: { feedback: MultiplayerGuessFeedback | un
     feedback.attributes.size,
     feedback.attributes.weight,
     feedback.attributes.lengthMm,
-    feedback.attributes.sideButtons,
+    feedback.attributes.width,
+    feedback.attributes.height,
     feedback.attributes.wireless,
+    feedback.attributes.sensor,
   ] : [];
   return (
     <span className="compact-feedback" aria-hidden="true">
@@ -286,7 +288,7 @@ function CompactFeedback({ feedback }: { feedback: MultiplayerGuessFeedback | un
               {'hint' in attribute && attribute.hint === 'lower' && <ArrowDown />}
             </i>
           ))
-        : Array.from({ length: 8 }, (_, index) => <i key={index} className="empty" />)}
+        : Array.from({ length: 11 }, (_, index) => <i key={index} className="empty" />)}
     </span>
   );
 }

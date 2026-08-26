@@ -52,8 +52,10 @@ function guess(mouseId: number, name: string, correct = false): GuessFeedback {
       size: attribute,
       weight: { value: 24, level: attribute.level },
       lengthMm: { value: 1, level: attribute.level },
-      sideButtons: { value: 4, level: attribute.level },
       wireless: { value: true, level: attribute.level },
+      width: { value: 60, level: attribute.level },
+      height: { value: 40, level: attribute.level },
+      sensor: { value: 'PixArt PAW3395', level: attribute.level },
     },
   };
 }
@@ -90,16 +92,7 @@ const room: RoomState = {
   matchResult: {
     winnerKey: 'g:me',
     reason: 'score',
-    answer: {
-      name: answer.name,
-      brand: answer.brand,
-      country: answer.country,
-      continent: answer.continent,
-      shape: answer.shape,
-      size: answer.size,
-      weight: answer.weight,
-      lengthMm: answer.lengthMm,
-    },
+    answer,
   },
   reportSubmitted: false,
   matchReplay: {
@@ -564,7 +557,7 @@ describe('MultiRoom replay', () => {
     const relayBoard = heading.closest('.relay-board');
     expect(relayBoard).not.toBeNull();
     const table = within(relayBoard as HTMLElement).getByRole('table');
-    expect(within(table).getAllByRole('columnheader')).toHaveLength(9);
+    expect(within(table).getAllByRole('columnheader')).toHaveLength(11);
     expect(within(table).getAllByRole('row')).toHaveLength(3);
     expect(within(table).getByText('Me')).toHaveClass('guess-row-actor-self');
     expect(within(table).getByText('Opponent')).toHaveClass('guess-row-actor-other');

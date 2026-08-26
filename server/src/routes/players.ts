@@ -59,6 +59,7 @@ router.get(
         sideButtons: p.side_buttons,
         difficulties: p.difficulties ?? [],
         wireless: Boolean(p.wireless),
+        display: p.display ?? null,
       }))
     );
   })

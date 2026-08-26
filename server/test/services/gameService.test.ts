@@ -15,6 +15,11 @@ function makeMouse(overrides: Partial<Mouse>): Mouse {
     length_mm: 125,
     side_buttons: 2,
     wireless: true,
+    display: JSON.stringify({
+      width: 64,
+      height: 40,
+      sensor: 'PixArt PAW3395',
+    }),
     created_at: '',
     ...overrides,
   };
@@ -72,11 +77,72 @@ describe('compareGuess', () => {
     expect(compareGuess(guess, target).attributes.lengthMm.level).toBe('wrong');
   });
 
-  it('侧键数只分对错,相差 1 也是 wrong 并带方向提示', () => {
-    const guess = makeMouse({ id: 2, side_buttons: target.side_buttons + 1 });
+  it('宽度相差 3mm 给 close,4mm 给 wrong', () => {
+    const close = makeMouse({
+      id: 2,
+      display: JSON.stringify({ width: 61, height: 40, sensor: 'PixArt PAW3395' }),
+    });
+    expect(compareGuess(close, target).attributes.width.level).toBe('close');
+    expect(compareGuess(close, target).attributes.width.hint).toBe('higher');
+    const far = makeMouse({
+      id: 3,
+      display: JSON.stringify({ width: 60, height: 40, sensor: 'PixArt PAW3395' }),
+    });
+    expect(compareGuess(far, target).attributes.width.level).toBe('wrong');
+  });
+
+  it('高度判定与宽度相同阈值', () => {
+    const close = makeMouse({
+      id: 2,
+      display: JSON.stringify({ width: 64, height: 43, sensor: 'PixArt PAW3395' }),
+    });
+    expect(compareGuess(close, target).attributes.height.level).toBe('close');
+    expect(compareGuess(close, target).attributes.height.hint).toBe('lower');
+  });
+
+  it('传感器完全匹配才 correct', () => {
+    const guess = makeMouse({
+      id: 2,
+      display: JSON.stringify({ width: 64, height: 40, sensor: 'PixArt PAW3950' }),
+    });
+    expect(compareGuess(guess, target).attributes.sensor.level).toBe('wrong');
+    const same = makeMouse({
+      id: 3,
+      display: JSON.stringify({ width: 61, height: 38, sensor: 'PixArt PAW3395' }),
+    });
+    expect(compareGuess(same, target).attributes.sensor.level).toBe('correct');
+  });
+
+  it('传感器缺失时跳过判定,两侧都空也不算 correct', () => {
+    const missingGuess = makeMouse({
+      id: 2,
+      display: JSON.stringify({ width: 64, height: 40, sensor: null }),
+    });
+    expect(compareGuess(missingGuess, target).attributes.sensor.level).toBe('unknown');
+    const missingTarget = makeMouse({
+      id: 10,
+      display: JSON.stringify({ width: 64, height: 40 }),
+    });
+    const bothMissing = makeMouse({
+      id: 3,
+      display: JSON.stringify({ width: 64, height: 40 }),
+    });
+    expect(compareGuess(bothMissing, missingTarget).attributes.sensor.level).toBe('unknown');
+  });
+
+  it('宽度或高度缺失时跳过判定', () => {
+    const guess = makeMouse({
+      id: 2,
+      display: JSON.stringify({ sensor: 'PixArt PAW3395' }),
+    });
     const fb = compareGuess(guess, target);
-    expect(fb.attributes.sideButtons.level).toBe('wrong');
-    expect(fb.attributes.sideButtons.hint).toBe('lower');
+    expect(fb.attributes.width.level).toBe('unknown');
+    expect(fb.attributes.height.level).toBe('unknown');
+  });
+
+  it('不把侧键纳入猜测反馈', () => {
+    const fb = compareGuess(target, target);
+    expect(fb.attributes).not.toHaveProperty('sideButtons');
   });
 
   it('形状不同给 wrong', () => {

@@ -13,8 +13,6 @@ import {
 import ModalPortal from './ModalPortal';
 import { useTranslation } from 'react-i18next';
 
-const regions = ['europe', 'cis', 'asia', 'oceania', 'northAmerica', 'southAmerica', 'africaIsrael'] as const;
-
 export default function GameRules() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -127,20 +125,20 @@ export default function GameRules() {
                         <span>{t('rules.exactText')}</span>
                       </div>
                       <div>
-                        <strong>{t('rules.teamTitle')}</strong>
-                        <span>{t('rules.teamText')}</span>
+                        <strong>{t('rules.brandTitle')}</strong>
+                        <span>{t('rules.brandText')}</span>
                       </div>
                       <div>
-                        <strong>{t('rules.regionTitle')}</strong>
-                        <span>{t('rules.regionText')}</span>
+                        <strong>{t('rules.countryTitle')}</strong>
+                        <span>{t('rules.countryText')}</span>
                       </div>
                       <div>
-                        <strong>{t('rules.ageTitle')}</strong>
-                        <span>{t('rules.ageText')}</span>
+                        <strong>{t('rules.numberTitle')}</strong>
+                        <span>{t('rules.numberText')}</span>
                       </div>
                       <div>
-                        <strong>{t('rules.majorTitle')}</strong>
-                        <span>{t('rules.majorText')}</span>
+                        <strong>{t('rules.boolTitle')}</strong>
+                        <span>{t('rules.boolText')}</span>
                       </div>
                     </div>
                     <div className="rule-result-notes">
@@ -164,16 +162,26 @@ export default function GameRules() {
                   <article className="rule-panel rule-panel-regions">
                     <div className="rule-panel-title">
                       <span aria-hidden="true"><MapPinned size={20} /></span>
-                      <div><small>03</small><h3>{t('rules.regionsTitle')}</h3></div>
+                      <div><small>03</small><h3>{t('rules.attrTitle')}</h3></div>
                     </div>
-                    <p>{t('rules.regionsIntro')}</p>
+                    <p>{t('rules.attrIntro')}</p>
                     <div className="region-list">
-                      {regions.map((region) => (
-                        <div className="region-item" key={region}>
-                          <strong>{t(`rules.regions.${region}.name`)}</strong>
-                          <span>{t(`rules.regions.${region}.countries`)}</span>
-                        </div>
-                      ))}
+                      <div className="region-item">
+                        <strong>{t('rules.attrShape')}</strong>
+                        <span>{t('rules.attrShapeText')}</span>
+                      </div>
+                      <div className="region-item">
+                        <strong>{t('rules.attrSize')}</strong>
+                        <span>{t('rules.attrSizeText')}</span>
+                      </div>
+                      <div className="region-item">
+                        <strong>{t('rules.attrWireless')}</strong>
+                        <span>{t('rules.attrWirelessText')}</span>
+                      </div>
+                      <div className="region-item">
+                        <strong>{t('rules.attrSensor')}</strong>
+                        <span>{t('rules.attrSensorText')}</span>
+                      </div>
                     </div>
                   </article>
                 </div>

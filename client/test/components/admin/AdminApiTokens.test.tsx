@@ -44,11 +44,11 @@ describe('AdminApiTokens', () => {
     renderWithProviders(<AdminApiTokens />);
     expect(await screen.findByText('暂无有效 API Token')).toBeInTheDocument();
 
-    await user.type(screen.getByPlaceholderText('例如：选手数据同步'), '选手同步');
+    await user.type(screen.getByPlaceholderText('例如：鼠标数据同步'), '鼠标同步');
     await user.click(screen.getByRole('button', { name: '生成 Token' }));
 
     expect(api.post).toHaveBeenCalledWith('/admin/api-tokens', {
-      name: '选手同步',
+      name: '鼠标同步',
       expiresInDays: 90,
     });
     expect(await screen.findByDisplayValue(secret)).toBeInTheDocument();

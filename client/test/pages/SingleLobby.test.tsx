@@ -21,8 +21,8 @@ describe('SingleLobby', () => {
     expect(beginner.querySelector('.single-difficulty-badge')).toHaveTextContent('推荐');
     expect(easy.querySelector('.single-difficulty-badge')).toBeNull();
     expect(normal.querySelector('.single-difficulty-badge')).toBeNull();
-    expect(beginner).toHaveTextContent('最大众选手池 · 熟悉规则');
-    expect(easy).toHaveTextContent('知名选手池 · 快速上手');
+    expect(beginner).toHaveTextContent('最大众鼠标池 · 熟悉规则');
+    expect(easy).toHaveTextContent('知名鼠标池 · 快速上手');
     expect(normal).toHaveTextContent('完整数据库 · 终极挑战');
     expect(beginner.style.getPropertyValue('--diff-color')).toBe('var(--primary)');
     expect(easy.style.getPropertyValue('--diff-color')).toBe('var(--success)');

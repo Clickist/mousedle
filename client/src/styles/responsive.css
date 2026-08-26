@@ -263,7 +263,7 @@
   }
   .player-board .game-table {
     border-spacing: 0.16em;
-    font-size: clamp(0.6rem, 2.75cqw, 0.78rem);
+    font-size: clamp(0.54rem, 2.2cqw, 0.7rem);
   }
   .player-board .game-table th {
     padding: 0.38em 0.08em;

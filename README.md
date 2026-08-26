@@ -19,7 +19,7 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-FF4438?logo=redis&logoColor=white)
 
-[玩法](#玩法) · [功能特性](#功能特性) · [快速开始](#快速开始) · [部署](#docker-生产部署) · [选手数据](#选手数据) · [贡献](#贡献)
+[玩法](#玩法) · [功能特性](#功能特性) · [快速开始](#快速开始) · [部署](#docker-生产部署) · [鼠标数据](#鼠标数据) · [贡献](#贡献)
 
 </div>
 
@@ -35,7 +35,7 @@ pnpm install
 #   redis-server.exe --port 6379 --save "" --appendonly no
 
 pnpm --filter server migrate   # SQLite 建表
-pnpm --filter server seed      # 导入 1609 只鼠标种子(server/src/db/seeds/mice.json)
+pnpm --filter server seed      # 导入/刷新 1617 只鼠标种子(server/src/db/seeds/mice.json)
 pnpm --filter server dev       # 后端 http://localhost:3000
 pnpm --filter client dev       # 前端 http://localhost:5173 (代理 /api -> 3000)
 
@@ -48,25 +48,26 @@ pnpm test                      # 全量测试,需要 Redis 在跑
 
 ## 玩法
 
-输入选手昵称,系统按 **国家或地区 / 赛区 / 队伍 / 年龄 / 位置 / Major 冠军数 / Major 出场数 / 现役状态** 逐属性给出对比反馈:
+输入鼠标名称,系统按 **品牌 / 产地 / 形状 / 尺寸 / 重量 / 长度 / 宽度 / 高度 / 连接方式 / 传感器** 逐属性给出对比反馈:
 
 - 🟩 **绿色** —— 该属性与答案完全一致
-- 🟨 **黄色** —— 接近(同赛区、数值相差不大)
+- 🟨 **黄色** —— 接近(产地同大洲、数值相差不大)
 - ↑↓ **箭头** —— 数值型属性提示答案更高或更低
+- 缺失字段(如部分鼠标没有传感器)会跳过判定,不按对错计
 
-8 次机会内猜出目标选手即获胜。
+8 次机会内猜出目标鼠标即获胜。
 
 ## 功能特性
 
-- 🎮 **单人模式** —— 简单版(知名选手)/ 完整版(全部选手),进行中对局可断线续玩
+- 🎮 **单人模式** —— 简单版(知名鼠标)/ 完整版(全部鼠标),进行中对局可断线续玩
 - 🌐 **多人联机** —— BO1/3/5/7 赛制、随机匹配、5 位房间码、观战;每小局限时 120 秒,断线即时通知、同身份可重连,30 秒未归判负
-- 🔍 **查选手** —— 模糊搜索选手资料
+- 🔍 **查鼠标** —— 模糊搜索鼠标资料
 - 📊 **统计与回放** / 🏆 **排行榜** / 📢 **公告**
 - 👤 **无需登录** —— 所有模式对匿名访客开放,战绩按浏览器本地标识记账,登录后自动并入账号
 - 🌏 **多语言** —— 简体中文 / English / 日本語;前后端交互仅传递错误码,文案统一在前端翻译
 - 🎨 **双主题** —— Blast 暗色 / 日间浅色,首次访问跟随系统偏好
 - 🛡 **PoW 人机验证** —— 公开接口由 WASM 工作量证明保护(Rust 编译,仓库内置预编译产物)
-- 🛠 **管理后台** —— 选手增删改、JSON 批量导入、外部 API Token、公告管理
+- 🛠 **管理后台** —— 鼠标增删改、JSON 批量导入、外部 API Token、公告管理
 
 ## 技术栈
 
@@ -111,8 +112,8 @@ ADMIN_USERNAME=admin ADMIN_PASSWORD='至少12位强密码' pnpm create-admin
 | `pnpm build`        | 构建 PoW WASM + 前端 + 编译后端         |
 | `pnpm start`        | 生产模式启动(server 托管 client/dist)   |
 | `pnpm test`         | 运行前后端测试                          |
-| `pnpm migrate`      | 初始化数据库结构 + 种子选手             |
-| `pnpm seed`         | 补充 5 名基础种子选手中缺失的选手       |
+| `pnpm migrate`      | 初始化数据库结构 + 种子鼠标             |
+| `pnpm seed`         | 补充种子数据集中缺失的鼠标               |
 | `pnpm create-admin` | 显式创建或重置管理员                    |
 | `pnpm loadtest`     | 运行 HTTP 缓存接口与多人建房负载测试    |
 
@@ -149,11 +150,11 @@ Docker Compose 部署、自动数据库迁移、管理员创建、更新和回�
 
 管理员按需外部作弊分析的 Bearer 鉴权与 JSON 展示契约见 [`docs/cheat-analysis-api.md`](docs/cheat-analysis-api.md)。
 
-## 选手数据
+## 鼠标数据
 
-选手数据集独立维护在 [**shnlfriberg/csgo-major-db**](https://github.com/shnlfriberg/csgo-major-db):646 名 CS Major 选手的 `players.json`,可直接通过管理后台批量导入,每次提交自动校验格式合法性。数据纠错与新增选手请到该仓库[提交 issue](https://github.com/shnlfriberg/csgo-major-db/issues/new/choose)。
+鼠标数据集来自 [eloshapes](https://github.com/eloshapes) 鼠标签名的快照，经 [`scripts/build-mouse-dataset.mjs`](scripts/build-mouse-dataset.mjs) 转换生成，当前种子数据为 `server/src/db/seeds/mice.json`（1609 只鼠标）。种子包含品牌、产地、形状、尺寸、重量、长度、侧键、连接方式等猜测属性，以及传感器/DPI/轮询率等仅用于揭晓展示的字段。可用 `pnpm seed` 导入数据库。数据纠错与新增鼠标可重新生成该 JSON，或通过管理后台批量导入。
 
-### 外部选手更新 API
+### 外部鼠标更新 API
 
 管理员可在管理后台的 **API Token** 页生成最长 365 天有效的 Bearer Token。明文只在创建时返回一次，服务端仅保存 SHA-256 哈希；每位管理员最多保留 20 个有效 Token，撤销后立即失效。
 
@@ -170,13 +171,13 @@ Content-Type: application/json
 
 | 端点 | 当前行为 |
 | --- | --- |
-| `POST /api/external/player-change-submissions` | 为已有选手提交字段级待审核变更；单次 1-100 名，不会立即修改选手数据 |
-| `GET /api/external/players/export` | 导出全部选手及难度成员关系（含 `playerId`），响应为 `players.json`；仅需 API Token，不需要 PoW |
-| `POST /api/external/players` | 直接新增单个选手，成功返回 `201 { "id": number }` |
-| `PUT /api/external/players/:id` | 按 ID 直接部分更新选手，成功返回 `200 { "ok": true }` |
-| `POST /api/external/players/import` | 按昵称直接批量 upsert；单次 1-1000 名且请求内昵称不可重复，返回 `created`/`updated` 数量 |
+| `POST /api/external/player-change-submissions` | 为已有鼠标提交字段级待审核变更；单次 1-100 只，不会立即修改鼠标数据 |
+| `GET /api/external/players/export` | 导出全部鼠标及难度成员关系（含 `mouseId`），响应为 `players.json`；仅需 API Token，不需要 PoW |
+| `POST /api/external/players` | 直接新增单个鼠标，成功返回 `201 { "id": number }` |
+| `PUT /api/external/players/:id` | 按 ID 直接部分更新鼠标，成功返回 `200 { "ok": true }` |
+| `POST /api/external/players/import` | 按名称直接批量 upsert；单次 1-1000 只且请求内名称不可重复，返回 `created`/`updated` 数量 |
 
-待审核接口适合外部数据源报送现有选手的纠错。每项使用 `playerId`、`nickname` 或二者定位选手；同时提供时必须指向同一人，同一请求不能重复提交同一选手。`changes` 必须至少包含一个字段：
+待审核接口适合外部数据源报送现有鼠标的纠错。每项使用 `mouseId`、`name` 或二者定位鼠标；同时提供时必须指向同一只鼠标，同一请求不能重复提交同一鼠标。`changes` 必须至少包含一个字段：
 
 ```bash
 curl -X POST 'https://example.com/api/external/player-change-submissions' \
@@ -185,10 +186,10 @@ curl -X POST 'https://example.com/api/external/player-change-submissions' \
   -d '{
     "players": [
       {
-        "playerId": 123,
+        "mouseId": 123,
         "changes": {
-          "team": "NAVI",
-          "age": 27,
+          "brand": "Logitech",
+          "weight": 63,
           "difficulties": ["normal", "easy"]
         }
       }
@@ -196,13 +197,13 @@ curl -X POST 'https://example.com/api/external/player-change-submissions' \
   }'
 ```
 
-有实际差异时返回 `201 { "submissionId": number, "submitted": number, "unchanged": number }`；所有值均未变化时返回 `200`，其中 `submissionId` 为 `null`。`submitted` 与 `unchanged` 统计的是字段数，不是选手数。管理员在 **选手变更审核** 页逐项批准或拒绝；批准前若该字段已被其他操作改动，该项会标记为 `conflict`，不会覆盖新值。
+有实际差异时返回 `201 { "submissionId": number, "submitted": number, "unchanged": number }`；所有值均未变化时返回 `200`，其中 `submissionId` 为 `null`。`submitted` 与 `unchanged` 统计的是字段数，不是鼠标数。管理员在 **鼠标变更审核** 页逐项批准或拒绝；批准前若该字段已被其他操作改动，该项会标记为 `conflict`，不会覆盖新值。
 
-可写字段为 `nickname`、`nationality`、`region`、`team`、`team_history`、`age`、`role`、`major_championships`、`major_appearances`、`is_active`、`is_enabled`、`difficulties`。其中 `role` 仅接受 `Rifler`、`AWPer`、`Coach`，`difficulties` 当前仅接受 `beginner`、`easy`、`normal`，`team_history` 最多 50 项。
+可写字段为 `name`、`brand`、`country`、`continent`、`shape`、`size`、`weight`、`length_mm`、`side_buttons`、`wireless`、`is_enabled`、`difficulties`。其中 `shape` 仅接受 `对称`、`人体工学`，`size` 仅接受 `小型`、`中型`、`大型`，`difficulties` 当前仅接受 `beginner`、`easy`、`normal`。
 
-直接写入端点用于受信任的完整同步任务。新增选手至少需要 `nickname`、`nationality` 和 `age`；批量导入应按完整记录提交。更新已有选手时，导入项省略 `difficulties`、`team_history` 或 `is_enabled` 会保留原值，其他带默认值的字段若省略则可能写入默认值。部分更新接口只修改显式传入的字段。
+直接写入端点用于受信任的完整同步任务。新增鼠标至少需要 `name`、`brand` 和 `weight`；批量导入应按完整记录提交。更新已有鼠标时，导入项省略 `difficulties` 或 `is_enabled` 会保留原值，其他带默认值的字段若省略则可能写入默认值。部分更新接口只修改显式传入的字段。
 
-外部 API 不提供永久删除端点；导出端点返回完整选手字段、`playerId` 及难度成员关系。同步源可将 `is_enabled` 设为 `false`，使选手立即退出目标池与猜测列表，同时保留历史对局。所有错误响应均使用 `{ "code": "..." }` 的机器可读格式。
+外部 API 不提供永久删除端点；导出端点返回完整鼠标字段、`mouseId` 及难度成员关系。同步源可将 `is_enabled` 设为 `false`，使鼠标立即退出目标池与猜测列表，同时保留历史对局。所有错误响应均使用 `{ "code": "..." }` 的机器可读格式。
 
 ## 项目结构
 
@@ -212,10 +213,10 @@ server/src
 ├── db/                # Knex 实例、建表、种子数据
 ├── middleware/        # 认证、Zod 校验、限流、PoW、错误处理
 ├── routes/            # auth / players / game / stats / leaderboard / announcements / admin
-├── services/          # 游戏判定、选手缓存、房间状态、战绩队列等
+├── services/          # 游戏判定、鼠标缓存、房间状态、战绩队列等
 └── socket/            # 多人房间系统
 client/src
-├── api/               # axios 封装、socket 单例、玩家列表缓存
+├── api/               # axios 封装、socket 单例、鼠标列表缓存
 ├── store/             # auth / theme / guest 等轻量状态
 ├── i18n/              # 中 / 英 / 日 文案与错误码翻译
 ├── components/        # Page / GuessBoard / GuessInputBar / DataTable / admin/*
@@ -225,7 +226,7 @@ client/src
 ## 贡献
 
 - 🐛 [问题反馈 / 功能建议](https://github.com/shnlfriberg/csgofriberg/issues/new/choose) —— 请使用对应的 issue 模板
-- 📊 选手数据问题请前往 [csgo-major-db](https://github.com/shnlfriberg/csgo-major-db/issues/new/choose)
+- 📊 鼠标数据问题：通过管理后台批量导入纠错，或用 `scripts/build-mouse-dataset.mjs` 重新生成种子数据
 - 提交 PR 前请运行 `pnpm test` 与 `pnpm build`;所有用户可见文案需同步维护中/英/日三语(`client/src/i18n/resources.ts`)
 
 ## 许可证

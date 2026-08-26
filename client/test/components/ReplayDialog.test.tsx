@@ -15,8 +15,10 @@ const guess = {
     shape: { value: 'Rifler', level: 'wrong' as const },
     size: { value: '中型', level: 'wrong' as const },
     lengthMm: { value: 0, level: 'wrong' as const },
-    sideButtons: { value: 1, level: 'wrong' as const },
     wireless: { value: true, level: 'wrong' as const },
+    width: { value: 60, level: 'wrong' as const },
+    height: { value: 40, level: 'wrong' as const },
+    sensor: { value: 'PixArt PAW3395', level: 'wrong' as const },
   },
 };
 

@@ -56,6 +56,33 @@ describe('AnswerOverlay', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
+  it('shows width, height, sensor and hump from display JSON', () => {
+    renderWithProviders(
+      <MouseInfoTable
+        answer={{
+          ...answer,
+          weight: 63,
+          wireless: true,
+          display: JSON.stringify({
+            width: 63.5,
+            height: 40.1,
+            sensor: 'PixArt PAW3395',
+            hump: '靠后·中等',
+            dpi: 26000,
+            polling_rate: 8000,
+          }),
+        }}
+      />
+    );
+
+    expect(screen.getByText('63.5 mm')).toBeInTheDocument();
+    expect(screen.getByText('40.1 mm')).toBeInTheDocument();
+    expect(screen.getByText('PixArt PAW3395')).toBeInTheDocument();
+    expect(screen.getByText('靠后·中等')).toBeInTheDocument();
+    expect(screen.queryByText(/26000 DPI/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/8000 Hz/)).not.toBeInTheDocument();
+  });
+
   it('shows a player\'s difficulty memberships when provided', () => {
     renderWithProviders(
       <MouseInfoTable answer={{ ...answer, difficulties: ['beginner', 'normal'] }} />

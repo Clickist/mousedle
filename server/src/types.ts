@@ -31,7 +31,7 @@ export interface Mouse {
   created_at: string;
 }
 
-export type FeedbackLevel = 'correct' | 'close' | 'wrong';
+export type FeedbackLevel = 'correct' | 'close' | 'wrong' | 'unknown';
 
 export interface AttributeFeedback {
   value: string | number | boolean;
@@ -51,7 +51,9 @@ export interface GuessFeedback {
     size: AttributeFeedback;
     weight: AttributeFeedback;
     lengthMm: AttributeFeedback;
-    sideButtons: AttributeFeedback;
     wireless: AttributeFeedback;
+    width: AttributeFeedback;
+    height: AttributeFeedback;
+    sensor: AttributeFeedback;
   };
 }
