@@ -82,21 +82,21 @@ export interface StoredMatchReport {
 
 export interface StoredReplayRound {
   round: number;
-  targetPlayerId: number;
+  targetMouseId: number;
   winnerKey: string | null;
   reason: string;
   guessesByPlayer: Record<string, number[]>;
   guessTimesByPlayer: Record<string, Array<number | null>>;
   sharedGuesses?: Array<{
     actorKey: string;
-    playerId: number;
+    mouseId: number;
     guessedAt: number;
     guessTime: number;
   }>;
   winnerTeam?: RoomTeam | null;
   teamGuesses?: Record<RoomTeam, Array<{
     actorKey: string;
-    playerId: number;
+    mouseId: number;
     guessedAt: number;
     guessTime: number;
   }>>;
@@ -105,7 +105,7 @@ export interface StoredReplayRound {
 
 export interface StoredRelayGuess {
   actorKey: string;
-  playerId: number;
+  mouseId: number;
   feedback: GuessFeedback;
   guessedAt: number;
   guessTime: number;
@@ -145,7 +145,7 @@ export interface StoredRoom {
   round: number;
   players: StoredPlayer[];
   spectators: StoredSpectator[];
-  targetPlayerId: number | null;
+  targetMouseId: number | null;
   roundEndsAt: number | null;
   nextRoundAt: number | null;
   eventResults: Record<string, number>;
@@ -181,7 +181,7 @@ const localIdentityRooms = new Map<string, string>();
 const localLocks = new Map<string, Promise<void>>();
 interface RoomGuessTarget {
   round: number;
-  targetPlayerId: number;
+  targetMouseId: number;
   maxGuesses: number;
   guessIntervalMs: number;
   roundDurationMs: number;
@@ -451,7 +451,7 @@ export async function getRoom(id: string): Promise<StoredRoom | null> {
       .filter((entry) => Number.isInteger(entry[1]))
   );
   room.status = (meta.status || room.status) as RoomStatus;
-  room.targetPlayerId = parseNullableNumber(meta.targetPlayerId);
+  room.targetMouseId = parseNullableNumber(meta.targetMouseId);
   room.round = Number(meta.round || room.round);
   room.revision = Number(meta.revision || room.revision);
   room.updatedAt = Number(meta.updatedAt || room.updatedAt);
@@ -577,7 +577,7 @@ export interface ApplyRoomGuessInput {
   socketId: string;
   expectedRound: number;
   eventId: string;
-  targetPlayerId: number;
+  targetMouseId: number;
   feedback: GuessFeedback;
   maxGuesses: number;
   roundDurationMs: number;
@@ -622,7 +622,7 @@ end
 if redis.call('EXISTS', KEYS[1]) == 0 then
   return cjson.encode({kind='error', code='NO_ACTIVE_ROUND', reason='room_missing'})
 end
-local meta = redis.call('HMGET', KEYS[2], 'status', 'targetPlayerId', 'round', 'roundEndsAt', 'revision', 'boType')
+local meta = redis.call('HMGET', KEYS[2], 'status', 'targetMouseId', 'round', 'roundEndsAt', 'revision', 'boType')
 if not meta[1] or redis.call('HLEN', KEYS[7]) == 0 then
   return cjson.encode({kind='error', code='HOT_STATE_MISSING', reason='room_hot_state_missing'})
 end
@@ -669,7 +669,7 @@ if player.eliminated == true then return cjson.encode({kind='error', code='PLAYE
 if player.skipped == true then return cjson.encode({kind='error', code='ROUND_SKIPPED'}) end
 if #guesses >= tonumber(ARGV[7]) then return cjson.encode({kind='error', code='GUESS_LIMIT_REACHED'}) end
 for _, previous in ipairs(guesses) do
-  if tonumber(previous.playerId) == tonumber(ARGV[4]) then
+  if tonumber(previous.mouseId) == tonumber(ARGV[4]) then
     return cjson.encode({kind='error', code='ALREADY_GUESSED'})
   end
 end
@@ -743,7 +743,7 @@ if shouldFinish then
 end
 local revision = tonumber(meta[5] or 0) + 1
 redis.call('HSET', KEYS[2],
-  'targetPlayerId', meta[2], 'status', status, 'round', meta[3],
+  'targetMouseId', meta[2], 'status', status, 'round', meta[3],
   'roundEndsAt', roundEndsAt, 'nextRoundAt', nextRoundAt,
   'roundResult', roundResult, 'matchResult', matchResult,
   'boType', meta[6], 'revision', revision, 'updatedAt', now)
@@ -773,7 +773,7 @@ if rateCount == 1 then redis.call('HEXPIRE', KEYS[6], ARGV[15], 'FIELDS', '1', A
 if rateCount > tonumber(ARGV[14]) then return cjson.encode({kind='error', code='RATE_LIMITED'}) end
 if redis.call('EXISTS', KEYS[5]) == 1 then return cjson.encode({kind='error', code='ROOM_BUSY'}) end
 if redis.call('EXISTS', KEYS[1]) == 0 then return cjson.encode({kind='error', code='NO_ACTIVE_ROUND', reason='room_missing'}) end
-local meta = redis.call('HMGET', KEYS[2], 'status', 'targetPlayerId', 'round', 'roundEndsAt', 'revision', 'totalRounds', 'currentTurnKey', 'relaySolvedRounds', 'relayGuesses', 'gameMode')
+local meta = redis.call('HMGET', KEYS[2], 'status', 'targetMouseId', 'round', 'roundEndsAt', 'revision', 'totalRounds', 'currentTurnKey', 'relaySolvedRounds', 'relayGuesses', 'gameMode')
 if not meta[1] or redis.call('HLEN', KEYS[7]) == 0 then return cjson.encode({kind='error', code='HOT_STATE_MISSING'}) end
 if meta[10] ~= 'relay' then return cjson.encode({kind='error', code='NO_ACTIVE_ROUND', reason='not_relay'}) end
 local identity = ARGV[1]
@@ -802,7 +802,7 @@ if player.socketId ~= ARGV[2] then return cjson.encode({kind='error', code='STAL
 if meta[7] ~= identity then return cjson.encode({kind='error', code='NOT_YOUR_TURN'}) end
 if #relayGuesses >= tonumber(ARGV[7]) then return cjson.encode({kind='error', code='GUESS_LIMIT_REACHED'}) end
 for _, previous in ipairs(relayGuesses) do
-  if tonumber(previous.playerId) == tonumber(ARGV[4]) then return cjson.encode({kind='error', code='ALREADY_GUESSED'}) end
+  if tonumber(previous.mouseId) == tonumber(ARGV[4]) then return cjson.encode({kind='error', code='ALREADY_GUESSED'}) end
 end
 local last = relayGuesses[#relayGuesses]
 local lastGuessAt = last and tonumber(last.guessedAt) or 0
@@ -818,7 +818,7 @@ if meta[4] and meta[4] ~= '' then
   if guessTime < 0 then guessTime = 0 end
   if guessTime > roundDuration then guessTime = roundDuration end
 end
-local relayGuess = {actorKey=identity, playerId=tonumber(ARGV[4]), feedback=feedback, guessedAt=now, guessTime=guessTime}
+local relayGuess = {actorKey=identity, mouseId=tonumber(ARGV[4]), feedback=feedback, guessedAt=now, guessTime=guessTime}
 table.insert(relayGuesses, relayGuess)
 redis.call('HSET', KEYS[9], eventKey, #relayGuesses - 1)
 local playerGuessesRaw = redis.call('HGET', KEYS[8], identity) or '[]'
@@ -887,9 +887,9 @@ export async function getRoomGuessTarget(
   const client = stateRedis();
   if (!client) {
     const room = localRooms.get(roomId);
-    return room?.targetPlayerId
+    return room?.targetMouseId
       ? {
-          targetPlayerId: room.targetPlayerId,
+          targetMouseId: room.targetMouseId,
           round: room.round,
           maxGuesses: room.maxGuesses,
           guessIntervalMs: room.guessIntervalMs,
@@ -908,7 +908,7 @@ export async function getRoomGuessTarget(
     gameModeRaw,
     currentTurnKeyRaw,
   ] = await client.hmGet(roomMetaKey(roomId), [
-    'targetPlayerId',
+    'targetMouseId',
     'round',
     'maxGuesses',
     'guessIntervalMs',
@@ -916,14 +916,14 @@ export async function getRoomGuessTarget(
     'gameMode',
     'currentTurnKey',
   ]);
-  const targetPlayerId = Number(targetRaw);
+  const targetMouseId = Number(targetRaw);
   const round = Number(roundRaw);
   const maxGuesses = Number(maxGuessesRaw);
   const guessIntervalMs = Number(guessIntervalMsRaw);
   const roundDurationMs = Number(roundDurationMsRaw);
   if (
-    Number.isInteger(targetPlayerId)
-    && targetPlayerId > 0
+    Number.isInteger(targetMouseId)
+    && targetMouseId > 0
     && round === expectedRound
     && Number.isInteger(maxGuesses)
     && maxGuesses >= MIN_ROOM_MAX_GUESSES
@@ -937,7 +937,7 @@ export async function getRoomGuessTarget(
   ) {
     const target = {
       round,
-      targetPlayerId,
+      targetMouseId,
       maxGuesses,
       guessIntervalMs,
       roundDurationMs,
@@ -950,9 +950,9 @@ export async function getRoomGuessTarget(
 
   // Lazy upgrade for rooms created before the hot metadata hash existed.
   const room = await getRoom(roomId);
-  if (!room?.targetPlayerId) return null;
+  if (!room?.targetMouseId) return null;
   await client.hSet(roomMetaKey(roomId), {
-    targetPlayerId: String(room.targetPlayerId),
+    targetMouseId: String(room.targetMouseId),
     status: room.status,
     round: String(room.round),
     maxGuesses: String(room.maxGuesses),
@@ -964,7 +964,7 @@ export async function getRoomGuessTarget(
   await client.expire(roomMetaKey(roomId), ROOM_TTL_SECONDS);
   const target = {
     round: room.round,
-    targetPlayerId: room.targetPlayerId,
+    targetMouseId: room.targetMouseId,
     maxGuesses: room.maxGuesses,
     guessIntervalMs: room.guessIntervalMs,
     roundDurationMs: room.roundDurationMs,
@@ -1000,10 +1000,10 @@ export async function applyRoomGuess(input: ApplyRoomGuessInput): Promise<ApplyR
             }
           : { kind: 'error', code: 'NO_ACTIVE_ROUND', reason: 'event_result_missing' };
       }
-      if (room.status !== 'playing' || !room.targetPlayerId) {
+      if (room.status !== 'playing' || !room.targetMouseId) {
         return { kind: 'error', code: 'NO_ACTIVE_ROUND', reason: 'round_not_playing' };
       }
-      if (room.round !== input.expectedRound || room.targetPlayerId !== input.targetPlayerId) {
+      if (room.round !== input.expectedRound || room.targetMouseId !== input.targetMouseId) {
         return { kind: 'error', code: 'STALE_ROUND', reason: 'round_id_mismatch' };
       }
       const now = Date.now();
@@ -1015,11 +1015,11 @@ export async function applyRoomGuess(input: ApplyRoomGuessInput): Promise<ApplyR
       if (input.gameMode === 'relay') {
         if (room.gameMode !== 'relay' || room.currentTurnKey !== input.identity) return { kind: 'error', code: 'NOT_YOUR_TURN' };
         if (room.relayGuesses.length >= input.maxGuesses) return { kind: 'error', code: 'GUESS_LIMIT_REACHED' };
-        if (room.relayGuesses.some((guess) => guess.playerId === input.feedback.playerId)) return { kind: 'error', code: 'ALREADY_GUESSED' };
+        if (room.relayGuesses.some((guess) => guess.mouseId === input.feedback.mouseId)) return { kind: 'error', code: 'ALREADY_GUESSED' };
         const lastGuessAt = room.relayGuesses.at(-1)?.guessedAt ?? 0;
         if (lastGuessAt && now - lastGuessAt < input.minGuessIntervalMs) return { kind: 'error', code: 'GUESS_COOLDOWN', retryAfterMs: input.minGuessIntervalMs - (now - lastGuessAt) };
         const guessTime = Math.max(0, Math.min(input.roundDurationMs, now - ((room.roundEndsAt ?? now) - input.roundDurationMs)));
-        const relayGuess: StoredRelayGuess = { actorKey: input.identity, playerId: input.feedback.playerId, feedback: input.feedback, guessedAt: now, guessTime };
+        const relayGuess: StoredRelayGuess = { actorKey: input.identity, mouseId: input.feedback.mouseId, feedback: input.feedback, guessedAt: now, guessTime };
         room.relayGuesses.push(relayGuess);
         room.eventResults[eventKey] = room.relayGuesses.length - 1;
         player.guesses.push(input.feedback);
@@ -1051,7 +1051,7 @@ export async function applyRoomGuess(input: ApplyRoomGuessInput): Promise<ApplyR
       if (player.guesses.length >= input.maxGuesses) {
         return { kind: 'error', code: 'GUESS_LIMIT_REACHED' };
       }
-      if (player.guesses.some((previous) => previous.playerId === input.feedback.playerId)) {
+      if (player.guesses.some((previous) => previous.mouseId === input.feedback.mouseId)) {
         return { kind: 'error', code: 'ALREADY_GUESSED' };
       }
       const elapsed = player.lastGuessAt ? now - player.lastGuessAt : input.minGuessIntervalMs;
@@ -1135,9 +1135,9 @@ export async function applyRoomGuess(input: ApplyRoomGuessInput): Promise<ApplyR
     input.identity,
     input.socketId,
     String(input.expectedRound),
-    String(input.feedback.playerId),
+    String(input.feedback.mouseId),
     input.eventId,
-    String(input.targetPlayerId),
+    String(input.targetMouseId),
     String(input.maxGuesses),
     JSON.stringify(input.feedback),
     String(now),
@@ -1204,10 +1204,10 @@ export async function saveRoom(room: StoredRoom): Promise<void> {
       }
     }
     localRooms.set(room.id, structuredClone(room));
-    if (room.targetPlayerId) {
+    if (room.targetMouseId) {
       roomTargetCache.set(room.id, {
         round: room.round,
-        targetPlayerId: room.targetPlayerId,
+        targetMouseId: room.targetMouseId,
         maxGuesses: room.maxGuesses,
         guessIntervalMs: room.guessIntervalMs,
         roundDurationMs: room.roundDurationMs,
@@ -1337,7 +1337,7 @@ export async function saveRoom(room: StoredRoom): Promise<void> {
        return tostring(value)
      end
      redis.call('HSET', metaKey,
-       'targetPlayerId', nullableNumber(incoming.targetPlayerId),
+       'targetMouseId', nullableNumber(incoming.targetMouseId),
        'status', incoming.status or '',
        'round', tostring(incoming.round or 0),
        'roundEndsAt', nullableNumber(incoming.roundEndsAt),
@@ -1450,10 +1450,10 @@ export async function saveRoom(room: StoredRoom): Promise<void> {
     room.revision = previousRevision;
     throw new Error('STALE_ROOM_WRITE');
   }
-  if (room.targetPlayerId) {
+  if (room.targetMouseId) {
     roomTargetCache.set(room.id, {
       round: room.round,
-      targetPlayerId: room.targetPlayerId,
+      targetMouseId: room.targetMouseId,
       maxGuesses: room.maxGuesses,
       guessIntervalMs: room.guessIntervalMs,
       roundDurationMs: room.roundDurationMs,
@@ -1746,8 +1746,8 @@ async function applyRelay2v2Guess(input: ApplyRoomGuessInput): Promise<ApplyRoom
       const previous = room.teamGuesses[team][previousIndex];
       return previous ? { kind: 'duplicate', feedback: previous.feedback, relayGuess: previous, round: room.round, revision: room.revision } : { kind: 'error', code: 'NO_ACTIVE_ROUND' };
     }
-    if (room.status !== 'playing' || !room.targetPlayerId) return { kind: 'error', code: 'NO_ACTIVE_ROUND' };
-    if (room.round !== input.expectedRound || room.targetPlayerId !== input.targetPlayerId) return { kind: 'error', code: 'STALE_ROUND' };
+    if (room.status !== 'playing' || !room.targetMouseId) return { kind: 'error', code: 'NO_ACTIVE_ROUND' };
+    if (room.round !== input.expectedRound || room.targetMouseId !== input.targetMouseId) return { kind: 'error', code: 'STALE_ROUND' };
     const now = Date.now();
     if (room.roundEndsAt && room.roundEndsAt <= now) return { kind: 'error', code: 'NO_ACTIVE_ROUND', reason: 'deadline_passed' };
     if (player.socketId !== input.socketId) return { kind: 'error', code: 'STALE_CONNECTION' };
@@ -1755,11 +1755,11 @@ async function applyRelay2v2Guess(input: ApplyRoomGuessInput): Promise<ApplyRoom
     if (room.teamTurnKeys[team] !== input.identity) return { kind: 'error', code: 'NOT_YOUR_TURN' };
     const guesses = room.teamGuesses[team];
     if (room.teamExhausted[team] || guesses.length >= input.maxGuesses) return { kind: 'error', code: 'GUESS_LIMIT_REACHED' };
-    if (guesses.some((guess) => guess.playerId === input.feedback.playerId)) return { kind: 'error', code: 'ALREADY_GUESSED' };
+    if (guesses.some((guess) => guess.mouseId === input.feedback.mouseId)) return { kind: 'error', code: 'ALREADY_GUESSED' };
     const lastGuessAt = room.teamLastGuessAt[team] ?? 0;
     if (lastGuessAt && now - lastGuessAt < input.minGuessIntervalMs) return { kind: 'error', code: 'GUESS_COOLDOWN', retryAfterMs: input.minGuessIntervalMs - (now - lastGuessAt) };
     const guessTime = Math.max(0, Math.min(input.roundDurationMs, now - ((room.roundEndsAt ?? now) - input.roundDurationMs)));
-    const relayGuess: StoredRelayGuess = { actorKey: input.identity, playerId: input.feedback.playerId, feedback: input.feedback, guessedAt: now, guessTime };
+    const relayGuess: StoredRelayGuess = { actorKey: input.identity, mouseId: input.feedback.mouseId, feedback: input.feedback, guessedAt: now, guessTime };
     guesses.push(relayGuess);
     room.eventResults[eventKey] = guesses.length - 1;
     player.guesses.push(input.feedback);

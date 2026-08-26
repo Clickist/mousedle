@@ -38,7 +38,7 @@ describe('daily challenge service', () => {
 
     expect(first.challenges.map((item) => item.difficulty)).toEqual(DAILY_CHALLENGE_DIFFICULTIES);
     expect(second).toEqual(first);
-    expect(new Set(first.challenges.map((item) => item.targetPlayerId)).size).toBe(
+    expect(new Set(first.challenges.map((item) => item.targetMouseId)).size).toBe(
       DAILY_CHALLENGE_DIFFICULTIES.length
     );
   });

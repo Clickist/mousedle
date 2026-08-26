@@ -17,7 +17,7 @@ router.get(
     const etag = `\"players-${list.version}\"`;
     res.setHeader('ETag', etag);
     res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
-    res.setHeader('X-Player-List-Version', list.version);
+    res.setHeader('X-Mouse-List-Version', list.version);
     if (req.headers['if-none-match'] === etag) return res.status(304).end();
     res.json(list);
   })
@@ -26,7 +26,7 @@ router.get(
 /**
  * 查选手 / 自动补全。
  * - ?search=xxx 模糊搜索昵称/队伍
- * - ?suggest=1 仅返回 id+nickname(猜测输入补全用,不泄露属性)
+ * - ?suggest=1 仅返回 id+name(猜测输入补全用,不泄露属性)
  */
 router.get(
   '/',
@@ -43,21 +43,22 @@ router.get(
     const players = searchCachedPlayers(search, suggest ? 10 : 100);
 
     if (suggest) {
-      return res.json(players.map((p) => ({ id: p.id, nickname: p.nickname })));
+      return res.json(players.map((p) => ({ id: p.id, name: p.name })));
     }
     res.json(
       players.map((p) => ({
         id: p.id,
-        nickname: p.nickname,
-        nationality: p.nationality,
-        region: p.region,
-        team: p.team,
-        age: p.age,
-        role: p.role,
-        majorChampionships: p.major_championships,
-        majorAppearances: p.major_appearances,
+        name: p.name,
+        country: p.country,
+        continent: p.continent,
+        brand: p.brand,
+        weight: p.weight,
+        shape: p.shape,
+        size: p.size,
+        lengthMm: p.length_mm,
+        sideButtons: p.side_buttons,
         difficulties: p.difficulties ?? [],
-        isActive: Boolean(p.is_active),
+        wireless: Boolean(p.wireless),
       }))
     );
   })

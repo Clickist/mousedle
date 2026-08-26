@@ -84,16 +84,16 @@ describe('admin user management', () => {
       .returning(['id', 'username', 'token_version']);
     const admin = insertedUsers.find((user) => user.username === adminUsername)!;
     const targetUser = insertedUsers.find((user) => user.username === username)!;
-    const [targetPlayer, analysisGuess] = await db('players').select('id').limit(2);
+    const [targetPlayer, analysisGuess] = await db('mice').select('id').limit(2);
     try {
       await db('games').insert([
         {
           session_id: `${sessionPrefix}-won`,
           user_id: targetUser.id,
-          target_player_id: targetPlayer.id,
+          target_mouse_id: targetPlayer.id,
           mode: 'easy',
           guesses: JSON.stringify([analysisGuess.id, targetPlayer.id]),
-          first_guess_player_id: analysisGuess.id,
+          first_guess_mouse_id: analysisGuess.id,
           status: 'won',
           guess_count: 2,
           finished_at: db.fn.now(),
@@ -101,10 +101,10 @@ describe('admin user management', () => {
         {
           session_id: `${sessionPrefix}-lost`,
           user_id: targetUser.id,
-          target_player_id: targetPlayer.id,
+          target_mouse_id: targetPlayer.id,
           mode: 'normal',
           guesses: JSON.stringify([analysisGuess.id, targetPlayer.id]),
-          first_guess_player_id: analysisGuess.id,
+          first_guess_mouse_id: analysisGuess.id,
           status: 'lost',
           guess_count: 6,
           finished_at: db.fn.now(),
@@ -121,7 +121,7 @@ describe('admin user management', () => {
             finish_reason: 'score',
             replay: JSON.stringify([{
               round: 1,
-              targetPlayerId: targetPlayer.id,
+              targetMouseId: targetPlayer.id,
               winnerKey: won ? `u:${targetUser.id}` : `g:${opponentKey}`,
               reason: 'guessed',
               guessesByPlayer: {
@@ -272,8 +272,8 @@ describe('admin user management', () => {
       );
       expect(singleReplay.response.status).toBe(200);
       expect(singleReplay.data.guesses[0]).toMatchObject({
-        playerId: analysisGuess.id,
-        nickname: expect.any(String),
+        mouseId: analysisGuess.id,
+        name: expect.any(String),
       });
 
       const multiReplay = await request(
@@ -283,8 +283,8 @@ describe('admin user management', () => {
       expect(multiReplay.response.status).toBe(200);
       expect(multiReplay.data.rounds[0]).toMatchObject({
         answer: { id: targetPlayer.id },
-        me: { guesses: [{ playerId: analysisGuess.id }, { playerId: targetPlayer.id }], guessTimes: [1_200, 3_000] },
-        opponent: { guesses: [{ playerId: targetPlayer.id }], guessTimes: [3_000] },
+        me: { guesses: [{ mouseId: analysisGuess.id }, { mouseId: targetPlayer.id }], guessTimes: [1_200, 3_000] },
+        opponent: { guesses: [{ mouseId: targetPlayer.id }], guessTimes: [3_000] },
       });
 
       const forbidden = await request(`/api/admin/users/${targetUser.id}/stats`, authCookie(targetUser));
@@ -629,7 +629,7 @@ describe('admin user management', () => {
     const stamp = Date.now();
     const adminUsername = `admin-export-admin-${stamp}`;
     const userUsername = `admin-export-user-${stamp}`;
-    const nickname = `export-player-${stamp}`;
+    const name = `export-player-${stamp}`;
     const insertedUsers = await db('users')
       .insert([
         {
@@ -650,45 +650,42 @@ describe('admin user management', () => {
       .returning(['id', 'username', 'token_version']);
     const admin = insertedUsers.find((user) => user.username === adminUsername)!;
     const user = insertedUsers.find((item) => item.username === userUsername)!;
-    const [insertedPlayer] = await db('players')
+    const [insertedPlayer] = await db('mice')
       .insert({
-        nickname,
-        nationality: 'China',
-        region: 'Asia',
-        team: 'Export Test',
-        team_history: JSON.stringify([]),
-        age: 24,
-        role: 'Rifler',
-        major_championships: 0,
-        major_appearances: 2,
-        is_active: false,
+        name,
+        country: 'China',
+        brand: 'Export Test',
+        weight: 24,
+        length_mm: 120,
+        side_buttons: 2,
+        wireless: false,
         is_enabled: true,
       })
       .returning('id');
-    const playerId = Number(typeof insertedPlayer === 'object' ? insertedPlayer.id : insertedPlayer);
+    const mouseId = Number(typeof insertedPlayer === 'object' ? insertedPlayer.id : insertedPlayer);
     try {
-      await db('player_difficulties').insert([
-        { player_id: playerId, difficulty_key: 'normal' },
-        { player_id: playerId, difficulty_key: 'easy' },
+      await db('mouse_difficulties').insert([
+        { mouse_id: mouseId, difficulty_key: 'normal' },
+        { mouse_id: mouseId, difficulty_key: 'easy' },
       ]);
 
       const exported = await request('/api/admin/players/export', authCookie(admin));
       expect(exported.response.status).toBe(200);
       expect(exported.response.headers.get('content-disposition')).toContain('players.json');
       expect(() => playerImportSchema.parse({ players: exported.data })).not.toThrow();
-      expect(exported.data.find((player: { nickname: string }) => player.nickname === nickname)).toEqual({
-        playerId,
-        nickname,
-        nationality: 'China',
-        region: 'Asia',
-        team: 'Export Test',
-        team_history: [],
-        age: 24,
-        role: 'Rifler',
-        major_championships: 0,
-        major_appearances: 2,
+      expect(exported.data.find((player: { name: string }) => player.name === name)).toEqual({
+        mouseId,
+        name,
+        country: 'China',
+        continent: '',
+        shape: '对称',
+        size: '中型',
+        brand: 'Export Test',
+        weight: 24,
+        length_mm: 120,
+        side_buttons: 2,
         difficulties: ['easy', 'normal'],
-        is_active: false,
+        wireless: false,
         is_enabled: true,
       });
 
@@ -696,8 +693,8 @@ describe('admin user management', () => {
       expect(forbidden.response.status).toBe(403);
       expect(forbidden.data).toEqual({ code: 'FORBIDDEN' });
     } finally {
-      await db('player_difficulties').where({ player_id: playerId }).del();
-      await db('players').where({ id: playerId }).del();
+      await db('mouse_difficulties').where({ mouse_id: mouseId }).del();
+      await db('mice').where({ id: mouseId }).del();
       await db('users').whereIn('username', [adminUsername, userUsername]).del();
     }
   });

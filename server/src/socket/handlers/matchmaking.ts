@@ -150,7 +150,7 @@ export async function handleMatchStart(
       makeRoomPlayer(me, socket.id, false),
     ],
     spectators: [],
-    targetPlayerId: null,
+    targetMouseId: null,
     roundEndsAt: null,
     nextRoundAt: null,
     eventResults: {},

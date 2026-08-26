@@ -55,17 +55,17 @@ describe('stats and replay', () => {
     const ownerKey = `stats-owner-${stamp}`;
     const otherKey = `stats-other-${stamp}`;
     const sessionId = `stats-session-${stamp}`;
-    const playerRows = await db('players').select('id').limit(2);
+    const playerRows = await db('mice').select('id').limit(2);
     const target = getPlayer(Number(playerRows[0].id))!;
     const otherPlayer = getPlayer(Number(playerRows[1].id))!;
     const [gameId] = await db('games')
       .insert({
         session_id: sessionId,
         guest_key: ownerKey,
-        target_player_id: target.id,
+        target_mouse_id: target.id,
         mode: 'easy',
         guesses: JSON.stringify([target.id]),
-        first_guess_player_id: target.id,
+        first_guess_mouse_id: target.id,
         status: 'won',
         guess_count: 1,
         finished_at: db.fn.now(),
@@ -90,7 +90,7 @@ describe('stats and replay', () => {
       ],
       rounds: [{
         round: 1,
-        targetPlayerId: target.id,
+        targetMouseId: target.id,
         winnerKey: meKey,
         reason: 'guessed',
         guessesByPlayer: {
@@ -131,14 +131,14 @@ describe('stats and replay', () => {
       expect(easyStats.data.personal.multiWins).toBe(1);
       expect(easyStats.data.personal.multiAvgWinningGuesses).toBe(1);
       expect(easyStats.data.personal.firstGuess).toEqual({
-        playerId: target.id,
-        nickname: target.nickname,
+        mouseId: target.id,
+        name: target.name,
         percentage: 1,
       });
       expect(easyStats.data.global.totalGames).toBeGreaterThanOrEqual(1);
       expect(easyStats.data.global.firstGuess).toMatchObject({
-        playerId: expect.any(Number),
-        nickname: expect.any(String),
+        mouseId: expect.any(Number),
+        name: expect.any(String),
         percentage: expect.any(Number),
       });
       expect(easyStats.data.global.firstGuess.percentage).toBeGreaterThan(0);
@@ -198,7 +198,7 @@ describe('stats and replay', () => {
 
       const replay = await request(`/api/stats/games/${gameId}/replay`, guestCookie(ownerKey));
       expect(replay.response.status).toBe(200);
-      expect(replay.data.answer.nickname).toBe(target.nickname);
+      expect(replay.data.answer.name).toBe(target.name);
       expect(replay.data.guesses).toHaveLength(1);
       expect(replay.data.guesses[0].correct).toBe(true);
 
@@ -207,7 +207,7 @@ describe('stats and replay', () => {
       expect(multiReplay.data.rounds).toHaveLength(1);
       expect(multiReplay.data.rounds[0].winner).toBe('me');
       expect(multiReplay.data.rounds[0].me.guesses[0].correct).toBe(true);
-      expect(multiReplay.data.rounds[0].opponent.guesses[0].playerId).toBe(otherPlayer.id);
+      expect(multiReplay.data.rounds[0].opponent.guesses[0].mouseId).toBe(otherPlayer.id);
       expect(multiReplay.data.rounds[0].me).not.toHaveProperty('guessTimes');
       expect(multiReplay.data.opponent.displayId).toBe(guestNameFromKey(otherKey));
 
@@ -275,7 +275,7 @@ describe('stats and replay', () => {
     const stamp = Date.now();
     const rawKeys = ['a1', 'a2', 'b1', 'b2'].map((name) => `stats-2v2-${name}-${stamp}`);
     const keys = rawKeys.map((key) => `g:${key}`);
-    const playerRows = await db('players').select('id').limit(2);
+    const playerRows = await db('mice').select('id').limit(2);
     const target = getPlayer(Number(playerRows[0].id))!;
     const otherPlayer = getPlayer(Number(playerRows[1].id))!;
     const recordId = randomUUID();
@@ -300,7 +300,7 @@ describe('stats and replay', () => {
       })),
       rounds: [{
         round: 1,
-        targetPlayerId: target.id,
+        targetMouseId: target.id,
         winnerKey: null,
         winnerTeam: 'a',
         reason: 'guessed',
@@ -308,8 +308,8 @@ describe('stats and replay', () => {
         guessTimesByPlayer: Object.fromEntries(keys.map((key) => [key, []])),
         teamScores: { a: 1, b: 0 },
         teamGuesses: {
-          a: [{ actorKey: keys[0], playerId: target.id, guessedAt: stamp, guessTime: 700 }],
-          b: [{ actorKey: keys[2], playerId: otherPlayer.id, guessedAt: stamp, guessTime: 1_300 }],
+          a: [{ actorKey: keys[0], mouseId: target.id, guessedAt: stamp, guessTime: 700 }],
+          b: [{ actorKey: keys[2], mouseId: otherPlayer.id, guessedAt: stamp, guessTime: 1_300 }],
         },
       }],
     });
@@ -342,12 +342,12 @@ describe('stats and replay', () => {
       });
       expect(replay.data.rounds[0].teamGuesses.a[0]).toMatchObject({
         actor: 'me',
-        feedback: { playerId: target.id, correct: true },
+        feedback: { mouseId: target.id, correct: true },
         guessTime: 700,
       });
       expect(replay.data.rounds[0].teamGuesses.b[0]).toMatchObject({
         actorDisplayId: guestNameFromKey(rawKeys[2]),
-        feedback: { playerId: otherPlayer.id },
+        feedback: { mouseId: otherPlayer.id },
         guessTime: 1_300,
       });
     } finally {
@@ -358,7 +358,7 @@ describe('stats and replay', () => {
   it('counts current first guesses and excludes invalid player ids', async () => {
     const stamp = Date.now();
     const ownerKey = `first-guess-owner-${stamp}`;
-    const players = await db('players').select('id').orderBy('id').limit(2);
+    const players = await db('mice').select('id').orderBy('id').limit(2);
     const favorite = getPlayer(Number(players[0].id))!;
     const other = getPlayer(Number(players[1].id))!;
     const games: Array<{ suffix: string; guesses: unknown[]; firstGuessPlayerId: number | null }> = [
@@ -370,10 +370,10 @@ describe('stats and replay', () => {
     await db('games').insert(games.map((game) => ({
       session_id: `first-guess-${game.suffix}-${stamp}`,
       guest_key: ownerKey,
-      target_player_id: favorite.id,
+      target_mouse_id: favorite.id,
       mode: 'easy',
       guesses: JSON.stringify(game.guesses),
-      first_guess_player_id: game.firstGuessPlayerId,
+      first_guess_mouse_id: game.firstGuessPlayerId,
       status: 'won',
       guess_count: 1,
       finished_at: db.fn.now(),
@@ -383,8 +383,8 @@ describe('stats and replay', () => {
       const stats = await request('/api/stats/me?difficulties=easy', guestCookie(ownerKey));
       expect(stats.response.status).toBe(200);
       expect(stats.data.personal.firstGuess).toEqual({
-        playerId: favorite.id,
-        nickname: favorite.nickname,
+        mouseId: favorite.id,
+        name: favorite.name,
         percentage: 1 / 2,
       });
     } finally {

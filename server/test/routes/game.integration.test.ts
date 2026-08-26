@@ -68,7 +68,7 @@ describe('single-player settlement soft limit', () => {
         expect(settled.response.status).toBe(200);
         expect(settled.data).toMatchObject({
           status: 'lost',
-          answer: { id: expect.any(Number), nickname: expect.any(String) },
+          answer: { id: expect.any(Number), name: expect.any(String) },
           recorded: index < 4,
         });
       }
@@ -111,7 +111,7 @@ describe('single-player settlement soft limit', () => {
     const first = await post('/api/game/start', cookie, { mode: 'beginner' });
     expect(first.response.status).toBe(200);
     const firstRaw = await redis()!.get(redisKey(`single:game:${first.data.gameId}`));
-    const firstTarget = Number(JSON.parse(firstRaw!).targetPlayerId);
+    const firstTarget = Number(JSON.parse(firstRaw!).targetMouseId);
     try {
       const resumed = await post('/api/game/start', cookie, { mode: 'beginner' });
       expect(resumed.data.gameId).toBe(first.data.gameId);
@@ -120,7 +120,7 @@ describe('single-player settlement soft limit', () => {
       expect((await post(`/api/game/${first.data.gameId}/giveup`, cookie)).response.status).toBe(200);
       const second = await post('/api/game/start', cookie, { mode: 'beginner' });
       const secondRaw = await redis()!.get(redisKey(`single:game:${second.data.gameId}`));
-      const secondTarget = Number(JSON.parse(secondRaw!).targetPlayerId);
+      const secondTarget = Number(JSON.parse(secondRaw!).targetMouseId);
       expect(secondTarget).not.toBe(firstTarget);
       await post(`/api/game/${second.data.gameId}/giveup`, cookie);
     } finally {
@@ -138,14 +138,14 @@ describe('single-player settlement soft limit', () => {
     const started = await post('/api/game/start', cookie, { mode: 'beginner' });
     expect(started.response.status).toBe(200);
     const activeRaw = await redis()!.get(redisKey(`single:game:${started.data.gameId}`));
-    const targetPlayerId = Number(JSON.parse(activeRaw!).targetPlayerId);
+    const targetMouseId = Number(JSON.parse(activeRaw!).targetMouseId);
     try {
       const guessed = await post(`/api/game/${started.data.gameId}/guess`, cookie, {
-        playerId: targetPlayerId,
+        mouseId: targetMouseId,
       });
       expect(guessed.response.status).toBe(200);
       expect(guessed.data.status).toBe('won');
-      expect(guessed.data.answer.region).toEqual(expect.any(String));
+      expect(guessed.data.answer.continent).toEqual(expect.any(String));
       expect(guessed.data).not.toHaveProperty('guessTimes');
 
       const stored = await db('games').where({ session_id: started.data.gameId }).first();

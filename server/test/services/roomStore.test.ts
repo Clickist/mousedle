@@ -52,7 +52,7 @@ function makeRoom(id: string): StoredRoom {
       team: null,
     }],
     spectators: [],
-    targetPlayerId: null,
+    targetMouseId: null,
     roundEndsAt: null,
     nextRoundAt: null,
     eventResults: {},
@@ -182,7 +182,7 @@ describe('roomStore local fallback', () => {
     const room = makeRoom(`TIMES${Date.now()}`);
     room.status = 'playing';
     room.round = 1;
-    room.targetPlayerId = 7;
+    room.targetMouseId = 7;
     room.roundEndsAt = 130_000;
     vi.setSystemTime(12_500);
     try {
@@ -193,8 +193,8 @@ describe('roomStore local fallback', () => {
         socketId: 's1',
         expectedRound: 1,
         eventId: 'event-1',
-        targetPlayerId: 7,
-        feedback: { playerId: 2, correct: false } as any,
+        targetMouseId: 7,
+        feedback: { mouseId: 2, correct: false } as any,
         maxGuesses: 10,
         roundDurationMs: 120_000,
         nextRoundDelayMs: 100,
@@ -219,7 +219,7 @@ describe('roomStore local fallback', () => {
     room.guessIntervalMs = 0;
     room.status = 'playing';
     room.round = 1;
-    room.targetPlayerId = 99;
+    room.targetMouseId = 99;
     room.roundEndsAt = Date.now() + 60_000;
     room.players = ['a1', 'a2', 'b1', 'b2'].map((key, index) => ({
       key,
@@ -241,9 +241,9 @@ describe('roomStore local fallback', () => {
     room.teamTurnKeys = { a: 'a1', b: 'b1' };
     await saveRoom(room);
     try {
-      const wrong = (identity: string, socketId: string, eventId: string, playerId: number) => applyRoomGuess({
-        roomId: room.id, identity, socketId, expectedRound: 1, eventId, targetPlayerId: 99,
-        feedback: { playerId, correct: false } as any, maxGuesses: 2, roundDurationMs: 120_000,
+      const wrong = (identity: string, socketId: string, eventId: string, mouseId: number) => applyRoomGuess({
+        roomId: room.id, identity, socketId, expectedRound: 1, eventId, targetMouseId: 99,
+        feedback: { mouseId, correct: false } as any, maxGuesses: 2, roundDurationMs: 120_000,
         nextRoundDelayMs: 100, minGuessIntervalMs: 0, rateLimit: 12, rateWindowSeconds: 10,
         gameMode: 'relay2v2',
       });

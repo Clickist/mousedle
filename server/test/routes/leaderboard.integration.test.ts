@@ -44,11 +44,11 @@ describe('leaderboard', () => {
     }));
     const inserted = await db('users').insert(users).returning(['id', 'username']);
     const userIds = inserted.map((row: any) => Number(row.id));
-    const [target] = await db('players').select('id').limit(1);
+    const [target] = await db('mice').select('id').limit(1);
     await db('games').insert(inserted.map((row: any, index: number) => ({
       session_id: `leaderboard-${stamp}-${index}`,
       user_id: Number(row.id),
-      target_player_id: Number(target.id),
+      target_mouse_id: Number(target.id),
       mode: 'easy',
       guesses: '[]',
       status: 'won',
@@ -59,7 +59,7 @@ describe('leaderboard', () => {
       {
         session_id: `leaderboard-${stamp}-beginner-win`,
         user_id: userIds[0],
-        target_player_id: Number(target.id),
+        target_mouse_id: Number(target.id),
         mode: 'beginner',
         guesses: '[]',
         status: 'won',
@@ -69,7 +69,7 @@ describe('leaderboard', () => {
       {
         session_id: `leaderboard-${stamp}-easy-extra`,
         user_id: userIds[0],
-        target_player_id: Number(target.id),
+        target_mouse_id: Number(target.id),
         mode: 'easy',
         guesses: '[]',
         status: 'won',
@@ -79,7 +79,7 @@ describe('leaderboard', () => {
       {
         session_id: `leaderboard-${stamp}-normal-a-win`,
         user_id: userIds[0],
-        target_player_id: Number(target.id),
+        target_mouse_id: Number(target.id),
         mode: 'normal',
         guesses: '[]',
         status: 'won',
@@ -89,7 +89,7 @@ describe('leaderboard', () => {
       {
         session_id: `leaderboard-${stamp}-normal-a-loss`,
         user_id: userIds[0],
-        target_player_id: Number(target.id),
+        target_mouse_id: Number(target.id),
         mode: 'normal',
         guesses: '[]',
         status: 'lost',
@@ -99,7 +99,7 @@ describe('leaderboard', () => {
       {
         session_id: `leaderboard-${stamp}-normal-b-win`,
         user_id: userIds[1],
-        target_player_id: Number(target.id),
+        target_mouse_id: Number(target.id),
         mode: 'normal',
         guesses: '[]',
         status: 'won',
@@ -109,7 +109,7 @@ describe('leaderboard', () => {
       {
         session_id: `leaderboard-${stamp}-normal-a-second-win`,
         user_id: userIds[0],
-        target_player_id: Number(target.id),
+        target_mouse_id: Number(target.id),
         mode: 'normal',
         guesses: '[]',
         status: 'won',

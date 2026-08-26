@@ -23,7 +23,7 @@ export interface DailyChallengeRecord {
   id: number;
   challengeDate: string;
   difficulty: string;
-  targetPlayerId: number;
+  targetMouseId: number;
 }
 
 export interface DailyLeaderboardEntry {
@@ -76,7 +76,7 @@ function normalizeChallenge(row: any): DailyChallengeRecord {
     id: Number(row.id),
     challengeDate: String(row.challengeDate),
     difficulty: String(row.difficulty),
-    targetPlayerId: Number(row.targetPlayerId),
+    targetMouseId: Number(row.targetMouseId),
   };
 }
 
@@ -88,7 +88,7 @@ async function challengesForDate(date: string): Promise<DailyChallengeRecord[]> 
       'id',
       'challenge_date as challengeDate',
       'difficulty_key as difficulty',
-      'target_player_id as targetPlayerId'
+      'target_mouse_id as targetMouseId'
     );
   const byDifficulty = new Map(rows.map((row) => [String(row.difficulty), normalizeChallenge(row)]));
   return DAILY_CHALLENGE_DIFFICULTIES.flatMap((difficulty) => {
@@ -114,7 +114,7 @@ export async function ensureDailyChallenges(
   const challenges = await withKeyLock(`daily-challenge-assignment:${window.date}`, async () => {
     const existing = await challengesForDate(window.date);
     const assigned = new Map(existing.map((record) => [record.difficulty, record]));
-    const usedPlayerIds = new Set(existing.map((record) => record.targetPlayerId));
+    const usedPlayerIds = new Set(existing.map((record) => record.targetMouseId));
 
     for (const difficulty of DAILY_CHALLENGE_DIFFICULTIES) {
       if (assigned.has(difficulty)) continue;
@@ -125,7 +125,7 @@ export async function ensureDailyChallenges(
         .insert({
           challenge_date: window.date,
           difficulty_key: difficulty,
-          target_player_id: target.id,
+          target_mouse_id: target.id,
         })
         .onConflict(['challenge_date', 'difficulty_key'])
         .ignore();

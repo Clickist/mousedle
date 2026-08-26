@@ -203,7 +203,7 @@ export async function handleRoomCreate(
     round: 0,
     players: [makeRoomPlayer(me, socket.id, true)],
     spectators: [],
-    targetPlayerId: null,
+    targetMouseId: null,
     roundEndsAt: null,
     nextRoundAt: null,
     eventResults: {},

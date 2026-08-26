@@ -71,7 +71,7 @@ export const matchReportPayloadSchema = z.object({
 });
 
 export const gameGuessPayloadSchema = z.object({
-  playerId: z.number().int().positive(),
+  mouseId: z.number().int().positive(),
   roundId: z.number().int().nonnegative(),
   eventId: z.string().regex(/^[\w-]{16,80}$/),
 });

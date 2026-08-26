@@ -4,7 +4,6 @@ import { config } from '../config';
 import { db } from '../db/knex';
 import { HttpError } from '../middleware/common';
 import { getPublicPlayerList } from './playerCache';
-import { normalizeTeamHistory } from './teamHistory';
 
 const MAX_SINGLE_GAMES = 50;
 const MAX_MATCHES = 50;
@@ -179,13 +178,13 @@ async function buildSnapshot(subject: AnalysisSubject, locale: AnalysisLocale, t
     .limit(MAX_SINGLE_GAMES)
     .select(
       'id',
-      'target_player_id as targetPlayerId',
+      'target_mouse_id as targetMouseId',
       'mode',
       'guesses',
       'guess_times as guessTimes',
       'status',
       'guess_count as guessCount',
-      'first_guess_player_id as firstGuessPlayerId',
+      'first_guess_mouse_id as firstGuessMouseId',
       'created_at as createdAt',
       'finished_at as finishedAt'
     );
@@ -226,22 +225,22 @@ async function buildSnapshot(subject: AnalysisSubject, locale: AnalysisLocale, t
     reportBase.clone().count({ count: 'id' }).countDistinct({ reporters: 'reporter_key' }).first(),
     reportBase.clone().where('status', 'pending').count({ count: 'id' }).first(),
     getPublicPlayerList(),
-    db('players').orderBy('id').select(
+    db('mice').orderBy('id').select(
       'id',
-      'nickname',
-      'nationality',
-      'region',
-      'team',
-      'team_history as teamHistory',
-      'age',
-      'role',
-      'major_championships as majorChampionships',
-      'major_appearances as majorAppearances',
-      'is_active as isActive',
+      'name',
+      'brand',
+      'country',
+      'continent',
+      'shape',
+      'size',
+      'weight',
+      'length_mm as lengthMm',
+      'side_buttons as sideButtons',
+      'wireless',
       'is_enabled as isEnabled',
       'created_at as createdAt'
     ),
-    db('player_difficulties').select('player_id as playerId', 'difficulty_key as difficultyKey'),
+    db('mouse_difficulties').select('mouse_id as mouseId', 'difficulty_key as difficultyKey'),
   ]);
 
   const matchIds = matchRows.map((row) => Number(row.id));
@@ -281,23 +280,23 @@ async function buildSnapshot(subject: AnalysisSubject, locale: AnalysisLocale, t
 
   const difficultiesByPlayer = new Map<number, string[]>();
   for (const membership of difficultyRows) {
-    const playerId = Number(membership.playerId);
-    const difficulties = difficultiesByPlayer.get(playerId) ?? [];
+    const mouseId = Number(membership.mouseId);
+    const difficulties = difficultiesByPlayer.get(mouseId) ?? [];
     difficulties.push(String(membership.difficultyKey));
-    difficultiesByPlayer.set(playerId, difficulties);
+    difficultiesByPlayer.set(mouseId, difficulties);
   }
   const players = playerRows.map((player) => ({
     id: Number(player.id),
-    nickname: String(player.nickname),
-    nationality: String(player.nationality),
-    region: String(player.region),
-    team: String(player.team),
-    teamHistory: normalizeTeamHistory(player.teamHistory),
-    age: Number(player.age),
-    role: String(player.role),
-    majorChampionships: Number(player.majorChampionships),
-    majorAppearances: Number(player.majorAppearances),
-    isActive: Boolean(player.isActive),
+    name: String(player.name),
+    country: String(player.country),
+    continent: String(player.continent),
+    brand: String(player.brand),
+    weight: Number(player.weight),
+    shape: String(player.shape),
+    size: String(player.size),
+    lengthMm: Number(player.lengthMm),
+    sideButtons: Number(player.sideButtons),
+    wireless: Boolean(player.wireless),
     isEnabled: Boolean(player.isEnabled),
     difficulties: (difficultiesByPlayer.get(Number(player.id)) ?? []).sort(),
     createdAt: isoTimestamp(player.createdAt),
@@ -305,11 +304,11 @@ async function buildSnapshot(subject: AnalysisSubject, locale: AnalysisLocale, t
 
   const singleGames = singleRows.map((row) => ({
     recordId: Number(row.id),
-    targetPlayerId: Number(row.targetPlayerId),
+    targetMouseId: Number(row.targetMouseId),
     mode: String(row.mode),
     status: String(row.status),
     guessCount: Number(row.guessCount),
-    firstGuessPlayerId: row.firstGuessPlayerId == null ? null : Number(row.firstGuessPlayerId),
+    firstGuessMouseId: row.firstGuessMouseId == null ? null : Number(row.firstGuessMouseId),
     guessPlayerIds: safeGuessIds(row.guesses),
     guessTimesMs: safeGuessTimes(row.guessTimes),
     startedAt: isoTimestamp(row.createdAt),
@@ -334,8 +333,8 @@ async function buildSnapshot(subject: AnalysisSubject, locale: AnalysisLocale, t
       const guessTimesByPlayer = stored.guessTimesByPlayer && typeof stored.guessTimesByPlayer === 'object'
         ? stored.guessTimesByPlayer as Record<string, unknown>
         : {};
-      const targetPlayerId = Number(stored.targetPlayerId);
-      if (!Number.isInteger(targetPlayerId) || targetPlayerId <= 0) return [];
+      const targetMouseId = Number(stored.targetMouseId);
+      if (!Number.isInteger(targetMouseId) || targetMouseId <= 0) return [];
       const guessesByParticipant = Object.fromEntries(
         Object.entries(guessesByPlayer).flatMap(([identityKey, guesses]) => {
           const participantId = opaqueIdentity(identityKey);
@@ -350,7 +349,7 @@ async function buildSnapshot(subject: AnalysisSubject, locale: AnalysisLocale, t
       );
       return [{
         round: Number.isInteger(Number(stored.round)) ? Number(stored.round) : 0,
-        targetPlayerId,
+        targetMouseId,
         winnerParticipantId: opaqueIdentity(stored.winnerKey),
         reason: typeof stored.reason === 'string' ? stored.reason.slice(0, 32) : '',
         guessesByParticipant,

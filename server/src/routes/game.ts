@@ -3,8 +3,8 @@ import { z } from 'zod';
 import { db } from '../db/knex';
 import { optionalAuth } from '../middleware/auth';
 import { validateBody, validateParams, asyncHandler, HttpError } from '../middleware/common';
-import { GuessFeedback, Player } from '../types';
-import { compareGuess, refreshGuessFeedback, MAX_GUESSES } from '../services/gameService';
+import { GuessFeedback, Mouse } from '../types';
+import { compareGuess, MAX_GUESSES } from '../services/gameService';
 import { getEnabledPlayer, getPlayer, isDifficultyAvailable } from '../services/playerCache';
 import { rateLimit, requestIdentity } from '../middleware/rateLimit';
 import { withKeyLock } from '../services/keyLock';
@@ -40,25 +40,23 @@ function identity(req: { user?: { id: number }; guestKey?: string }) {
   return null;
 }
 
-function answerView(target: Player) {
+function answerView(target: Mouse) {
   return {
     id: target.id,
-    nickname: target.nickname,
-    team: target.team,
-    nationality: target.nationality,
-    region: target.region,
-    role: target.role,
-    majorChampionships: target.major_championships,
-    majorAppearances: target.major_appearances,
+    name: target.name,
+    brand: target.brand,
+    country: target.country,
+    continent: target.continent,
+    shape: target.shape,
+        size: target.size,
+    lengthMm: target.length_mm,
+    sideButtons: target.side_buttons,
   };
 }
 
 function publicGuesses(game: SingleGameState): GuessFeedback[] {
-  const target = getPlayer(game.targetPlayerId);
-  return game.guesses.map((feedback) => {
-    const guess = getPlayer(feedback.playerId);
-    return refreshGuessFeedback(feedback, guess, target);
-  });
+  const target = getPlayer(game.targetMouseId);
+  return game.guesses.map((feedback) => feedback);
 }
 
 async function loadOwnedGame(id: string, identityKey: string): Promise<SingleGameState> {
@@ -78,11 +76,11 @@ async function settleGame(game: SingleGameState, status: 'won' | 'lost'): Promis
         session_id: game.id,
         user_id: game.userId,
         guest_key: game.guestKey,
-        target_player_id: game.targetPlayerId,
+        target_mouse_id: game.targetMouseId,
         mode: game.mode,
-        guesses: JSON.stringify(game.guesses.map((guess) => guess.playerId)),
+        guesses: JSON.stringify(game.guesses.map((guess) => guess.mouseId)),
         guess_times: JSON.stringify(game.guessTimes),
-        first_guess_player_id: game.guesses[0]?.playerId ?? null,
+        first_guess_mouse_id: game.guesses[0]?.mouseId ?? null,
         status,
         guess_count: game.guesses.length,
         created_at: new Date(game.createdAt),
@@ -131,7 +129,7 @@ router.post(
       const result = await createOrResumeSingleGameWithStatus({
         ...owner,
         mode,
-        targetPlayerId: target.id,
+        targetMouseId: target.id,
       });
       return {
         game: result.game,
@@ -142,7 +140,7 @@ router.post(
       await rememberTargetSelection({
         mode,
         identities: [owner.identityKey],
-        playerId: started.selectedTargetId,
+        mouseId: started.selectedTargetId,
       });
     }
     res.json({
@@ -164,18 +162,18 @@ router.post(
     failClosed: true,
   }),
   validateParams(gameIdParams),
-  validateBody(z.object({ playerId: z.number().int().positive() })),
+  validateBody(z.object({ mouseId: z.number().int().positive() })),
   asyncHandler(async (req, res) => {
     const owner = identity(req);
     if (!owner) throw new HttpError(400, 'GUEST_KEY_REQUIRED');
     const gameId = req.params.id;
     const response = await withKeyLock(`single-game:${gameId}`, async () => {
       const game = await loadOwnedGame(gameId, owner.identityKey);
-      const guess = getEnabledPlayer(req.body.playerId);
+      const guess = getEnabledPlayer(req.body.mouseId);
       if (!guess) throw new HttpError(404, 'PLAYER_NOT_FOUND');
-      const target = getPlayer(game.targetPlayerId);
+      const target = getPlayer(game.targetMouseId);
       if (!target) throw new HttpError(500, 'INTERNAL_ERROR');
-      if (game.guesses.some((item) => item.playerId === guess.id)) {
+      if (game.guesses.some((item) => item.mouseId === guess.id)) {
         throw new HttpError(400, 'ALREADY_GUESSED');
       }
 
@@ -218,7 +216,7 @@ router.post(
     const gameId = req.params.id;
     const response = await withKeyLock(`single-game:${gameId}`, async () => {
       const game = await loadOwnedGame(gameId, owner.identityKey);
-      const target = getPlayer(game.targetPlayerId);
+      const target = getPlayer(game.targetMouseId);
       if (!target) throw new HttpError(500, 'INTERNAL_ERROR');
       const recorded = await settleGame(game, 'lost');
       return { status: 'lost', answer: answerView(target), recorded };

@@ -4,10 +4,10 @@ import { db } from '../db/knex';
 import { guestNameFromKey, optionalAuth, userNameFromUsername } from '../middleware/auth';
 import { asyncHandler, HttpError, validateParams, validateQuery } from '../middleware/common';
 import { cached } from '../services/queryCache';
-import { compareGuess, refreshGuessFeedback, MAX_GUESSES } from '../services/gameService';
+import { compareGuess, MAX_GUESSES } from '../services/gameService';
 import { getPlayer, isDifficultyAvailable } from '../services/playerCache';
 import { getPlayerPerformance } from '../services/playerPerformance';
-import { GuessFeedback, Player } from '../types';
+import { GuessFeedback, Mouse } from '../types';
 import { rateLimit, requestIdentity } from '../middleware/rateLimit';
 import { globalStatsCacheKey, personalStatsCacheKey } from '../services/statsCache';
 import { DIFFICULTY_LEVELS } from '../difficulties';
@@ -81,43 +81,44 @@ function multiAvgWinningGuesses(row: any): number | null {
 
 async function firstGuessSummary(query: ReturnType<typeof db>) {
   const rows = await query.clone()
-    .where('first_guess_player_id', '>', 0)
-    .select({ playerId: 'first_guess_player_id' })
+    .where('first_guess_mouse_id', '>', 0)
+    .select({ mouseId: 'first_guess_mouse_id' })
     .count({ count: '*' })
-    .groupBy('first_guess_player_id') as unknown as Array<{ playerId: unknown; count: unknown }>;
+    .groupBy('first_guess_mouse_id') as unknown as Array<{ mouseId: unknown; count: unknown }>;
   const counts = new Map<number, number>();
   for (const row of rows) {
-    const playerId = Number(row.playerId);
+    const mouseId = Number(row.mouseId);
     const count = Number(row.count);
-    if (Number.isInteger(playerId) && playerId > 0 && count > 0) {
-      counts.set(playerId, (counts.get(playerId) ?? 0) + count);
+    if (Number.isInteger(mouseId) && mouseId > 0 && count > 0) {
+      counts.set(mouseId, (counts.get(mouseId) ?? 0) + count);
     }
   }
-  const validCounts = Array.from(counts, ([playerId, count]) => ({ playerId, count }))
-    .filter((row) => Boolean(getPlayer(row.playerId)));
+  const validCounts = Array.from(counts, ([mouseId, count]) => ({ mouseId, count }))
+    .filter((row) => Boolean(getPlayer(row.mouseId)));
   const total = validCounts.reduce((sum, row) => sum + row.count, 0);
   const top = validCounts
-    .sort((a, b) => b.count - a.count || a.playerId - b.playerId)[0];
+    .sort((a, b) => b.count - a.count || a.mouseId - b.mouseId)[0];
   if (!top || !total) return null;
   return {
-    playerId: top.playerId,
-    nickname: getPlayer(top.playerId)!.nickname,
+    mouseId: top.mouseId,
+    name: getPlayer(top.mouseId)!.name,
     percentage: top.count / total,
   };
 }
 
-function answerView(target: Player) {
+function answerView(target: Mouse) {
   return {
     id: target.id,
-    nickname: target.nickname,
-    team: target.team,
-    nationality: target.nationality,
-    region: target.region,
-    age: target.age,
-    role: target.role,
-    majorChampionships: target.major_championships,
-    majorAppearances: target.major_appearances,
-    isActive: Boolean(target.is_active),
+    name: target.name,
+    brand: target.brand,
+    country: target.country,
+    continent: target.continent,
+    weight: target.weight,
+    shape: target.shape,
+        size: target.size,
+    lengthMm: target.length_mm,
+    sideButtons: target.side_buttons,
+    wireless: Boolean(target.wireless),
   };
 }
 
@@ -203,7 +204,7 @@ function replayTeamScores(value: unknown): { a: number; b: number } | null {
   }
 }
 
-function replayGuesses(target: Player, ids: number[]): GuessFeedback[] {
+function replayGuesses(target: Mouse, ids: number[]): GuessFeedback[] {
   return ids.flatMap((id) => {
     const guess = getPlayer(id);
     return guess ? [compareGuess(guess, target)] : [];
@@ -265,7 +266,7 @@ router.get(
       const owner = ownerFor(req);
       if (!owner) throw new HttpError(400, 'GUEST_KEY_REQUIRED');
       const rows = await db('games as g')
-        .join('players as p', 'p.id', 'g.target_player_id')
+        .join('mice as p', 'p.id', 'g.target_mouse_id')
         .where(qualifiedOwner(owner, 'g'))
         .whereNot('g.status', 'playing')
         .orderBy('g.finished_at', 'desc')
@@ -278,7 +279,7 @@ router.get(
           'g.status',
           'g.guess_count as guessCount',
           'g.finished_at as finishedAt',
-          'p.nickname as answer'
+          'p.name as answer'
         );
       const hasNext = rows.length > pageSize;
       return res.json({
@@ -408,7 +409,7 @@ router.get(
       .whereNot('status', 'playing')
       .first();
     if (!game) throw new HttpError(404, 'GAME_NOT_FOUND');
-    const target = getPlayer(Number(game.target_player_id));
+    const target = getPlayer(Number(game.target_mouse_id));
     if (!target) throw new HttpError(404, 'PLAYER_NOT_FOUND');
 
     let storedGuesses: unknown[] = [];
@@ -423,9 +424,9 @@ router.get(
         const guess = getPlayer(stored);
         return guess ? [compareGuess(guess, target)] : [];
       }
-      if (!stored || typeof stored !== 'object' || !('playerId' in stored)) return [];
+      if (!stored || typeof stored !== 'object' || !('mouseId' in stored)) return [];
       const feedback = stored as GuessFeedback;
-      return [refreshGuessFeedback(feedback, getPlayer(feedback.playerId), target)];
+      return [feedback];
     });
 
     res.json({
@@ -568,7 +569,7 @@ router.get(
     const rounds = storedRounds.flatMap((stored) => {
       if (!stored || typeof stored !== 'object') return [];
       const round = stored as Record<string, unknown>;
-      const target = getPlayer(Number(round.targetPlayerId));
+      const target = getPlayer(Number(round.targetMouseId));
       if (!target) return [];
       const guessesByPlayer = round.guessesByPlayer;
       if (!guessesByPlayer || typeof guessesByPlayer !== 'object') return [];
@@ -577,7 +578,7 @@ router.get(
         ? round.sharedGuesses.slice(0, 15).flatMap((item) => {
           if (!item || typeof item !== 'object') return [];
           const storedGuess = item as Record<string, unknown>;
-          const guess = getPlayer(Number(storedGuess.playerId));
+          const guess = getPlayer(Number(storedGuess.mouseId));
           if (!guess) return [];
           const actorKey = typeof storedGuess.actorKey === 'string' ? storedGuess.actorKey : '';
           const actor = participants.find((participant) => participant.key === actorKey);
@@ -593,7 +594,7 @@ router.get(
         ? ((round.teamGuesses as Record<string, unknown>)[team] as unknown[]).slice(0, 15).flatMap((item) => {
           if (!item || typeof item !== 'object') return [];
           const storedGuess = item as Record<string, unknown>;
-          const guess = getPlayer(Number(storedGuess.playerId));
+          const guess = getPlayer(Number(storedGuess.mouseId));
           if (!guess) return [];
           const actorKey = typeof storedGuess.actorKey === 'string' ? storedGuess.actorKey : '';
           const actor = participants.find((participant) => participant.key === actorKey);

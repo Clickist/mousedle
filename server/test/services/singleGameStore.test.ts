@@ -20,7 +20,7 @@ describe('singleGameStore', () => {
       userId: null,
       guestKey: 'test-guest',
       mode: 'easy',
-      targetPlayerId: 1,
+      targetMouseId: 1,
     })).rejects.toThrow('REDIS_UNAVAILABLE');
     await expect(loadSingleGame('missing', 'g:test')).rejects.toThrow('REDIS_UNAVAILABLE');
     await expect(deleteSingleGame({
@@ -29,7 +29,7 @@ describe('singleGameStore', () => {
       userId: null,
       guestKey: 'test-guest',
       mode: 'easy',
-      targetPlayerId: 1,
+      targetMouseId: 1,
       guesses: [],
       guessTimes: [],
       createdAt: 0,
@@ -45,9 +45,9 @@ describe('singleGameStore', () => {
       userId: null,
       guestKey: identityKey.slice(2),
       mode: 'easy',
-      targetPlayerId: 1,
+      targetMouseId: 1,
     });
-    created.guesses.push({ playerId: 2, nickname: 'test' } as any);
+    created.guesses.push({ mouseId: 2, name: 'test' } as any);
     await saveSingleGame(created);
     expect(await redis()!.zScore(redisKey('presence:single'), created.id)).not.toBeNull();
 
@@ -56,10 +56,10 @@ describe('singleGameStore', () => {
       userId: null,
       guestKey: identityKey.slice(2),
       mode: 'easy',
-      targetPlayerId: 3,
+      targetMouseId: 3,
     });
     expect(restored.id).toBe(created.id);
-    expect(restored.targetPlayerId).toBe(1);
+    expect(restored.targetMouseId).toBe(1);
     expect(restored.guesses).toEqual(created.guesses);
     expect(restored.guessTimes).toEqual([null]);
 
@@ -76,7 +76,7 @@ describe('singleGameStore', () => {
       userId: null,
       guestKey: identityKey.slice(2),
       mode: 'normal',
-      targetPlayerId: 1,
+      targetMouseId: 1,
     });
     created.lastActiveAt = Date.now() - 1_801_000;
     await redis()!.set(
@@ -99,7 +99,7 @@ describe('singleGameStore', () => {
       userId: null,
       guestKey: identityKey.slice(2),
       mode: 'daily:2099-01-01:easy',
-      targetPlayerId: 1,
+      targetMouseId: 1,
       kind: 'daily',
       expiresAt,
     });

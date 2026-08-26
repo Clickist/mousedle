@@ -94,32 +94,30 @@ describe('external player API tokens', () => {
         method: 'POST',
         headers: authorization,
         body: JSON.stringify({
-          nickname: nickA,
-          nationality: 'Denmark',
-          region: 'Europe',
-          team: 'API Team',
-          age: 25,
-          role: 'Rifler',
-          major_championships: 0,
-          major_appearances: 2,
+          name: nickA,
+          country: 'Denmark',
+          brand: 'API Team',
+          weight: 25,
+          length_mm: 120,
+          side_buttons: 2,
           difficulties: ['normal'],
-          is_active: true,
+          wireless: true,
           is_enabled: true,
         }),
       });
       expect(createdPlayer.response.status).toBe(201);
-      const playerId = Number(createdPlayer.data.id);
-      expect(getPlayer(playerId)?.nickname).toBe(nickA);
+      const mouseId = Number(createdPlayer.data.id);
+      expect(getPlayer(mouseId)?.name).toBe(nickA);
 
-      const updatedPlayer = await request(`/api/external/players/${playerId}`, {
+      const updatedPlayer = await request(`/api/external/players/${mouseId}`, {
         method: 'PUT',
         headers: authorization,
-        body: JSON.stringify({ team: 'Updated API Team', difficulties: ['normal', 'easy'] }),
+        body: JSON.stringify({ brand: 'Updated API Team', difficulties: ['normal', 'easy'] }),
       });
       expect(updatedPlayer.response.status).toBe(200);
-      expect(getPlayer(playerId)?.team).toBe('Updated API Team');
-      expect(await db('player_difficulties')
-        .where({ player_id: playerId })
+      expect(getPlayer(mouseId)?.brand).toBe('Updated API Team');
+      expect(await db('mouse_difficulties')
+        .where({ mouse_id: mouseId })
         .orderBy('difficulty_key')
         .pluck('difficulty_key')).toEqual(['easy', 'normal']);
 
@@ -129,20 +127,20 @@ describe('external player API tokens', () => {
         body: JSON.stringify({
           players: [
             {
-              nickname: nickA,
-              nationality: 'Denmark',
-              region: 'Europe',
-              team: 'Bulk Updated',
-              age: 26,
-              role: 'Rifler',
-              major_championships: 0,
-              major_appearances: 3,
-              is_active: true,
+              name: nickA,
+              country: 'Denmark',
+              brand: 'Bulk Updated',
+              weight: 26,
+              length_mm: 120,
+              side_buttons: 3,
+              wireless: true,
             },
             {
-              nickname: nickB,
-              nationality: 'Sweden',
-              age: 23,
+              name: nickB,
+              brand: 'Razer',
+              country: 'Sweden',
+              weight: 23,
+              length_mm: 124,
               difficulties: ['normal', 'easy'],
             },
           ],
@@ -150,10 +148,10 @@ describe('external player API tokens', () => {
       });
       expect(imported.response.status).toBe(200);
       expect(imported.data).toEqual({ created: 1, updated: 1 });
-      expect(getPlayer(playerId)?.team).toBe('Bulk Updated');
-      const importedPlayerId = await db('players').where({ nickname: nickB }).first('id');
-      expect(await db('player_difficulties')
-        .where({ player_id: importedPlayerId.id })
+      expect(getPlayer(mouseId)?.brand).toBe('Bulk Updated');
+      const importedPlayerId = await db('mice').where({ name: nickB }).first('id');
+      expect(await db('mouse_difficulties')
+        .where({ mouse_id: importedPlayerId.id })
         .orderBy('difficulty_key')
         .pluck('difficulty_key')).toEqual(['easy', 'normal']);
 
@@ -162,19 +160,19 @@ describe('external player API tokens', () => {
       });
       expect(exported.response.status).toBe(200);
       expect(exported.response.headers.get('content-disposition')).toContain('players.json');
-      expect(exported.data.find((player: { nickname: string }) => player.nickname === nickA)).toEqual({
-        playerId,
-        nickname: nickA,
-        nationality: 'Denmark',
-        region: 'Europe',
-        team: 'Bulk Updated',
-        team_history: [],
-        age: 26,
-        role: 'Rifler',
-        major_championships: 0,
-        major_appearances: 3,
+      expect(exported.data.find((player: { name: string }) => player.name === nickA)).toEqual({
+        mouseId,
+        name: nickA,
+        country: 'Denmark',
+        continent: '',
+        shape: '对称',
+        size: '中型',
+        brand: 'Bulk Updated',
+        weight: 26,
+        length_mm: 120,
+        side_buttons: 3,
         difficulties: ['easy', 'normal'],
-        is_active: true,
+        wireless: true,
         is_enabled: true,
       });
 
@@ -184,18 +182,18 @@ describe('external player API tokens', () => {
       });
       expect(revoked.response.status).toBe(200);
 
-      const afterRevoke = await request(`/api/external/players/${playerId}`, {
+      const afterRevoke = await request(`/api/external/players/${mouseId}`, {
         method: 'PUT',
         headers: authorization,
-        body: JSON.stringify({ age: 27 }),
+        body: JSON.stringify({ weight: 27 }),
       });
       expect(afterRevoke.response.status).toBe(401);
       expect(afterRevoke.data.code).toBe('API_TOKEN_INVALID');
     } finally {
-      const playerIds = await db('players').whereIn('nickname', [nickA, nickB]).pluck('id');
+      const playerIds = await db('mice').whereIn('name', [nickA, nickB]).pluck('id');
       if (playerIds.length) {
-        await db('player_difficulties').whereIn('player_id', playerIds).del();
-        await db('players').whereIn('id', playerIds).del();
+        await db('mouse_difficulties').whereIn('mouse_id', playerIds).del();
+        await db('mice').whereIn('id', playerIds).del();
       }
       await db('api_tokens').where({ created_by_user_id: admin.id }).del();
       await db('users').where({ id: admin.id }).del();

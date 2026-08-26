@@ -1,9 +1,9 @@
 import { Server, Socket } from 'socket.io';
 import { guestNameFromKey, userNameFromUsername } from '../middleware/auth';
-import { compareGuess, refreshGuessFeedback } from '../services/gameService';
+import { compareGuess } from '../services/gameService';
 import { getPlayer } from '../services/playerCache';
 import { StoredIdentity, StoredRoom } from '../services/roomStore';
-import { GuessFeedback, Player } from '../types';
+import { GuessFeedback, Mouse } from '../types';
 import { winsNeeded } from './roomRules';
 
 export function identityChannel(key: string): string {
@@ -24,12 +24,11 @@ export function joinRoomChannels(socket: Socket, room: StoredRoom, identity: str
 }
 
 export function visibleGuess(feedback: GuessFeedback) {
-  const { region: _region, ...attributes } = feedback.attributes;
-  return { ...feedback, attributes };
+  return { ...feedback };
 }
 
 export function hiddenGuess(feedback: GuessFeedback) {
-  const hideAttribute = ({ level, hint }: GuessFeedback['attributes']['team']) => ({
+  const hideAttribute = ({ level, hint }: GuessFeedback['attributes']['brand']) => ({
     level,
     ...(hint ? { hint } : {}),
   });
@@ -37,13 +36,14 @@ export function hiddenGuess(feedback: GuessFeedback) {
     hidden: true as const,
     correct: feedback.correct,
     attributes: {
-      nationality: hideAttribute(feedback.attributes.nationality),
-      team: hideAttribute(feedback.attributes.team),
-      age: hideAttribute(feedback.attributes.age),
-      role: hideAttribute(feedback.attributes.role),
-      majorChampionships: hideAttribute(feedback.attributes.majorChampionships),
-      majorAppearances: hideAttribute(feedback.attributes.majorAppearances),
-      isActive: hideAttribute(feedback.attributes.isActive),
+      brand: hideAttribute(feedback.attributes.brand),
+      country: hideAttribute(feedback.attributes.country),
+      shape: hideAttribute(feedback.attributes.shape),
+      size: hideAttribute(feedback.attributes.size),
+      weight: hideAttribute(feedback.attributes.weight),
+      lengthMm: hideAttribute(feedback.attributes.lengthMm),
+      sideButtons: hideAttribute(feedback.attributes.sideButtons),
+      wireless: hideAttribute(feedback.attributes.wireless),
     },
   };
 }
@@ -66,24 +66,25 @@ export function identityDisplayName(identity: StoredIdentity): string {
   return identity.name;
 }
 
-function replayAnswer(target: Player) {
+function replayAnswer(target: Mouse) {
   return {
     id: target.id,
-    nickname: target.nickname,
-    nationality: target.nationality,
-    region: target.region,
-    team: target.team,
-    age: target.age,
-    role: target.role,
-    majorChampionships: target.major_championships,
-    majorAppearances: target.major_appearances,
-    isActive: Boolean(target.is_active),
+    name: target.name,
+    brand: target.brand,
+    country: target.country,
+    continent: target.continent,
+    shape: target.shape,
+    size: target.size,
+    weight: target.weight,
+    lengthMm: target.length_mm,
+    sideButtons: target.side_buttons,
+    wireless: Boolean(target.wireless),
   };
 }
 
-function replayGuesses(target: Player, playerIds: number[], maxGuesses: number) {
-  return playerIds.slice(0, maxGuesses).flatMap((playerId) => {
-    const guess = getPlayer(playerId);
+function replayGuesses(target: Mouse, playerIds: number[], maxGuesses: number) {
+  return playerIds.slice(0, maxGuesses).flatMap((mouseId) => {
+    const guess = getPlayer(mouseId);
     return guess ? [visibleGuess(compareGuess(guess, target))] : [];
   });
 }
@@ -139,7 +140,7 @@ function buildMatchReplay(room: StoredRoom, viewerKey: string) {
       ? participantIdByKey.get(room.matchResult.winnerKey) ?? null
       : null,
     rounds: room.replayRounds.flatMap((round) => {
-      const target = getPlayer(round.targetPlayerId);
+      const target = getPlayer(round.targetMouseId);
       if (!target) return [];
       return [{
         round: round.round,
@@ -164,7 +165,7 @@ function buildMatchReplay(room: StoredRoom, viewerKey: string) {
           guessTimes: round.guessTimesByPlayer[player.key] ?? [],
         })),
         sharedGuesses: round.sharedGuesses?.flatMap((guess) => {
-          const player = getPlayer(guess.playerId);
+          const player = getPlayer(guess.mouseId);
           if (!player) return [];
           const actorIdentity = room.players.find((candidate) => candidate.key === guess.actorKey);
           return [{
@@ -179,7 +180,7 @@ function buildMatchReplay(room: StoredRoom, viewerKey: string) {
         ...(room.gameMode === 'relay2v2' ? {
           teamScores: round.teamScores ?? null,
           teamGuesses: Object.fromEntries((['a', 'b'] as const).map((team) => [team, (round.teamGuesses?.[team] ?? []).flatMap((guess) => {
-            const player = getPlayer(guess.playerId);
+            const player = getPlayer(guess.mouseId);
             if (!player) return [];
             const actorIdentity = room.players.find((candidate) => candidate.key === guess.actorKey);
             return [{
@@ -197,17 +198,19 @@ function buildMatchReplay(room: StoredRoom, viewerKey: string) {
   };
 }
 
-function answerView(targetPlayerId: number | null) {
-  const target = targetPlayerId ? getPlayer(targetPlayerId) : null;
+function answerView(targetMouseId: number | null) {
+  const target = targetMouseId ? getPlayer(targetMouseId) : null;
   return target
     ? {
-        nickname: target.nickname,
-        team: target.team,
-        nationality: target.nationality,
-        region: target.region,
-        role: target.role,
-        majorChampionships: target.major_championships,
-        majorAppearances: target.major_appearances,
+        name: target.name,
+        brand: target.brand,
+        country: target.country,
+        continent: target.continent,
+        shape: target.shape,
+        size: target.size,
+        weight: target.weight,
+        lengthMm: target.length_mm,
+        sideButtons: target.side_buttons,
       }
     : null;
 }
@@ -215,7 +218,7 @@ function answerView(targetPlayerId: number | null) {
 export function buildPublicRoom(room: StoredRoom, viewerKey: string) {
   const viewerIsSpectator = room.spectators.some((spectator) => spectator.key === viewerKey);
   const roundIsComplete = room.status === 'round_over' || room.status === 'finished';
-  const target = room.targetPlayerId ? getPlayer(room.targetPlayerId) : undefined;
+  const target = room.targetMouseId ? getPlayer(room.targetMouseId) : undefined;
   const matchReplay = buildMatchReplay(room, viewerKey);
   return {
     id: room.id,
@@ -275,7 +278,7 @@ export function buildPublicRoom(room: StoredRoom, viewerKey: string) {
           winnerTeam: room.roundResult.winnerTeam ?? null,
           reason: room.roundResult.reason,
           nextRoundAt: room.roundResult.nextRoundAt,
-          answer: answerView(room.targetPlayerId),
+          answer: answerView(room.targetMouseId),
         },
     matchResult: room.matchResult
       ? {
@@ -283,15 +286,14 @@ export function buildPublicRoom(room: StoredRoom, viewerKey: string) {
           winnerTeam: room.matchResult.winnerTeam ?? null,
           winnerKeys: Array.isArray(room.matchResult.winnerKeys) ? room.matchResult.winnerKeys : [],
           reason: room.matchResult.reason,
-          answer: answerView(room.targetPlayerId),
+          answer: answerView(room.targetMouseId),
         }
       : null,
     reportSubmitted: room.matchmaking && room.reports.some((report) => report.reporterKey === viewerKey),
     ...(matchReplay ? { matchReplay } : {}),
     players: room.players.map((player) => {
       const guesses = player.guesses.map((feedback) => {
-        const guess = getPlayer(feedback.playerId);
-        return refreshGuessFeedback(feedback, guess, target);
+        return feedback;
       });
       const viewerTeam = room.players.find((candidate) => candidate.key === viewerKey)?.team;
       const sameTeam = room.gameMode === 'relay2v2' && viewerTeam && player.team === viewerTeam;

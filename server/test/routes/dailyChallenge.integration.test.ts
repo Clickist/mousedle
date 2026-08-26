@@ -107,8 +107,8 @@ describe('daily challenge routes', () => {
       const secondGameKey = redisKey(`single:game:${secondGameId}`);
       const stored = JSON.parse((await redis()!.get(gameKey))!);
       const secondStored = JSON.parse((await redis()!.get(secondGameKey))!);
-      expect(stored).toMatchObject({ kind: 'daily', targetPlayerId: expect.any(Number) });
-      expect(secondStored.targetPlayerId).toBe(stored.targetPlayerId);
+      expect(stored).toMatchObject({ kind: 'daily', targetMouseId: expect.any(Number) });
+      expect(secondStored.targetMouseId).toBe(stored.targetMouseId);
 
       const playingDetail = await request('/api/daily-challenge/beginner', cookie);
       expect(playingDetail.response.status).toBe(200);
@@ -126,10 +126,10 @@ describe('daily challenge routes', () => {
 
       const [solved, secondSolved] = await Promise.all([
         request(`/api/daily-challenge/${firstGameId}/guess`, cookie, 'POST', {
-          playerId: stored.targetPlayerId,
+          mouseId: stored.targetMouseId,
         }),
         request(`/api/daily-challenge/${secondGameId}/guess`, secondCookie, 'POST', {
-          playerId: stored.targetPlayerId,
+          mouseId: stored.targetMouseId,
         }),
       ]);
       expect(solved.response.status).toBe(200);
@@ -185,7 +185,7 @@ describe('daily challenge routes', () => {
       const completedDetail = await request('/api/daily-challenge/beginner', cookie);
       expect(completedDetail.response.status).toBe(200);
       expect(completedDetail.data.challenge.status).toBe('won');
-      expect(completedDetail.data.challenge.answer).toMatchObject({ id: stored.targetPlayerId });
+      expect(completedDetail.data.challenge.answer).toMatchObject({ id: stored.targetMouseId });
       expect(completedDetail.data.challenge.solveOrder).toBe(solved.data.solveOrder);
       expect(completedDetail.data.challenge).not.toHaveProperty('leaderboard');
 

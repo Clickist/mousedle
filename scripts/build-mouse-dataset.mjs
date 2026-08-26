@@ -1,4 +1,6 @@
-// 把 eloshapes 鼠标快照转换成 mousedle 的数据集格式。
+// 把 eloshapes 鼠标快照转换成 mousedle 的数据集格式(v2:属性精简方案)。
+// 8 个猜测属性全部大众化:品牌/产地/形状/大小/重量/长度/侧键/无线;
+// 硬核参数(传感器/DPI/轮询率/隆起/材质/尺寸细节)只进揭晓展示,不做猜测列。
 // 用法: node scripts/build-mouse-dataset.mjs [eloshapes快照.json] [输出mice.json]
 import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -33,6 +35,13 @@ const BRAND_COUNTRY = {
   'be quiet!': '德国', Scyrox: '中国',
 };
 
+const COUNTRY_CONTINENT = {
+  '瑞士': '欧洲', '丹麦': '欧洲', '瑞典': '欧洲', '德国': '欧洲', '英国': '欧洲', '法国': '欧洲', '乌克兰': '欧洲',
+  '中国': '亚洲', '中国台湾': '亚洲', '韩国': '亚洲', '日本': '亚洲', '新加坡': '亚洲', '泰国': '亚洲', '印度': '亚洲', '菲律宾': '亚洲',
+  '美国': '美洲', '巴西': '美洲',
+  '俄罗斯': '欧洲', '新西兰': '大洋洲',
+};
+
 // 难度分档按瞄准圈知名度:beginner 是圈内人尽皆知的品牌,easy 再加一圈,normal 全量。
 const BEGINNER_BRANDS = new Set([
   'Logitech', 'Razer', 'Zowie', 'Pulsar', 'Finalmouse', 'LAMZU', 'VAXEE', 'ATK', 'VXE', 'G-Wolves',
@@ -44,15 +53,16 @@ const EASY_BRANDS = new Set([
   'Rapoo', 'EWEADN', 'Attack Shark', 'Scyrox',
 ]);
 
-const SIZE_ZH = { small: '小型', medium: '中型', large: '大型', fingertip: '指尖' };
-const SHAPE_ZH = { symmetrical: '对称', ergonomic: '人体工学', hybrid: '混合' };
+// 属性精简归并:混合→对称、指尖→小型(圈内细分档不做猜测列)
+const SHAPE_ZH = { symmetrical: '对称', hybrid: '对称', ergonomic: '人体工学' };
+const SIZE_ZH = { small: '小型', fingertip: '小型', medium: '中型', large: '大型' };
+const HAND_ZH = { right: '右手', left: '左手', ambidextrous: '双手' };
 const HUMP_ZH = {
   center: '居中',
   'back - minimal': '靠后·轻微',
   'back - moderate': '靠后·中等',
   'back - aggressive': '靠后·激进',
 };
-const HAND_ZH = { right: '右手', left: '左手', ambidextrous: '双手' };
 
 const snapshot = JSON.parse(await readFile(inputPath, 'utf-8'));
 const entries = Array.isArray(snapshot) ? snapshot : snapshot.entries ?? [];
@@ -70,6 +80,7 @@ for (const e of entries) {
   }
   const country = BRAND_COUNTRY[brand] ?? null;
   if (!country) unmatchedBrands.add(brand);
+  const continent = country ? COUNTRY_CONTINENT[country] ?? '其他' : null;
 
   const variant = e.general__variant;
   const image = e.general__images?.find((i) => i.default)?.urls?.[0] ?? e.general__images?.[0]?.urls?.[0] ?? null;
@@ -77,46 +88,66 @@ for (const e of entries) {
   const sensorModel = e.mouse__sensor_model ?? '';
   const sensor = [sensorBrand, sensorModel].filter(Boolean).join(' ') || null;
 
+  // 连接方式展示串(揭晓卡片用)
+  const conn = [];
+  if (e.mouse__is_wireless_2_4_ghz) conn.push('2.4G 无线');
+  if (e.mouse__is_bluetooth) conn.push('蓝牙');
+  if (e.mouse__is_wired) conn.push('有线');
+
   const difficulties = ['normal'];
   if (EASY_BRANDS.has(brand)) difficulties.push('easy');
   if (BEGINNER_BRANDS.has(brand)) difficulties.push('beginner');
 
   mice.push({
-    nickname: [brand, model, variant].filter(Boolean).join(' '),
+    // 8 个猜测属性
+    name: [brand, model, variant].filter(Boolean).join(' '),
     brand,
     country,
-    sizeCategory: SIZE_ZH[e.mouse__size_category] ?? e.mouse__size_category,
-    shape: SHAPE_ZH[e.mouse__shape] ?? e.mouse__shape,
-    humpPlacement: HUMP_ZH[e.mouse__hump_placement] ?? e.mouse__hump_placement ?? null,
-    handCompatibility: HAND_ZH[e.mouse__hand_compatibility] ?? e.mouse__hand_compatibility,
-    weight: e.mouse__weight,
-    length: e.mouse__length,
-    width: e.mouse__width,
-    height: e.mouse__height,
-    wired: Boolean(e.mouse__is_wired),
-    wireless24: Boolean(e.mouse__is_wireless_2_4_ghz),
-    bluetooth: Boolean(e.mouse__is_bluetooth),
-    dpi: e.mouse__dpi,
-    pollingRate: e.mouse__polling_rate,
-    sideButtons: e.mouse__side_buttons,
-    sensor,
+    continent,
+    shape: SHAPE_ZH[e.mouse__shape] ?? '对称',
+    size: SIZE_ZH[e.mouse__size_category] ?? '中型',
+    weight: Math.round(e.mouse__weight),
+    length: Math.round(e.mouse__length),
+    side_buttons: e.mouse__side_buttons ?? 0,
+    wireless: Boolean(e.mouse__is_wireless_2_4_ghz),
+    // 揭晓卡片展示字段(不参与猜测)
+    display: {
+      sensor,
+      dpi: e.mouse__dpi,
+      polling_rate: e.mouse__polling_rate,
+      hump: HUMP_ZH[e.mouse__hump_placement] ?? null,
+      hand: HAND_ZH[e.mouse__hand_compatibility] ?? null,
+      width: e.mouse__width,
+      height: e.mouse__height,
+      connection: conn.join(' · ') || '有线',
+      image,
+    },
     difficulties,
-    isActive: true,
-    isEnabled: true,
+    is_enabled: true,
     handle: e.general__handle,
-    image,
   });
 }
 
-// 品牌内按名称排序,方便人工审阅
-mice.sort((a, b) => a.nickname.localeCompare(b.nickname, 'en'));
+// 批内按规范化名称去重(同名不同条目保留首条),避免种子插入撞唯一约束
+const seen = new Set();
+const deduped = [];
+for (const m of mice) {
+  const key = m.name.toLowerCase('en-US').replace(/[_-]/g, '');
+  if (seen.has(key)) continue;
+  seen.add(key);
+  deduped.push(m);
+}
+const duplicates = mice.length - deduped.length;
+mice.length = 0;
+mice.push(...deduped);
+
+mice.sort((a, b) => a.name.localeCompare(b.name, 'en'));
 
 await writeFile(outputPath, JSON.stringify(mice, null, 2) + '\n', 'utf-8');
 
 const beginnerCount = mice.filter((m) => m.difficulties.includes('beginner')).length;
 const easyCount = mice.filter((m) => m.difficulties.includes('easy')).length;
-console.log(`total: ${entries.length} -> ${mice.length} (skipped ${skipped.length})`);
+console.log(`total: ${entries.length} -> ${mice.length} (skipped ${skipped.length}, duplicates ${duplicates})`);
 console.log(`beginner: ${beginnerCount}, easy: ${easyCount}, normal: ${mice.length}`);
 console.log(`country known: ${mice.filter((m) => m.country).length}/${mice.length}`);
-if (unmatchedBrands.size) console.log(`brands without country:`, [...unmatchedBrands].join(', '));
-if (skipped.length) console.log(`skipped:`, skipped.slice(0, 10).join(' | '), skipped.length > 10 ? '...' : '');
+if (skipped.length) console.log(`skipped:`, skipped.slice(0, 6).join(' | '), skipped.length > 6 ? '...' : '');

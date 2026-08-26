@@ -25,8 +25,8 @@ export async function startRound(io: Server, roomId: string): Promise<boolean> {
     }
     const identities = activePlayers.map((player) => player.key);
     const previousTargets = [
-      ...room.replayRounds.map((round) => round.targetPlayerId),
-      ...(room.targetPlayerId ? [room.targetPlayerId] : []),
+      ...room.replayRounds.map((round) => round.targetMouseId),
+      ...(room.targetMouseId ? [room.targetMouseId] : []),
     ];
     const target = await pickTargetAvoidingRecent({
       mode: room.dbType,
@@ -37,7 +37,7 @@ export async function startRound(io: Server, roomId: string): Promise<boolean> {
     room.status = 'playing';
     room.readyCheckEndsAt = null;
     room.round += 1;
-    room.targetPlayerId = target.id;
+    room.targetMouseId = target.id;
     room.roundEndsAt = Date.now() + room.roundDurationMs;
     room.nextRoundAt = null;
     room.eventResults = {};
@@ -63,7 +63,7 @@ export async function startRound(io: Server, roomId: string): Promise<boolean> {
       player.lastGuessAt = null;
       player.skipped = false;
     }
-    return { room, targetSelection: { identities, playerId: target.id } };
+    return { room, targetSelection: { identities, mouseId: target.id } };
   }, (value) => Boolean(
     value && !('waitingForReconnect' in value) && !('waitingForStart' in value)
   ));
@@ -78,7 +78,7 @@ export async function startRound(io: Server, roomId: string): Promise<boolean> {
   await rememberTargetSelection({
     mode: room.dbType,
     identities: result.targetSelection.identities,
-    playerId: result.targetSelection.playerId,
+    mouseId: result.targetSelection.mouseId,
   });
   emitRoomViews(io, room, 'round:start', (viewerKey) => ({
     room: publicRoom(room, viewerKey),

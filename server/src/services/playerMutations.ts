@@ -4,9 +4,9 @@ import { db } from '../db/knex';
 import { isKnownDifficultyKey } from '../difficulties';
 import { HttpError } from '../middleware/common';
 import { invalidatePlayerCache } from './playerCache';
-import { MAX_TEAM_HISTORY_ITEMS, MAX_TEAM_HISTORY_NAME_LENGTH, serializeTeamHistory } from './teamHistory';
 
-const playerRoles = ['Rifler', 'AWPer', 'Coach'] as const;
+const mouseShapes = ['对称', '人体工学'] as const;
+const mouseSizes = ['小型', '中型', '大型'] as const;
 const difficultyKeySchema = z.string().trim().regex(/^[a-z0-9][a-z0-9_-]{0,31}$/);
 const difficultyListSchema = z.array(difficultyKeySchema)
   .min(1)
@@ -14,24 +14,21 @@ const difficultyListSchema = z.array(difficultyKeySchema)
   .refine((keys) => new Set(keys).size === keys.length);
 
 export const playerSchema = z.object({
-  nickname: z.string().trim().min(1).max(64),
-  nationality: z.string().trim().min(1).max(64),
-  region: z.string().trim().max(32).default(''),
-  team: z.string().trim().max(64).default(''),
-  team_history: z.array(z.string().trim().min(1).max(MAX_TEAM_HISTORY_NAME_LENGTH))
-    .max(MAX_TEAM_HISTORY_ITEMS)
-    .default([]),
-  age: z.number().int().min(10).max(100),
-  role: z.enum(playerRoles).default('Rifler'),
-  major_championships: z.number().int().min(0).default(0),
-  major_appearances: z.number().int().min(0).default(0),
-  is_active: z.boolean().default(true),
+  name: z.string().trim().min(1).max(96),
+  brand: z.string().trim().min(1).max(64),
+  country: z.string().trim().max(32).default(''),
+  continent: z.string().trim().max(32).default(''),
+  shape: z.enum(mouseShapes).default('对称'),
+  size: z.enum(mouseSizes).default('中型'),
+  weight: z.number().int().min(5).max(600),
+  length_mm: z.number().int().min(40).max(200),
+  side_buttons: z.number().int().min(0).max(20).default(2),
+  wireless: z.boolean().default(true),
   is_enabled: z.boolean().default(true),
   difficulties: difficultyListSchema.optional(),
 });
 
 export const importedPlayerSchema = playerSchema.extend({
-  team_history: playerSchema.shape.team_history.optional(),
   is_enabled: z.boolean().optional(),
 });
 
@@ -41,8 +38,8 @@ export const playerUpdateSchema = playerSchema.partial().strict()
 export const playerImportSchema = z.object({
   players: z.array(importedPlayerSchema)
     .min(1)
-    .max(1000)
-    .refine((players) => new Set(players.map((player) => player.nickname)).size === players.length),
+    .max(2000)
+    .refine((players) => new Set(players.map((player) => player.name)).size === players.length),
 });
 
 export type PlayerInput = z.infer<typeof playerSchema>;
@@ -58,34 +55,34 @@ export function assertDifficultyKeys(keys: string[]): void {
 
 export async function replacePlayerDifficulties(
   executor: Knex | Knex.Transaction,
-  playerId: number,
+  mouseId: number,
   keys: string[]
 ): Promise<void> {
   const unique = [...new Set(keys)];
-  await executor('player_difficulties').where({ player_id: playerId }).del();
+  await executor('mouse_difficulties').where({ mouse_id: mouseId }).del();
   if (unique.length) {
-    await executor('player_difficulties').insert(
-      unique.map((key) => ({ player_id: playerId, difficulty_key: key }))
+    await executor('mouse_difficulties').insert(
+      unique.map((key) => ({ mouse_id: mouseId, difficulty_key: key }))
     );
   }
 }
 
 export async function createPlayer(input: PlayerInput): Promise<number> {
-  const exists = await db('players').where({ nickname: input.nickname }).first('id');
+  const exists = await db('mice').where({ name: input.name }).first('id');
   if (exists) throw new HttpError(409, 'NICKNAME_TAKEN');
   const difficulties = input.difficulties ?? ['normal'];
   assertDifficultyKeys(difficulties);
-  const { difficulties: _difficulties, team_history, ...values } = input;
+  const { difficulties: _difficulties, ...values } = input;
   const id = await db.transaction(async (trx) => {
-    const [createdId] = await trx('players')
-      .insert({ ...values, team_history: serializeTeamHistory(team_history) })
+    const [createdId] = await trx('mice')
+      .insert(values)
       .returning('id')
       .then((rows) => rows.map((row: unknown) => (
         typeof row === 'object' && row !== null && 'id' in row ? row.id : row
       )));
-    const playerId = Number(createdId);
-    await replacePlayerDifficulties(trx, playerId, difficulties);
-    return playerId;
+    const mouseId = Number(createdId);
+    await replacePlayerDifficulties(trx, mouseId, difficulties);
+    return mouseId;
   });
   await invalidatePlayerCache();
   return id;
@@ -93,7 +90,7 @@ export async function createPlayer(input: PlayerInput): Promise<number> {
 
 export async function updatePlayer(id: number, input: PlayerUpdateInput): Promise<void> {
   await db.transaction(async (trx) => {
-    const exists = await trx('players').where({ id }).first('id');
+    const exists = await trx('mice').where({ id }).first('id');
     if (!exists) throw new HttpError(404, 'PLAYER_NOT_FOUND');
     await applyPlayerUpdate(trx, id, input);
   });
@@ -105,26 +102,22 @@ export async function applyPlayerUpdate(
   id: number,
   input: PlayerUpdateInput
 ): Promise<void> {
-  const { difficulties, team_history, ...values } = input;
+  const { difficulties, ...values } = input;
   if (difficulties) assertDifficultyKeys(difficulties);
-  const updates = {
-    ...values,
-    ...(team_history === undefined ? {} : { team_history: serializeTeamHistory(team_history) }),
-  };
-  if (Object.keys(updates).length) await executor('players').where({ id }).update(updates);
+  if (Object.keys(values).length) await executor('mice').where({ id }).update(values);
   if (difficulties) await replacePlayerDifficulties(executor, id, difficulties);
 }
 
 export async function deletePlayer(id: number): Promise<void> {
-  const player = await db('players').where({ id }).first('id', 'is_enabled');
+  const player = await db('mice').where({ id }).first('id', 'is_enabled');
   if (!player) throw new HttpError(404, 'PLAYER_NOT_FOUND');
   if (Boolean(player.is_enabled)) throw new HttpError(409, 'PLAYER_MUST_BE_DISABLED');
   const [usedInGame, usedInDailyChallenge] = await Promise.all([
-    db('games').where({ target_player_id: id }).first('id'),
-    db('daily_challenges').where({ target_player_id: id }).first('id'),
+    db('games').where({ target_mouse_id: id }).first('id'),
+    db('daily_challenges').where({ target_mouse_id: id }).first('id'),
   ]);
   if (usedInGame || usedInDailyChallenge) throw new HttpError(409, 'PLAYER_HAS_HISTORY');
-  const count = await db('players').where({ id }).del();
+  const count = await db('mice').where({ id }).del();
   if (!count) throw new HttpError(404, 'PLAYER_NOT_FOUND');
   await invalidatePlayerCache();
 }
@@ -135,30 +128,24 @@ export async function importPlayers(
   let created = 0;
   let updated = 0;
   await db.transaction(async (trx) => {
-    const nicknames = players.map((player) => player.nickname);
-    const existing = await trx('players')
-      .whereIn('nickname', nicknames)
-      .select('id', 'nickname', 'is_enabled', 'team_history');
-    const existingNames = new Set(existing.map((player) => String(player.nickname)));
+    const nicknames = players.map((player) => player.name);
+    const existing = await trx('mice')
+      .whereIn('name', nicknames)
+      .select('id', 'name', 'is_enabled');
+    const existingNames = new Set(existing.map((player) => String(player.name)));
     const existingEnabled = new Map(
-      existing.map((player) => [String(player.nickname), Boolean(player.is_enabled)])
+      existing.map((player) => [String(player.name), Boolean(player.is_enabled)])
     );
-    const existingTeamHistory = new Map(
-      existing.map((player) => [String(player.nickname), serializeTeamHistory(player.team_history)])
-    );
-    updated = players.filter((player) => existingNames.has(player.nickname)).length;
+    updated = players.filter((player) => existingNames.has(player.name)).length;
     created = players.length - updated;
     const desiredDifficulties = new Map<string, string[] | null>();
     const importedPlayers = players.map((player) => {
-      const { difficulties, team_history, ...values } = player;
-      const desired = difficulties ?? (existingNames.has(player.nickname) ? null : ['normal']);
-      desiredDifficulties.set(player.nickname, desired);
+      const { difficulties, ...values } = player;
+      const desired = difficulties ?? (existingNames.has(player.name) ? null : ['normal']);
+      desiredDifficulties.set(player.name, desired);
       return {
         ...values,
-        team_history: team_history === undefined && existingNames.has(player.nickname)
-          ? existingTeamHistory.get(player.nickname) ?? '[]'
-          : serializeTeamHistory(team_history ?? []),
-        is_enabled: player.is_enabled ?? existingEnabled.get(player.nickname) ?? true,
+        is_enabled: player.is_enabled ?? existingEnabled.get(player.name) ?? true,
       };
     });
     assertDifficultyKeys([...new Set(
@@ -166,32 +153,32 @@ export async function importPlayers(
     )]);
     const chunkSize = 200;
     for (let index = 0; index < importedPlayers.length; index += chunkSize) {
-      await trx('players')
+      await trx('mice')
         .insert(importedPlayers.slice(index, index + chunkSize))
-        .onConflict('nickname')
+        .onConflict('name')
         .merge();
     }
-    const savedPlayers = await trx('players')
-      .whereIn('nickname', nicknames)
-      .select('id', 'nickname');
+    const savedPlayers = await trx('mice')
+      .whereIn('name', nicknames)
+      .select('id', 'name');
     const replacementIds: number[] = [];
-    const replacementMemberships: Array<{ player_id: number; difficulty_key: string }> = [];
+    const replacementMemberships: Array<{ mouse_id: number; difficulty_key: string }> = [];
     for (const player of savedPlayers) {
-      const difficulties = desiredDifficulties.get(String(player.nickname));
+      const difficulties = desiredDifficulties.get(String(player.name));
       if (!difficulties) continue;
-      const playerId = Number(player.id);
-      replacementIds.push(playerId);
+      const mouseId = Number(player.id);
+      replacementIds.push(mouseId);
       replacementMemberships.push(
         ...[...new Set(difficulties)].map((difficultyKey) => ({
-          player_id: playerId,
+          mouse_id: mouseId,
           difficulty_key: difficultyKey,
         }))
       );
     }
     if (replacementIds.length) {
-      await trx('player_difficulties').whereIn('player_id', replacementIds).del();
+      await trx('mouse_difficulties').whereIn('mouse_id', replacementIds).del();
       for (let index = 0; index < replacementMemberships.length; index += 500) {
-        await trx('player_difficulties').insert(replacementMemberships.slice(index, index + 500));
+        await trx('mouse_difficulties').insert(replacementMemberships.slice(index, index + 500));
       }
     }
   });

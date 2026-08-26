@@ -45,7 +45,7 @@ describe('player change submissions', () => {
   it('stores field-level changes and protects against stale approvals', async () => {
     const stamp = Date.now();
     const username = `player-change-admin-${stamp}`;
-    const nickname = `player-change-${stamp}`;
+    const name = `player-change-${stamp}`;
     const insertedAdmin = await db('users').insert({
       username,
       display_id: userNameFromUsername(username),
@@ -54,21 +54,18 @@ describe('player change submissions', () => {
       token_version: 0,
     }).returning(['id', 'token_version']);
     const admin = insertedAdmin[0];
-    const [playerId] = await db('players').insert({
-      nickname,
-      nationality: 'Denmark',
-      region: 'Europe',
-      team: 'Old Team',
-      team_history: '[]',
-      age: 24,
-      role: 'Rifler',
-      major_championships: 0,
-      major_appearances: 1,
-      is_active: true,
+    const [mouseId] = await db('mice').insert({
+      name,
+      country: 'Denmark',
+      brand: 'Old Team',
+      weight: 24,
+      length_mm: 120,
+      side_buttons: 1,
+      wireless: true,
       is_enabled: true,
     }).returning('id');
-    const id = typeof playerId === 'object' ? playerId.id : playerId;
-    await db('player_difficulties').insert({ player_id: id, difficulty_key: 'normal' });
+    const id = typeof mouseId === 'object' ? mouseId.id : mouseId;
+    await db('mouse_difficulties').insert({ mouse_id: id, difficulty_key: 'normal' });
     let tokenId: number | null = null;
     let submissionId: number | null = null;
     try {
@@ -81,42 +78,42 @@ describe('player change submissions', () => {
       const authorization = { Authorization: `Bearer ${tokenResponse.data.token}` };
       const submitted = await request('/api/external/player-change-submissions', {
         method: 'POST', headers: authorization,
-        body: JSON.stringify({ players: [{ playerId: Number(id), changes: {
-          team: 'New Team', age: 25, is_active: false,
+        body: JSON.stringify({ players: [{ mouseId: Number(id), changes: {
+          brand: 'New Team', weight: 25, wireless: false,
         } }] }),
       });
       submissionId = Number(submitted.data.submissionId);
       expect(submitted.response.status).toBe(201);
       expect(submitted.data.submitted).toBe(3);
-      expect((await db('players').where({ id }).first()).team).toBe('Old Team');
+      expect((await db('mice').where({ id }).first()).brand).toBe('Old Team');
 
-      const pending = await request(`/api/admin/player-change-submissions?status=pending&page=1&pageSize=50&search=${encodeURIComponent(nickname)}`, { headers: { Cookie: cookie } });
+      const pending = await request(`/api/admin/player-change-submissions?status=pending&page=1&pageSize=50&search=${encodeURIComponent(name)}`, { headers: { Cookie: cookie } });
       expect(pending.data.items).toHaveLength(3);
-      const ageItem = pending.data.items.find((item: { field: string }) => item.field === 'age');
-      const teamItem = pending.data.items.find((item: { field: string }) => item.field === 'team');
-      const activeItem = pending.data.items.find((item: { field: string }) => item.field === 'is_active');
+      const ageItem = pending.data.items.find((item: { field: string }) => item.field === 'weight');
+      const teamItem = pending.data.items.find((item: { field: string }) => item.field === 'brand');
+      const activeItem = pending.data.items.find((item: { field: string }) => item.field === 'wireless');
 
-      await db('players').where({ id }).update({ team: 'Manual Team' });
+      await db('mice').where({ id }).update({ brand: 'Manual Team' });
       const approved = await request('/api/admin/player-change-submissions/review', {
         method: 'POST', headers: { Cookie: cookie },
         body: JSON.stringify({ itemIds: [ageItem.id, teamItem.id], decision: 'approve' }),
       });
       expect(approved.data).toMatchObject({ approved: 1, conflict: 1 });
-      expect((await db('players').where({ id }).first()).age).toBe(25);
-      expect((await db('players').where({ id }).first()).team).toBe('Manual Team');
+      expect((await db('mice').where({ id }).first()).weight).toBe(25);
+      expect((await db('mice').where({ id }).first()).brand).toBe('Manual Team');
 
       const rejected = await request('/api/admin/player-change-submissions/review', {
         method: 'POST', headers: { Cookie: cookie },
         body: JSON.stringify({ itemIds: [activeItem.id], decision: 'reject' }),
       });
       expect(rejected.data).toMatchObject({ rejected: 1 });
-      const history = await request(`/api/admin/player-change-submissions?status=all&page=1&pageSize=50&search=${encodeURIComponent(nickname)}`, { headers: { Cookie: cookie } });
+      const history = await request(`/api/admin/player-change-submissions?status=all&page=1&pageSize=50&search=${encodeURIComponent(name)}`, { headers: { Cookie: cookie } });
       expect(history.data.items.map((item: { status: string }) => item.status).sort()).toEqual(['approved', 'conflict', 'rejected']);
     } finally {
-      await db('player_change_items').where({ player_id: id }).del();
-      if (submissionId) await db('player_change_submissions').where({ id: submissionId }).del();
-      await db('player_difficulties').where({ player_id: id }).del();
-      await db('players').where({ id }).del();
+      await db('mouse_change_items').where({ mouse_id: id }).del();
+      if (submissionId) await db('mouse_change_submissions').where({ id: submissionId }).del();
+      await db('mouse_difficulties').where({ mouse_id: id }).del();
+      await db('mice').where({ id }).del();
       if (tokenId) await db('api_tokens').where({ id: tokenId }).del();
       await db('users').where({ id: admin.id }).del();
     }

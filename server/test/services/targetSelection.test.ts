@@ -17,8 +17,8 @@ describe('target selection', () => {
     const pool = getDifficultyPlayers('normal');
     expect(pool.length).toBeGreaterThan(2);
     try {
-      await rememberTargetSelection({ mode: 'normal', identities: [identities[0]], playerId: pool[0].id, now: stamp });
-      await rememberTargetSelection({ mode: 'normal', identities: [identities[1]], playerId: pool[1].id, now: stamp + 1 });
+      await rememberTargetSelection({ mode: 'normal', identities: [identities[0]], mouseId: pool[0].id, now: stamp });
+      await rememberTargetSelection({ mode: 'normal', identities: [identities[1]], mouseId: pool[1].id, now: stamp + 1 });
 
       const selected = await pickTargetAvoidingRecent({ mode: 'normal', identities, now: stamp + 2 });
 
@@ -52,7 +52,7 @@ describe('target selection', () => {
     const key = redisKey(`target-history:normal:${identity}`);
     try {
       for (let index = 1; index <= 25; index += 1) {
-        await rememberTargetSelection({ mode: 'normal', identities: [identity], playerId: index, now: 1_000 + index });
+        await rememberTargetSelection({ mode: 'normal', identities: [identity], mouseId: index, now: 1_000 + index });
       }
       expect(await redis()!.zCard(key)).toBe(20);
       expect(await redis()!.ttl(key)).toBeGreaterThan(0);

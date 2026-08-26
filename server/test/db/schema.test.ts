@@ -37,9 +37,9 @@ describe('database schema initialization', () => {
 
     expect(await instance.schema.hasTable('users')).toBe(true);
     expect(await instance.schema.hasTable('guest_accounts')).toBe(true);
-    expect(await instance.schema.hasTable('players')).toBe(true);
+    expect(await instance.schema.hasTable('mice')).toBe(true);
     expect(await instance.schema.hasTable('difficulty_levels')).toBe(true);
-    expect(await instance.schema.hasTable('player_difficulties')).toBe(true);
+    expect(await instance.schema.hasTable('mouse_difficulties')).toBe(true);
     expect(await instance.schema.hasTable('games')).toBe(true);
     expect(await instance.schema.hasTable('match_records')).toBe(true);
     expect(await instance.schema.hasTable('match_players')).toBe(true);
@@ -50,9 +50,10 @@ describe('database schema initialization', () => {
     expect(await instance.schema.hasTable('daily_challenge_attempts')).toBe(true);
     expect(await instance.schema.hasColumn('guest_accounts', 'matchmaking_restricted')).toBe(false);
 
-    expect(await instance.schema.hasColumn('players', 'age')).toBe(true);
-    expect(await instance.schema.hasColumn('players', 'team_history')).toBe(true);
-    expect(await instance.schema.hasColumn('games', 'first_guess_player_id')).toBe(true);
+    expect(await instance.schema.hasColumn('mice', 'weight')).toBe(true);
+    expect(await instance.schema.hasColumn('mice', 'length_mm')).toBe(true);
+    expect(await instance.schema.hasColumn('mice', 'wireless')).toBe(true);
+    expect(await instance.schema.hasColumn('games', 'first_guess_mouse_id')).toBe(true);
     expect(await instance.schema.hasColumn('games', 'guess_times')).toBe(true);
     expect(await instance.schema.hasColumn('match_records', 'winner_key')).toBe(true);
     expect(await instance.schema.hasColumn('match_records', 'finish_reason')).toBe(true);
@@ -63,7 +64,7 @@ describe('database schema initialization', () => {
     expect(await instance.schema.hasColumn('match_players', 'is_eliminated')).toBe(true);
     expect(await instance.schema.hasColumn('match_players', 'elimination_reason')).toBe(true);
     expect(await instance.schema.hasColumn('announcements', 'is_popup')).toBe(true);
-    expect(await instance.schema.hasColumn('daily_challenges', 'target_player_id')).toBe(true);
+    expect(await instance.schema.hasColumn('daily_challenges', 'target_mouse_id')).toBe(true);
     expect(await instance.schema.hasColumn('daily_challenges', 'solved_count')).toBe(true);
     expect(await instance.schema.hasColumn('daily_challenge_attempts', 'guess_count')).toBe(true);
     expect(await instance.schema.hasColumn('daily_challenge_attempts', 'solve_order')).toBe(true);
@@ -78,7 +79,7 @@ describe('database schema initialization', () => {
       table.increments('id').primary();
       table.string('challenge_date', 10).notNullable();
       table.string('difficulty_key', 32).notNullable();
-      table.integer('target_player_id').notNullable();
+      table.integer('target_mouse_id').notNullable();
       table.timestamp('created_at').notNullable().defaultTo(instance.fn.now());
     });
     await instance.schema.createTable('daily_challenge_attempts', (table) => {
@@ -99,7 +100,7 @@ describe('database schema initialization', () => {
       id: 1,
       challenge_date: '2026-08-11',
       difficulty_key: 'beginner',
-      target_player_id: 1,
+      target_mouse_id: 1,
     });
     await instance('daily_challenge_attempts').insert([
       {
@@ -155,7 +156,7 @@ describe('database schema initialization', () => {
       table.string('db_type', 16).notNullable().defaultTo('easy');
       table.integer('bo_type').notNullable().defaultTo(3);
       table.integer('winner_id').nullable();
-      table.text('players').notNullable().defaultTo('[]');
+      table.text('mice').notNullable().defaultTo('[]');
       table.timestamp('created_at').notNullable().defaultTo(instance.fn.now());
     });
     await instance('match_records').insert({ room_id: 'classic-bo5', bo_type: 5 });

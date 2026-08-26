@@ -11,7 +11,7 @@ const originalConfig = { ...config.cheatAnalysis };
 let userId = 0;
 let gameId = 0;
 let matchId = 0;
-let targetPlayerId = 0;
+let targetMouseId = 0;
 let guessPlayerId = 0;
 const opponentKey = `g:external-analysis-opponent-${Date.now()}`;
 
@@ -29,16 +29,16 @@ beforeAll(async () => {
     email: `private-${stamp}@example.com`,
   }).returning('id');
   userId = Number(typeof user === 'object' ? user.id : user);
-  const [target, guess] = await db('players').select('id').orderBy('id').limit(2);
-  targetPlayerId = Number(target.id);
+  const [target, guess] = await db('mice').select('id').orderBy('id').limit(2);
+  targetMouseId = Number(target.id);
   guessPlayerId = Number(guess.id);
   const [game] = await db('games').insert({
     user_id: userId,
-    target_player_id: targetPlayerId,
+    target_mouse_id: targetMouseId,
     mode: 'normal',
-    guesses: JSON.stringify([guessPlayerId, targetPlayerId]),
+    guesses: JSON.stringify([guessPlayerId, targetMouseId]),
     guess_times: JSON.stringify([900, 1750]),
-    first_guess_player_id: guessPlayerId,
+    first_guess_mouse_id: guessPlayerId,
     status: 'won',
     guess_count: 2,
     finished_at: db.fn.now(),
@@ -55,12 +55,12 @@ beforeAll(async () => {
     finish_reason: 'score',
     replay: JSON.stringify([{
       round: 1,
-      targetPlayerId,
+      targetMouseId,
       winnerKey: subjectKey,
       reason: 'guessed',
       guessesByPlayer: {
-        [subjectKey]: [guessPlayerId, targetPlayerId],
-        [opponentKey]: [targetPlayerId],
+        [subjectKey]: [guessPlayerId, targetMouseId],
+        [opponentKey]: [targetMouseId],
       },
       guessTimesByPlayer: {
         [subjectKey]: [900, 1750],
@@ -166,38 +166,38 @@ describe('external cheat analysis', () => {
     expect(request.singleGames).toEqual(expect.arrayContaining([
       expect.objectContaining({
         recordId: gameId,
-        targetPlayerId,
+        targetMouseId,
         mode: 'normal',
         status: 'won',
         guessCount: 2,
-        firstGuessPlayerId: guessPlayerId,
-        guessPlayerIds: [guessPlayerId, targetPlayerId],
+        firstGuessMouseId: guessPlayerId,
+        guessPlayerIds: [guessPlayerId, targetMouseId],
         guessTimesMs: [900, 1750],
         startedAt: expect.any(String),
         finishedAt: expect.any(String),
       }),
     ]));
 
-    const databasePlayerCount = Number((await db('players').count({ count: 'id' }).first())?.count ?? 0);
-    const targetPlayer = await db('players').where({ id: targetPlayerId }).first();
-    const targetDifficulties = await db('player_difficulties')
-      .where({ player_id: targetPlayerId })
+    const databasePlayerCount = Number((await db('mice').count({ count: 'id' }).first())?.count ?? 0);
+    const targetPlayer = await db('mice').where({ id: targetMouseId }).first();
+    const targetDifficulties = await db('mouse_difficulties')
+      .where({ mouse_id: targetMouseId })
       .orderBy('difficulty_key')
       .pluck('difficulty_key');
     expect(request.playerPool.revision).toEqual(expect.any(String));
     expect(request.playerPool.players).toHaveLength(databasePlayerCount);
     expect(request.playerPool.players).toEqual(expect.arrayContaining([{
-      id: targetPlayerId,
-      nickname: String(targetPlayer.nickname),
-      nationality: String(targetPlayer.nationality),
-      region: String(targetPlayer.region),
-      team: String(targetPlayer.team),
-      teamHistory: JSON.parse(String(targetPlayer.team_history)),
-      age: Number(targetPlayer.age),
-      role: String(targetPlayer.role),
-      majorChampionships: Number(targetPlayer.major_championships),
-      majorAppearances: Number(targetPlayer.major_appearances),
-      isActive: Boolean(targetPlayer.is_active),
+      id: targetMouseId,
+      name: String(targetPlayer.name),
+      brand: String(targetPlayer.brand),
+      country: String(targetPlayer.country),
+      continent: String(targetPlayer.continent),
+      shape: String(targetPlayer.shape),
+      size: String(targetPlayer.size),
+      weight: Number(targetPlayer.weight),
+      lengthMm: Number(targetPlayer.length_mm),
+      sideButtons: Number(targetPlayer.side_buttons),
+      wireless: Boolean(targetPlayer.wireless),
       isEnabled: Boolean(targetPlayer.is_enabled),
       difficulties: targetDifficulties.map(String),
       createdAt: new Date(String(targetPlayer.created_at)).toISOString(),
@@ -231,12 +231,12 @@ describe('external cheat analysis', () => {
     expect(match.winnerParticipantId).toBe(request.subject.opaqueId);
     expect(match.rounds).toEqual([expect.objectContaining({
       round: 1,
-      targetPlayerId,
+      targetMouseId,
       winnerParticipantId: request.subject.opaqueId,
       reason: 'guessed',
       guessesByParticipant: {
-        [request.subject.opaqueId]: [guessPlayerId, targetPlayerId],
-        [opponentParticipant.participantId]: [targetPlayerId],
+        [request.subject.opaqueId]: [guessPlayerId, targetMouseId],
+        [opponentParticipant.participantId]: [targetMouseId],
       },
       guessTimesMsByParticipant: {
         [request.subject.opaqueId]: [900, 1750],
@@ -265,11 +265,11 @@ describe('external cheat analysis', () => {
     const singleRows = Array.from({ length: 51 }, (_, index) => ({
       session_id: `${prefix}-single-${index}`,
       user_id: userId,
-      target_player_id: targetPlayerId,
+      target_mouse_id: targetMouseId,
       mode: 'normal',
-      guesses: JSON.stringify([targetPlayerId]),
+      guesses: JSON.stringify([targetMouseId]),
       guess_times: JSON.stringify([1000 + index]),
-      first_guess_player_id: targetPlayerId,
+      first_guess_mouse_id: targetMouseId,
       status: 'won',
       guess_count: 1,
       created_at: new Date(baseTime + index * 1000 - 500),
@@ -284,10 +284,10 @@ describe('external cheat analysis', () => {
       finish_reason: 'score',
       replay: JSON.stringify([{
         round: 1,
-        targetPlayerId,
+        targetMouseId,
         winnerKey: subjectKey,
         reason: 'guessed',
-        guessesByPlayer: { [subjectKey]: [targetPlayerId] },
+        guessesByPlayer: { [subjectKey]: [targetMouseId] },
         guessTimesByPlayer: { [subjectKey]: [1000 + index] },
       }]),
       created_at: new Date(baseTime + index * 1000),

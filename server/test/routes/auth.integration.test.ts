@@ -101,11 +101,11 @@ describe('cookie authentication', () => {
     expect(result.data.guest.name).toBe(guestNameFromKey(guest.key));
     expect(guest.exp - guest.iat).toBe(3 * 365 * 24 * 60 * 60);
     const sessionId = `auth-test-${Date.now()}`;
-    const [player] = await db('players').select('id').limit(1);
+    const [player] = await db('mice').select('id').limit(1);
     await db('games').insert({
       session_id: sessionId,
       guest_key: guest.key,
-      target_player_id: player.id,
+      target_mouse_id: player.id,
       mode: 'easy',
       guesses: '[]',
       status: 'lost',

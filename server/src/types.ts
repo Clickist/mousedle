@@ -12,19 +12,21 @@ export interface User {
   created_at: string;
 }
 
-export interface Player {
+export interface Mouse {
   id: number;
-  nickname: string;
-  nationality: string;
-  region: string;
-  team: string;
-  team_history: string[];
-  age: number;
-  role: string;
-  major_championships: number;
-  major_appearances: number;
+  name: string;
+  brand: string;
+  country: string;
+  continent: string;
+  shape: string;
+  size: string;
+  weight: number;
+  length_mm: number;
+  side_buttons: number;
+  wireless: boolean | number;
+  /** 揭示卡片展示字段(JSON):sensor/dpi/polling_rate/hump/hand/width/height/connection/image */
+  display?: string | null;
   difficulties?: string[];
-  is_active: boolean | number;
   is_enabled: boolean | number;
   created_at: string;
 }
@@ -39,17 +41,17 @@ export interface AttributeFeedback {
 }
 
 export interface GuessFeedback {
-  playerId: number;
-  nickname: string;
+  mouseId: number;
+  name: string;
   correct: boolean;
   attributes: {
-    nationality: AttributeFeedback;
-    region: AttributeFeedback;
-    team: AttributeFeedback;
-    age: AttributeFeedback;
-    role: AttributeFeedback;
-    majorChampionships: AttributeFeedback;
-    majorAppearances: AttributeFeedback;
-    isActive: AttributeFeedback;
+    brand: AttributeFeedback;
+    country: AttributeFeedback;
+    shape: AttributeFeedback;
+    size: AttributeFeedback;
+    weight: AttributeFeedback;
+    lengthMm: AttributeFeedback;
+    sideButtons: AttributeFeedback;
+    wireless: AttributeFeedback;
   };
 }

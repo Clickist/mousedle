@@ -99,40 +99,31 @@ export async function ensureSchema(instance: Knex = db): Promise<void> {
     `create index${apiTokensIndexConcurrently} if not exists "api_tokens_owner_created_idx" on "api_tokens" ("created_by_user_id", "created_at")`
   );
 
-  if (!(await instance.schema.hasTable('players'))) {
-    await instance.schema.createTable('players', (t) => {
+  if (!(await instance.schema.hasTable('mice'))) {
+    await instance.schema.createTable('mice', (t) => {
       t.increments('id').primary();
-      t.string('nickname', 64).notNullable().unique();
-      t.string('nationality', 64).notNullable();
-      t.string('region', 32).notNullable().defaultTo('');
-      t.string('team', 64).notNullable().defaultTo('');
-      t.text('team_history').notNullable().defaultTo('[]');
-      t.integer('age').notNullable();
-      t.string('role', 32).notNullable().defaultTo('Rifler');
-      t.integer('major_championships').notNullable().defaultTo(0);
-      t.integer('major_appearances').notNullable().defaultTo(0);
-      t.boolean('is_active').notNullable().defaultTo(true);
+      t.string('name', 96).notNullable().unique();
+      t.string('brand', 64).notNullable();
+      t.string('country', 32).notNullable().defaultTo('');
+      t.string('continent', 32).notNullable().defaultTo('');
+      t.string('shape', 16).notNullable().defaultTo('对称');
+      t.string('size', 16).notNullable().defaultTo('中型');
+      t.integer('weight').notNullable();
+      t.integer('length_mm').notNullable();
+      t.integer('side_buttons').notNullable().defaultTo(2);
+      t.boolean('wireless').notNullable().defaultTo(true);
+      t.text('display').nullable();
       t.boolean('is_enabled').notNullable().defaultTo(true);
       t.timestamp('created_at').notNullable().defaultTo(instance.fn.now());
-    });
-  }
-  if (!(await instance.schema.hasColumn('players', 'major_championships'))) {
-    await instance.schema.alterTable('players', (t) => {
-      t.integer('major_championships').notNullable().defaultTo(0);
-    });
-  }
-  if (!(await instance.schema.hasColumn('players', 'is_enabled'))) {
-    await instance.schema.alterTable('players', (t) => {
-      t.boolean('is_enabled').notNullable().defaultTo(true);
     });
   }
   if (instance.client.config.client === 'pg') {
     await instance.raw('create extension if not exists pg_trgm');
     await instance.raw(
-      'create index if not exists "players_nickname_trgm_idx" on "players" using gin ("nickname" gin_trgm_ops)'
+      'create index if not exists "mice_name_trgm_idx" on "mice" using gin ("name" gin_trgm_ops)'
     );
     await instance.raw(
-      'create index if not exists "players_team_trgm_idx" on "players" using gin ("team" gin_trgm_ops)'
+      'create index if not exists "mice_brand_trgm_idx" on "mice" using gin ("brand" gin_trgm_ops)'
     );
   }
 
@@ -142,11 +133,11 @@ export async function ensureSchema(instance: Knex = db): Promise<void> {
       t.string('session_id', 64).nullable();
       t.integer('user_id').nullable().references('id').inTable('users');
       t.string('guest_key', 64).nullable().index();
-      t.integer('target_player_id').notNullable().references('id').inTable('players');
+      t.integer('target_mouse_id').notNullable().references('id').inTable('mice');
       t.string('mode', 16).notNullable().defaultTo('easy');
       t.text('guesses').notNullable().defaultTo('[]');
       t.text('guess_times').notNullable().defaultTo('[]');
-      t.integer('first_guess_player_id').nullable();
+      t.integer('first_guess_mouse_id').nullable();
       t.string('status', 16).notNullable().defaultTo('playing');
       t.integer('guess_count').notNullable().defaultTo(0);
       t.timestamp('created_at').notNullable().defaultTo(instance.fn.now());
@@ -155,11 +146,6 @@ export async function ensureSchema(instance: Knex = db): Promise<void> {
   }
   if (!(await instance.schema.hasColumn('games', 'session_id'))) {
     await instance.schema.alterTable('games', (t) => t.string('session_id', 64).nullable());
-  }
-  if (!(await instance.schema.hasColumn('players', 'team_history'))) {
-    await instance.schema.alterTable('players', (t) => {
-      t.text('team_history').notNullable().defaultTo('[]');
-    });
   }
   if (!(await instance.schema.hasColumn('games', 'guess_times'))) {
     await instance.schema.alterTable('games', (t) => t.text('guess_times').notNullable().defaultTo('[]'));
@@ -180,16 +166,16 @@ export async function ensureSchema(instance: Knex = db): Promise<void> {
     })))
     .onConflict('key')
     .merge(['sort_order', 'is_enabled']);
-  if (!(await instance.schema.hasTable('player_difficulties'))) {
-    await instance.schema.createTable('player_difficulties', (t) => {
-      t.integer('player_id').notNullable().references('id').inTable('players').onDelete('CASCADE');
+  if (!(await instance.schema.hasTable('mouse_difficulties'))) {
+    await instance.schema.createTable('mouse_difficulties', (t) => {
+      t.integer('mouse_id').notNullable().references('id').inTable('mice').onDelete('CASCADE');
       t.string('difficulty_key', 32).notNullable().references('key').inTable('difficulty_levels').onDelete('CASCADE');
-      t.primary(['player_id', 'difficulty_key']);
-      t.index(['difficulty_key', 'player_id']);
+      t.primary(['mouse_id', 'difficulty_key']);
+      t.index(['difficulty_key', 'mouse_id']);
     });
   }
-  if (!(await instance.schema.hasTable('player_change_submissions'))) {
-    await instance.schema.createTable('player_change_submissions', (t) => {
+  if (!(await instance.schema.hasTable('mouse_change_submissions'))) {
+    await instance.schema.createTable('mouse_change_submissions', (t) => {
       t.increments('id').primary();
       t.integer('api_token_id')
         .nullable()
@@ -200,20 +186,20 @@ export async function ensureSchema(instance: Knex = db): Promise<void> {
       t.timestamp('created_at').notNullable().defaultTo(instance.fn.now());
     });
   }
-  if (!(await instance.schema.hasTable('player_change_items'))) {
-    await instance.schema.createTable('player_change_items', (t) => {
+  if (!(await instance.schema.hasTable('mouse_change_items'))) {
+    await instance.schema.createTable('mouse_change_items', (t) => {
       t.increments('id').primary();
       t.integer('submission_id')
         .notNullable()
         .references('id')
-        .inTable('player_change_submissions')
+        .inTable('mouse_change_submissions')
         .onDelete('CASCADE');
-      t.integer('player_id')
+      t.integer('mouse_id')
         .nullable()
         .references('id')
-        .inTable('players')
+        .inTable('mice')
         .onDelete('SET NULL');
-      t.string('player_nickname', 64).notNullable();
+      t.string('mouse_name', 96).notNullable();
       t.string('field', 32).notNullable();
       t.text('old_value').notNullable();
       t.text('new_value').notNullable();
@@ -225,13 +211,13 @@ export async function ensureSchema(instance: Knex = db): Promise<void> {
         .onDelete('SET NULL');
       t.timestamp('handled_at').nullable();
       t.timestamp('created_at').notNullable().defaultTo(instance.fn.now());
-      t.index(['status', 'created_at'], 'player_change_items_status_created_idx');
-      t.index(['player_id', 'field', 'status'], 'player_change_items_player_field_status_idx');
-      t.index(['submission_id'], 'player_change_items_submission_idx');
+      t.index(['status', 'created_at'], 'mouse_change_items_status_created_idx');
+      t.index(['mouse_id', 'field', 'status'], 'mouse_change_items_mouse_field_status_idx');
+      t.index(['submission_id'], 'mouse_change_items_submission_idx');
     });
   }
-  if (!(await instance.schema.hasColumn('games', 'first_guess_player_id'))) {
-    await instance.schema.alterTable('games', (t) => t.integer('first_guess_player_id').nullable());
+  if (!(await instance.schema.hasColumn('games', 'first_guess_mouse_id'))) {
+    await instance.schema.alterTable('games', (t) => t.integer('first_guess_mouse_id').nullable());
   }
   await instance.raw(
     'create unique index if not exists "games_session_id_unique" on "games" ("session_id")'
@@ -429,9 +415,9 @@ export async function ensureSchema(instance: Knex = db): Promise<void> {
     await instance.raw(`create index if not exists \"${name}\" on \"games\" (${quotedColumns})`);
   }
   const firstGuessIndexes = [
-    ['games_first_guess_idx', ['first_guess_player_id']],
-    ['games_user_first_guess_idx', ['user_id', 'first_guess_player_id']],
-    ['games_guest_first_guess_idx', ['guest_key', 'first_guess_player_id']],
+    ['games_first_guess_idx', ['first_guess_mouse_id']],
+    ['games_user_first_guess_idx', ['user_id', 'first_guess_mouse_id']],
+    ['games_guest_first_guess_idx', ['guest_key', 'first_guess_mouse_id']],
   ] as const;
   for (const [name, columns] of firstGuessIndexes) {
     const quotedColumns = columns.map((column) => `\"${column}\"`).join(', ');
@@ -477,10 +463,10 @@ export async function ensureSchema(instance: Knex = db): Promise<void> {
         .notNullable()
         .references('key')
         .inTable('difficulty_levels');
-      t.integer('target_player_id')
+      t.integer('target_mouse_id')
         .notNullable()
         .references('id')
-        .inTable('players');
+        .inTable('mice');
       t.integer('solved_count').notNullable().defaultTo(0);
       t.timestamp('created_at').notNullable().defaultTo(instance.fn.now());
       t.unique(['challenge_date', 'difficulty_key']);

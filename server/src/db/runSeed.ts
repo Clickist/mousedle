@@ -1,12 +1,12 @@
 import { db } from './knex';
 import { ensureSchema } from './schema';
-import { insertMissingSeedPlayers } from './seedPlayers';
+import { insertMissingSeedMice } from './seedMice';
 
-// 手动执行:补充种子数据中数据库尚不存在的选手(按昵称去重)
+// 手动执行:补充种子数据中数据库尚不存在的鼠标(按名称去重)
 async function run() {
   await ensureSchema();
-  const inserted = await insertMissingSeedPlayers();
-  console.log(`[seed] 新增 ${inserted} 名选手`);
+  const inserted = await insertMissingSeedMice();
+  console.log(`[seed] 新增 ${inserted} 只鼠标`);
   await db.destroy();
 }
 

@@ -99,7 +99,7 @@ export async function handleGameGuess(
     return;
   }
   socket.data.roomId = roomId;
-  const guess = getEnabledPlayer(payload.playerId);
+  const guess = getEnabledPlayer(payload.mouseId);
   if (!guess) {
     ack?.({ code: 'PLAYER_NOT_FOUND' });
     return;
@@ -114,7 +114,7 @@ export async function handleGameGuess(
     ack?.({ code: 'STALE_ROUND', reason: 'round_id_mismatch' });
     return;
   }
-  const target = getPlayer(targetState.targetPlayerId);
+  const target = getPlayer(targetState.targetMouseId);
   if (!target) {
     ack?.({ code: 'INTERNAL_ERROR' });
     return;
@@ -125,7 +125,7 @@ export async function handleGameGuess(
     socketId: socket.id,
     expectedRound: roundId,
     eventId,
-    targetPlayerId: targetState.targetPlayerId,
+    targetMouseId: targetState.targetMouseId,
     feedback: compareGuess(guess, target),
     maxGuesses: targetState.maxGuesses,
     roundDurationMs: targetState.roundDurationMs,

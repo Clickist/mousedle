@@ -22,9 +22,9 @@ import { currentDailyLeaderboardCacheKeys } from '../services/dailyChallenge';
 import { rateLimit, requestIdentity } from '../middleware/rateLimit';
 import { publishResourceVersion } from '../services/resourceVersion';
 import { getPlayerPerformance } from '../services/playerPerformance';
-import { compareGuess, refreshGuessFeedback, MAX_GUESSES } from '../services/gameService';
+import { compareGuess, MAX_GUESSES } from '../services/gameService';
 import { getPlayer } from '../services/playerCache';
-import type { GuessFeedback, Player } from '../types';
+import type { GuessFeedback, Mouse } from '../types';
 import { DIFFICULTY_LEVELS } from '../difficulties';
 import {
   AnalysisLocale,
@@ -44,7 +44,6 @@ import { createApiToken, listApiTokens, revokeApiToken } from '../services/apiTo
 import { cacheMatchmakingRestriction } from '../services/matchmakingRestriction';
 import { cancelQueue, moveQueuedIdentityToPool } from '../services/roomStore';
 import { redis, redisKey } from '../redis';
-import { normalizeTeamHistory } from '../services/teamHistory';
 import { exportPlayers } from '../services/playerExport';
 import {
   listPlayerChangeItems,
@@ -177,22 +176,23 @@ function matchPlayerDisplayId(row: { key?: unknown; name?: unknown; username?: u
   return name || '未知对手';
 }
 
-function replayAnswer(target: Player) {
+function replayAnswer(target: Mouse) {
   return {
     id: target.id,
-    nickname: target.nickname,
-    team: target.team,
-    nationality: target.nationality,
-    region: target.region,
-    age: target.age,
-    role: target.role,
-    majorChampionships: target.major_championships,
-    majorAppearances: target.major_appearances,
-    isActive: Boolean(target.is_active),
+    name: target.name,
+    brand: target.brand,
+    country: target.country,
+    continent: target.continent,
+    weight: target.weight,
+    shape: target.shape,
+        size: target.size,
+    lengthMm: target.length_mm,
+    sideButtons: target.side_buttons,
+    wireless: Boolean(target.wireless),
   };
 }
 
-function replayGuessesWithTimes(target: Player, guessIds: unknown, guessTimes: unknown) {
+function replayGuessesWithTimes(target: Mouse, guessIds: unknown, guessTimes: unknown) {
   const ids = Array.isArray(guessIds) ? guessIds.slice(0, MAX_GUESSES) : [];
   const times = Array.isArray(guessTimes) ? guessTimes : [];
   const guesses: GuessFeedback[] = [];
@@ -463,7 +463,8 @@ router.get(
           id: Number(user.id),
           username: user.username,
           displayId: user.display_id || userNameFromUsername(user.username),
-          role: user.role,
+          shape: user.shape,
+        size: user.size,
           leaderboardHidden: Boolean(user.leaderboard_hidden),
           matchmakingRestricted: Boolean(user.matchmaking_restricted),
           email: user.email ?? null,
@@ -629,7 +630,7 @@ router.get(
 
     if (type === 'single') {
       const rows = await db('games as g')
-        .join('players as p', 'p.id', 'g.target_player_id')
+        .join('mice as p', 'p.id', 'g.target_mouse_id')
         .where('g.user_id', id)
         .whereNot('g.status', 'playing')
         .orderBy('g.finished_at', 'desc')
@@ -642,7 +643,7 @@ router.get(
           'g.status',
           'g.guess_count as guessCount',
           'g.finished_at as finishedAt',
-          'p.nickname as answer'
+          'p.name as answer'
         );
       return res.json({
         type,
@@ -729,7 +730,7 @@ router.get(
       .whereNot('status', 'playing')
       .first();
     if (!game) throw new HttpError(404, 'GAME_NOT_FOUND');
-    const target = getPlayer(Number(game.target_player_id));
+    const target = getPlayer(Number(game.target_mouse_id));
     if (!target) throw new HttpError(404, 'PLAYER_NOT_FOUND');
 
     let storedGuesses: unknown[] = [];
@@ -744,9 +745,9 @@ router.get(
         const guess = getPlayer(stored);
         return guess ? [compareGuess(guess, target)] : [];
       }
-      if (!stored || typeof stored !== 'object' || !('playerId' in stored)) return [];
+      if (!stored || typeof stored !== 'object' || !('mouseId' in stored)) return [];
       const feedback = stored as GuessFeedback;
-      return [refreshGuessFeedback(feedback, getPlayer(feedback.playerId), target)];
+      return [feedback];
     });
     res.json({
       id: Number(game.id),
@@ -809,7 +810,7 @@ router.get(
     const rounds = storedRounds.flatMap((stored) => {
       if (!stored || typeof stored !== 'object') return [];
       const round = stored as Record<string, unknown>;
-      const target = getPlayer(Number(round.targetPlayerId));
+      const target = getPlayer(Number(round.targetMouseId));
       if (!target) return [];
       const guessesByPlayer = round.guessesByPlayer;
       if (!guessesByPlayer || typeof guessesByPlayer !== 'object') return [];
@@ -821,7 +822,7 @@ router.get(
         ? round.sharedGuesses.slice(0, 15).flatMap((item) => {
           if (!item || typeof item !== 'object') return [];
           const storedGuess = item as Record<string, unknown>;
-          const guess = getPlayer(Number(storedGuess.playerId));
+          const guess = getPlayer(Number(storedGuess.mouseId));
           if (!guess) return [];
           const actorKey = typeof storedGuess.actorKey === 'string' ? storedGuess.actorKey : '';
           return [{
@@ -874,13 +875,12 @@ router.get(
   asyncHandler(async (req, res) => {
     const parsed = req.query as unknown as z.infer<typeof playerListQuerySchema>;
     const { pageSize, search } = parsed;
-    const query = db('players');
+    const query = db('mice');
     if (search) {
       query.where((builder) => {
-        builder.whereILike('nickname', `%${search}%`)
-          .orWhereILike('nationality', `%${search}%`)
-          .orWhereILike('region', `%${search}%`)
-          .orWhereILike('team', `%${search}%`);
+        builder.whereILike('name', `%${search}%`)
+          .orWhereILike('country', `%${search}%`)
+          .orWhereILike('brand', `%${search}%`);
       });
     }
     const countRow = await query.clone().count({ count: 'id' }).first();
@@ -888,26 +888,26 @@ router.get(
     const totalPages = Math.max(1, Math.ceil(total / pageSize));
     const page = Math.min(parsed.page, totalPages);
     const players = await query.clone()
-      .orderBy('nickname')
+      .orderBy('name')
       .limit(pageSize)
       .offset((page - 1) * pageSize);
     const playerIds = players.map((player) => Number(player.id));
     const memberships = playerIds.length
-      ? await db('player_difficulties')
-        .whereIn('player_id', playerIds)
+      ? await db('mouse_difficulties')
+        .whereIn('mouse_id', playerIds)
         .orderBy('difficulty_key')
-        .select('player_id', 'difficulty_key')
+        .select('mouse_id', 'difficulty_key')
       : [];
     const difficultiesByPlayer = new Map<number, string[]>();
     for (const membership of memberships) {
-      const list = difficultiesByPlayer.get(Number(membership.player_id)) ?? [];
+      const list = difficultiesByPlayer.get(Number(membership.mouse_id)) ?? [];
       list.push(String(membership.difficulty_key));
-      difficultiesByPlayer.set(Number(membership.player_id), list);
+      difficultiesByPlayer.set(Number(membership.mouse_id), list);
     }
     res.json({
       players: players.map((player) => ({
         ...player,
-        team_history: normalizeTeamHistory(player.team_history),
+        display: typeof player.display === 'string' ? player.display : player.display ? JSON.stringify(player.display) : null,
         difficulties: difficultiesByPlayer.get(Number(player.id)) ?? [],
       })),
       total,
@@ -1186,10 +1186,10 @@ router.get(
     if (!guest) throw new HttpError(404, 'USER_NOT_FOUND');
     const offset = (parsed.page - 1) * parsed.pageSize;
     if (parsed.type === 'single') {
-      const rows = await db('games as g').join('players as p', 'p.id', 'g.target_player_id')
+      const rows = await db('games as g').join('mice as p', 'p.id', 'g.target_mouse_id')
         .where('g.guest_key', guest.guest_key).whereNot('g.status', 'playing')
         .orderBy('g.finished_at', 'desc').orderBy('g.id', 'desc').offset(offset).limit(parsed.pageSize + 1)
-        .select('g.id', 'g.mode', 'g.status', 'g.guess_count as guessCount', 'g.finished_at as finishedAt', 'p.nickname as answer');
+        .select('g.id', 'g.mode', 'g.status', 'g.guess_count as guessCount', 'g.finished_at as finishedAt', 'p.name as answer');
       return res.json({ type: parsed.type, page: parsed.page, pageSize: parsed.pageSize, hasNext: rows.length > parsed.pageSize, items: rows.slice(0, parsed.pageSize).map((row) => ({ type: 'single', ...row })) });
     }
     const identityKey = `g:${guest.guest_key}`;

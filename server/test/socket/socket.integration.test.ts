@@ -202,7 +202,7 @@ describe('multiplayer socket integration', () => {
       expect(await emit(socket, 'match:rematch-respond', { accept: 'yes' }))
         .toEqual({ code: 'VALIDATION_FAILED' });
       expect(await emit(socket, 'game:guess', {
-        playerId: '1',
+        mouseId: '1',
         roundId: 1,
         eventId: 'short',
       })).toEqual({ code: 'VALIDATION_FAILED' });
@@ -327,15 +327,15 @@ describe('multiplayer socket integration', () => {
     const spectator = await connect(withPowCookie(`csgofriberg_guest=${guestToken(spectatorKey)}`));
     const outsider = await connect(withPowCookie(`csgofriberg_guest=${guestToken(outsiderKey)}`));
     try {
-      const [target] = await db('players').select('id').limit(1);
+      const [target] = await db('mice').select('id').limit(1);
       await db('games').insert([
         {
           session_id: `${historyPrefix}-single-win`,
           guest_key: keyB,
-          target_player_id: target.id,
+          target_mouse_id: target.id,
           mode: 'easy',
           guesses: JSON.stringify([target.id]),
-          first_guess_player_id: target.id,
+          first_guess_mouse_id: target.id,
           status: 'won',
           guess_count: 2,
           finished_at: db.fn.now(),
@@ -343,10 +343,10 @@ describe('multiplayer socket integration', () => {
         {
           session_id: `${historyPrefix}-single-loss`,
           guest_key: keyB,
-          target_player_id: target.id,
+          target_mouse_id: target.id,
           mode: 'normal',
           guesses: JSON.stringify([target.id]),
-          first_guess_player_id: target.id,
+          first_guess_mouse_id: target.id,
           status: 'lost',
           guess_count: 6,
           finished_at: db.fn.now(),
@@ -355,7 +355,7 @@ describe('multiplayer socket integration', () => {
       for (const [index, won] of [true, false].entries()) {
         const replay = [{
           round: 1,
-          targetPlayerId: target.id,
+          targetMouseId: target.id,
           winnerKey: won ? `g:${keyB}` : `g:${keyA}`,
           reason: 'guessed',
           guessesByPlayer: {
@@ -551,7 +551,7 @@ describe('multiplayer socket integration', () => {
     const a = await connect(userA.cookie);
     const b = await connect(userB.cookie);
     try {
-      const [target] = await db('players').select('id').limit(1);
+      const [target] = await db('mice').select('id').limit(1);
       const [inserted] = await db('match_records').insert({
         room_id: historyRoomId,
         db_type: 'easy',
@@ -560,7 +560,7 @@ describe('multiplayer socket integration', () => {
         finish_reason: 'score',
         replay: JSON.stringify([{
           round: 1,
-          targetPlayerId: target.id,
+          targetMouseId: target.id,
           winnerKey: keyA,
           reason: 'guessed',
           guessesByPlayer: {
@@ -655,18 +655,18 @@ describe('multiplayer socket integration', () => {
       expect(synced.room.roundId).toBe(1);
       const room = await redis()!.get(redisKey(`room:${created.room.id}`));
       const stored = JSON.parse(room!);
-      const targetId = stored.targetPlayerId;
+      const targetId = stored.targetMouseId;
       const stale = await emit(a, 'game:guess', {
-        playerId: targetId,
+        mouseId: targetId,
         roundId: synced.room.roundId - 1,
         eventId: `stale-${stamp}-0001`,
       });
       expect(stale.code).toBe('STALE_ROUND');
       const eventId = `valid-${stamp}-0001`;
       const results = await Promise.all([
-        emit(a, 'game:guess', { playerId: targetId, roundId: synced.room.roundId, eventId }),
-        emit(a, 'game:guess', { playerId: targetId, roundId: synced.room.roundId, eventId }),
-        emit(b, 'game:guess', { playerId: targetId, roundId: synced.room.roundId, eventId: `valid-${stamp}-0002` }),
+        emit(a, 'game:guess', { mouseId: targetId, roundId: synced.room.roundId, eventId }),
+        emit(a, 'game:guess', { mouseId: targetId, roundId: synced.room.roundId, eventId }),
+        emit(b, 'game:guess', { mouseId: targetId, roundId: synced.room.roundId, eventId: `valid-${stamp}-0002` }),
       ]);
       expect(results.every((result) => result.feedback === undefined)).toBe(true);
       results.filter((result) => !result.code).forEach((result) => {
@@ -737,7 +737,7 @@ describe('multiplayer socket integration', () => {
       const active = await getRoom(created.room.id);
       const matchOver = onceEvent(a, 'match:over');
       await emit(a, 'game:guess', {
-        playerId: active!.targetPlayerId,
+        mouseId: active!.targetMouseId,
         roundId: active!.round,
         eventId: `report-finish-${stamp}`,
       });
@@ -780,7 +780,7 @@ describe('multiplayer socket integration', () => {
       const active = await getRoom(matchA.room.id);
       const matchOver = onceEvent(a, 'match:over');
       await emit(a, 'game:guess', {
-        playerId: active!.targetPlayerId,
+        mouseId: active!.targetMouseId,
         roundId: active!.round,
         eventId: `matchmaking-report-finish-${Date.now()}`,
       });
@@ -839,7 +839,7 @@ describe('multiplayer socket integration', () => {
       const active = await getRoom(matchA.room.id);
       const matchOver = onceEvent(a, 'match:over');
       await emit(a, 'game:guess', {
-        playerId: active!.targetPlayerId,
+        mouseId: active!.targetMouseId,
         roundId: active!.round,
         eventId: `matchmaking-report-reconnect-${Date.now()}`,
       });
@@ -885,7 +885,7 @@ describe('multiplayer socket integration', () => {
       const originalRecordId = active!.recordId;
       const matchOverEvent = onceEvent(a, 'match:over');
       await emit(a, 'game:guess', {
-        playerId: active!.targetPlayerId,
+        mouseId: active!.targetMouseId,
         roundId: active!.round,
         eventId: `rematch-finish-${stamp}`,
       });
@@ -904,7 +904,7 @@ describe('multiplayer socket integration', () => {
         requiredKeys: [`g:${keyA}`, `g:${keyB}`],
       });
       expect(wanted).not.toHaveProperty('room');
-      expect(wanted).not.toHaveProperty('players');
+      expect(wanted).not.toHaveProperty('mice');
       expect(wanted).not.toHaveProperty('rematchInvite');
       expect(JSON.stringify(wanted).length).toBeLessThan(320);
 
@@ -962,7 +962,7 @@ describe('multiplayer socket integration', () => {
       const active = await getRoom(created.room.id);
       const matchOver = onceEvent(a, 'match:over');
       await emit(a, 'game:guess', {
-        playerId: active!.targetPlayerId,
+        mouseId: active!.targetMouseId,
         roundId: active!.round,
         eventId: `rematch-3-finish-${stamp}`,
       });
@@ -1011,10 +1011,10 @@ describe('multiplayer socket integration', () => {
       expect((await emit(a, 'game:start')).ok).toBe(true);
 
       const active = await getRoom(created.room.id);
-      const wrongGuess = getDifficultyPlayers('easy').find((player) => player.id !== active!.targetPlayerId)!;
+      const wrongGuess = getDifficultyPlayers('easy').find((player) => player.id !== active!.targetMouseId)!;
       const hiddenEvent = onceEvent(b, 'game:guess:applied');
       await emit(a, 'game:guess', {
-        playerId: wrongGuess.id,
+        mouseId: wrongGuess.id,
         roundId: active!.round,
         eventId: `multi-hidden-${stamp}`,
       });
@@ -1071,7 +1071,7 @@ describe('multiplayer socket integration', () => {
       const firstTurnKey = active!.currentTurnKey!;
       const firstTurnIndex = turnOrder.indexOf(firstTurnKey);
       const wrongGuesses = getDifficultyPlayers('easy')
-        .filter((player) => player.id !== active!.targetPlayerId)
+        .filter((player) => player.id !== active!.targetMouseId)
         .slice(0, 4);
       expect(wrongGuesses).toHaveLength(4);
 
@@ -1091,7 +1091,7 @@ describe('multiplayer socket integration', () => {
 
       const secondTurnKey = turnOrder[(firstTurnIndex + 1) % turnOrder.length];
       expect((await emit(socketByPlayerKey.get(secondTurnKey)!, 'game:guess', {
-        playerId: wrongGuesses[0].id,
+        mouseId: wrongGuesses[0].id,
         roundId: active!.round,
         eventId: `relay-wrong-turn-${stamp}`,
       })).code).toBe('NOT_YOUR_TURN');
@@ -1103,7 +1103,7 @@ describe('multiplayer socket integration', () => {
         const nextTurnKey = turnOrder[(firstTurnIndex + guessIndex + 1) % turnOrder.length];
         const appliedEvents = sockets.map((socket) => onceEvent(socket, 'game:guess:applied'));
         expect((await emit(socketByPlayerKey.get(actorKey)!, 'game:guess', {
-          playerId: wrongGuesses[guessIndex].id,
+          mouseId: wrongGuesses[guessIndex].id,
           roundId: active!.round,
           eventId: `relay-rotate-${guessIndex}-${stamp}`,
         })).code).toBeUndefined();
@@ -1112,8 +1112,8 @@ describe('multiplayer socket integration', () => {
           expect(applied).toMatchObject({
             key: actorKey,
             feedback: {
-              playerId: wrongGuesses[guessIndex].id,
-              nickname: wrongGuesses[guessIndex].nickname,
+              mouseId: wrongGuesses[guessIndex].id,
+              name: wrongGuesses[guessIndex].name,
             },
             currentTurnKey: nextTurnKey,
             guessedAt: expect.any(Number),
@@ -1131,13 +1131,13 @@ describe('multiplayer socket integration', () => {
         currentTurnKey: firstTurnKey,
       });
       expect((await emit(socketByPlayerKey.get(firstTurnKey)!, 'game:guess', {
-        playerId: wrongGuesses[0].id,
+        mouseId: wrongGuesses[0].id,
         roundId: active!.round,
         eventId: `relay-duplicate-${stamp}`,
       })).code).toBe('ALREADY_GUESSED');
       const matchOver = onceEvent(a, 'match:over');
       expect((await emit(socketByPlayerKey.get(firstTurnKey)!, 'game:guess', {
-        playerId: active!.targetPlayerId, roundId: active!.round, eventId: `relay-solve-${stamp}`,
+        mouseId: active!.targetMouseId, roundId: active!.round, eventId: `relay-solve-${stamp}`,
       })).code).toBeUndefined();
       const finished = (await matchOver).room;
       expect(finished).toMatchObject({ gameMode: 'relay', relaySolvedRounds: 1 });
@@ -1183,26 +1183,26 @@ describe('multiplayer socket integration', () => {
       const active = await getRoom(created.room.id);
       const actorKey = active!.teamTurnKeys.a!;
       const actorSocket = socketByPlayerKey.get(actorKey)!;
-      const wrongGuess = getDifficultyPlayers('easy').find((player) => player.id !== active!.targetPlayerId)!;
+      const wrongGuess = getDifficultyPlayers('easy').find((player) => player.id !== active!.targetMouseId)!;
       const spectatorEvent = onceEvent(spectator, 'game:guess:applied');
       const opponentEvent = onceEvent(b1, 'game:guess:applied');
 
       expect((await emit(actorSocket, 'game:guess', {
-        playerId: wrongGuess.id,
+        mouseId: wrongGuess.id,
         roundId: active!.round,
         eventId: `relay2v2-spectator-${stamp}`,
       })).code).toBeUndefined();
 
       expect((await spectatorEvent).feedback).toMatchObject({
-        playerId: wrongGuess.id,
-        nickname: wrongGuess.nickname,
+        mouseId: wrongGuess.id,
+        name: wrongGuess.name,
       });
       expect((await opponentEvent).feedback).toMatchObject({ hidden: true });
 
       const spectatorSnapshot = await emit(spectator, 'room:sync');
       expect(spectatorSnapshot.room.teamGuesses.a[0].feedback).toMatchObject({
-        playerId: wrongGuess.id,
-        nickname: wrongGuess.nickname,
+        mouseId: wrongGuess.id,
+        name: wrongGuess.name,
       });
     } finally {
       sockets.forEach((socket) => socket.disconnect());
@@ -1289,24 +1289,24 @@ describe('multiplayer socket integration', () => {
       const active = await getRoom(created.room.id);
       expect(active?.roundEndsAt).toBeGreaterThanOrEqual(beforeStart + 9_000);
       expect(active?.roundEndsAt).toBeLessThanOrEqual(Date.now() + 10_000);
-      const wrongGuesses = await db('players')
-        .whereNot({ id: active!.targetPlayerId })
+      const wrongGuesses = await db('mice')
+        .whereNot({ id: active!.targetMouseId })
         .where({ is_enabled: true })
         .select('id')
         .limit(2);
       expect(wrongGuesses).toHaveLength(2);
       expect(await emit(a, 'game:guess', {
-        playerId: wrongGuesses[0].id,
+        mouseId: wrongGuesses[0].id,
         roundId: active!.round,
         eventId: `custom-${stamp}-0001`,
       })).toEqual({ cooldownMs: 0 });
       expect(await emit(a, 'game:guess', {
-        playerId: wrongGuesses[1].id,
+        mouseId: wrongGuesses[1].id,
         roundId: active!.round,
         eventId: `custom-${stamp}-0002`,
       })).toEqual({ cooldownMs: 0 });
       expect(await emit(a, 'game:guess', {
-        playerId: wrongGuesses[0].id,
+        mouseId: wrongGuesses[0].id,
         roundId: active!.round,
         eventId: `custom-${stamp}-0003`,
       })).toEqual({ code: 'GUESS_LIMIT_REACHED' });
@@ -1351,7 +1351,7 @@ describe('multiplayer socket integration', () => {
       const originalRecordId = active!.recordId;
       const matchOver = onceEvent(a, 'match:over');
       await emit(a, 'game:guess', {
-        playerId: active!.targetPlayerId,
+        mouseId: active!.targetMouseId,
         roundId: active!.round,
         eventId: `matchmaking-rematch-finish-${Date.now()}`,
       });
@@ -1451,11 +1451,11 @@ describe('multiplayer socket integration', () => {
 
       expect((await emit(a, 'game:start')).ok).toBe(true);
       const active = await getRoom(created.room.id);
-      expect(active?.targetPlayerId).toEqual(expect.any(Number));
+      expect(active?.targetMouseId).toEqual(expect.any(Number));
       const eventId = `patch-guess-${stamp}`;
       const matchOverPromise = onceEvent(a, 'match:over');
       const guessAck = await emit(a, 'game:guess', {
-        playerId: active!.targetPlayerId,
+        mouseId: active!.targetMouseId,
         roundId: active!.round,
         eventId,
       });
@@ -1544,14 +1544,14 @@ describe('multiplayer socket integration', () => {
       const stored = JSON.parse(
         (await redis()!.get(redisKey(`room:${created.room.id}`)))!
       );
-      const [wrongGuess] = await db('players')
-        .whereNot({ id: stored.targetPlayerId })
+      const [wrongGuess] = await db('mice')
+        .whereNot({ id: stored.targetMouseId })
         .select('id')
         .limit(1);
       const opponentEvent = onceEvent(b, 'game:guess:applied');
       const spectatorEvent = onceEvent(spectator, 'game:guess:applied');
       const guessed = await emit(a, 'game:guess', {
-        playerId: wrongGuess.id,
+        mouseId: wrongGuess.id,
         roundId: syncedA.room.roundId,
         eventId: `hidden-${stamp}-0001`,
       });
@@ -1562,18 +1562,18 @@ describe('multiplayer socket integration', () => {
       expect(hiddenUpdate.feedback).toMatchObject({ hidden: true, correct: false });
       expect(hiddenUpdate.eventId).toBeUndefined();
       expect(hiddenUpdate.guessCount).toBeUndefined();
-      expect(hiddenUpdate.feedback).not.toHaveProperty('playerId');
-      expect(hiddenUpdate.feedback).not.toHaveProperty('nickname');
+      expect(hiddenUpdate.feedback).not.toHaveProperty('mouseId');
+      expect(hiddenUpdate.feedback).not.toHaveProperty('name');
       expect(hiddenUpdate.feedback.attributes).not.toHaveProperty('region');
-      expect(hiddenUpdate.feedback.attributes.team).not.toHaveProperty('value');
+      expect(hiddenUpdate.feedback.attributes.brand).not.toHaveProperty('value');
 
       const spectatorUpdate = await spectatorEvent;
-      expect(spectatorUpdate.feedback.playerId).toBe(wrongGuess.id);
+      expect(spectatorUpdate.feedback.mouseId).toBe(wrongGuess.id);
       expect(spectatorUpdate.eventId).toBeUndefined();
       expect(spectatorUpdate.guessCount).toBeUndefined();
-      expect(spectatorUpdate.feedback.nickname).toEqual(expect.any(String));
+      expect(spectatorUpdate.feedback.name).toEqual(expect.any(String));
       expect(spectatorUpdate.feedback.attributes).not.toHaveProperty('region');
-      expect(spectatorUpdate.feedback.attributes.team).toHaveProperty('value');
+      expect(spectatorUpdate.feedback.attributes.brand).toHaveProperty('value');
 
       const syncedB = await emit(b, 'room:sync');
       expect(syncedB.room.anonymous).toBe(true);
@@ -1583,9 +1583,9 @@ describe('multiplayer socket integration', () => {
       ]);
       const opponentView = syncedB.room.players.find((player: any) => player.key === `g:${keyA}`);
       expect(opponentView.guesses[0]).toMatchObject({ hidden: true, correct: false });
-      expect(opponentView.guesses[0]).not.toHaveProperty('playerId');
-      expect(opponentView.guesses[0]).not.toHaveProperty('nickname');
-      expect(opponentView.guesses[0].attributes.nationality).not.toHaveProperty('value');
+      expect(opponentView.guesses[0]).not.toHaveProperty('mouseId');
+      expect(opponentView.guesses[0]).not.toHaveProperty('name');
+      expect(opponentView.guesses[0].attributes.country).not.toHaveProperty('value');
 
       const spectatorSync = await emit(spectator, 'room:sync');
       expect(spectatorSync.room.players.map((player: any) => player.name)).toEqual([
@@ -1595,13 +1595,13 @@ describe('multiplayer socket integration', () => {
       const spectatorView = spectatorSync.room.players.find(
         (player: any) => player.key === `g:${keyA}`
       );
-      expect(spectatorView.guesses[0].playerId).toBe(wrongGuess.id);
-      expect(spectatorView.guesses[0].nickname).toEqual(expect.any(String));
-      expect(spectatorView.guesses[0].attributes.nationality).toHaveProperty('value');
+      expect(spectatorView.guesses[0].mouseId).toBe(wrongGuess.id);
+      expect(spectatorView.guesses[0].name).toEqual(expect.any(String));
+      expect(spectatorView.guesses[0].attributes.country).toHaveProperty('value');
 
       const roundOverPromise = onceEvent(b, 'round:over');
       await emit(b, 'game:guess', {
-        playerId: stored.targetPlayerId,
+        mouseId: stored.targetMouseId,
         roundId: syncedA.room.roundId,
         eventId: `hidden-${stamp}-0002`,
       });
@@ -1610,9 +1610,9 @@ describe('multiplayer socket integration', () => {
       const revealedOpponent = roundOver.room.players.find(
         (player: any) => player.key === `g:${keyA}`
       );
-      expect(revealedOpponent.guesses[0].playerId).toBe(wrongGuess.id);
-      expect(revealedOpponent.guesses[0].nickname).toEqual(expect.any(String));
-      expect(revealedOpponent.guesses[0].attributes.nationality).toHaveProperty('value');
+      expect(revealedOpponent.guesses[0].mouseId).toBe(wrongGuess.id);
+      expect(revealedOpponent.guesses[0].name).toEqual(expect.any(String));
+      expect(revealedOpponent.guesses[0].attributes.country).toHaveProperty('value');
     } finally {
       a.disconnect();
       b.disconnect();
@@ -1634,21 +1634,21 @@ describe('multiplayer socket integration', () => {
       expect((await emit(a, 'game:start')).ok).toBe(true);
       const synced = await emit(a, 'room:sync');
       const stored = JSON.parse((await redis()!.get(redisKey(`room:${created.room.id}`)))!);
-      const wrongGuesses = await db('players')
-        .whereNot({ id: stored.targetPlayerId })
+      const wrongGuesses = await db('mice')
+        .whereNot({ id: stored.targetMouseId })
         .where({ is_enabled: true })
         .select('id')
         .limit(2);
 
       const firstAppliedPromise = onceEvent(a, 'game:guess:applied');
       const first = await emit(a, 'game:guess', {
-        playerId: wrongGuesses[0].id,
+        mouseId: wrongGuesses[0].id,
         roundId: synced.room.roundId,
         eventId: `script-${stamp}-0001`,
       });
       const firstApplied = await firstAppliedPromise;
       expect(first.feedback).toBeUndefined();
-      expect(firstApplied.feedback.playerId).toBe(wrongGuesses[0].id);
+      expect(firstApplied.feedback.mouseId).toBe(wrongGuesses[0].id);
       expect(first).not.toHaveProperty('room');
       const identityA = `g:script-a-${stamp}`;
       const snapshotAfterFirst = JSON.parse(
@@ -1683,7 +1683,7 @@ describe('multiplayer socket integration', () => {
 
       await redis()!.sendCommand(['SCRIPT', 'FLUSH']);
       const coolingDown = await emit(a, 'game:guess', {
-        playerId: wrongGuesses[1].id,
+        mouseId: wrongGuesses[1].id,
         roundId: synced.room.roundId,
         eventId: `script-${stamp}-0002`,
       });
@@ -1694,13 +1694,13 @@ describe('multiplayer socket integration', () => {
 
       const secondAppliedPromise = onceEvent(a, 'game:guess:applied');
       const second = await emit(a, 'game:guess', {
-        playerId: wrongGuesses[1].id,
+        mouseId: wrongGuesses[1].id,
         roundId: synced.room.roundId,
         eventId: `script-${stamp}-0003`,
       });
       const secondApplied = await secondAppliedPromise;
       expect(second.feedback).toBeUndefined();
-      expect(secondApplied.feedback.playerId).toBe(wrongGuesses[1].id);
+      expect(secondApplied.feedback.mouseId).toBe(wrongGuesses[1].id);
       expect(second).not.toHaveProperty('room');
       const roomAfterSecond = await getRoom(created.room.id);
       const timesAfterSecond = roomAfterSecond!.players.find(
@@ -1711,14 +1711,14 @@ describe('multiplayer socket integration', () => {
 
       for (let index = 4; index <= 12; index += 1) {
         const repeated = await emit(a, 'game:guess', {
-          playerId: wrongGuesses[1].id,
+          mouseId: wrongGuesses[1].id,
           roundId: synced.room.roundId,
           eventId: `script-${stamp}-${String(index).padStart(4, '0')}`,
         });
         expect(repeated.code).toBe('ALREADY_GUESSED');
       }
       const limited = await emit(a, 'game:guess', {
-        playerId: wrongGuesses[1].id,
+        mouseId: wrongGuesses[1].id,
         roundId: synced.room.roundId,
         eventId: `script-${stamp}-0013`,
       });
@@ -2000,11 +2000,11 @@ describe('multiplayer socket integration', () => {
         room.round = 2;
         room.replayRounds = [{
           round: 1,
-          targetPlayerId: room.targetPlayerId!,
+          targetMouseId: room.targetMouseId!,
           winnerKey: winner.key,
           reason: 'guessed',
           guessesByPlayer: {
-            [`g:${keyA}`]: [room.targetPlayerId!],
+            [`g:${keyA}`]: [room.targetMouseId!],
             [`g:${keyB}`]: [],
           },
         }];
@@ -2019,7 +2019,7 @@ describe('multiplayer socket integration', () => {
       const matchOverPromise = onceEvent(a, 'match:over');
       const opponentMatchOverPromise = onceEvent(b, 'match:over');
       const guessed = await emit(a, 'game:guess', {
-        playerId: stored.targetPlayerId,
+        mouseId: stored.targetMouseId,
         roundId: before.room.roundId,
         eventId: `result-${stamp}-0001`,
       });
@@ -2141,7 +2141,7 @@ describe('multiplayer socket integration', () => {
       expect(synced.room.players.find((player: any) => player.key === `g:${keyB}`).score).toBe(0);
       const guessPlayer = getDifficultyPlayers('easy')[0];
       expect((await emit(a, 'game:guess', {
-        playerId: guessPlayer.id,
+        mouseId: guessPlayer.id,
         roundId: active.room.roundId,
         eventId: `skip-${stamp}-0001`,
       })).code).toBe('ROUND_SKIPPED');
@@ -2211,7 +2211,7 @@ describe('multiplayer socket integration', () => {
       expect(roundOver.room.roundResult).toMatchObject({
         winnerKey: null,
         reason: 'skipped',
-        answer: { nickname: expect.any(String) },
+        answer: { name: expect.any(String) },
       });
       const synced = await emit(b, 'room:sync');
       expect(synced.room.status).toBe('round_over');
@@ -2244,7 +2244,7 @@ describe('multiplayer socket integration', () => {
       expect((await emit(a, 'game:skip-round', { roundId: active.room.roundId })).ok).toBe(true);
 
       const stored = await getRoom(created.room.id);
-      const target = getPlayer(stored!.targetPlayerId!)!;
+      const target = getPlayer(stored!.targetMouseId!)!;
       const wrongPool = getDifficultyPlayers('easy')
         .filter((player) => player.id !== target.id)
       expect(wrongPool.length).toBeGreaterThan(1);
@@ -2262,7 +2262,7 @@ describe('multiplayer socket integration', () => {
 
       const roundOverPromise = onceEvent(a, 'round:over');
       expect((await emit(b, 'game:guess', {
-        playerId: wrongPlayers[7].id,
+        mouseId: wrongPlayers[7].id,
         roundId: active.room.roundId,
         eventId: `skip-limit-${stamp}-0001`,
       }))).toMatchObject({ cooldownMs: expect.any(Number) });
@@ -2270,7 +2270,7 @@ describe('multiplayer socket integration', () => {
       expect(roundOver.room.roundResult).toMatchObject({
         winnerKey: null,
         reason: 'skipped',
-        answer: { nickname: target.nickname },
+        answer: { name: target.name },
       });
       expect(roundOver.room.players.map((player: any) => player.score)).toEqual([0, 0]);
     } finally {
@@ -2297,7 +2297,7 @@ describe('multiplayer socket integration', () => {
       await emit(a, 'game:start');
       const firstStored = JSON.parse((await redis()!.get(redisKey(`room:${first.room.id}`)))!);
       await emit(a, 'game:guess', {
-        playerId: firstStored.targetPlayerId,
+        mouseId: firstStored.targetMouseId,
         roundId: firstStored.round,
         eventId: `switch-${stamp}-first`,
       });

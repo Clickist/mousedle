@@ -12,7 +12,7 @@ export interface SingleGameState {
   userId: number | null;
   guestKey: string | null;
   mode: SingleGameMode;
-  targetPlayerId: number;
+  targetMouseId: number;
   dailyChallengeId?: number;
   guesses: GuessFeedback[];
   /** Milliseconds from game creation for each accepted guess. */
@@ -58,7 +58,7 @@ export async function createOrResumeSingleGameWithStatus(input: {
   userId: number | null;
   guestKey: string | null;
   mode: SingleGameMode;
-  targetPlayerId: number;
+  targetMouseId: number;
   kind?: SingleGameKind;
   expiresAt?: number;
   dailyChallengeId?: number;
@@ -74,7 +74,7 @@ export async function createOrResumeSingleGameWithStatus(input: {
     userId: input.userId,
     guestKey: input.guestKey,
     mode: input.mode,
-    targetPlayerId: input.targetPlayerId,
+    targetMouseId: input.targetMouseId,
     dailyChallengeId: input.dailyChallengeId,
     guesses: [],
     guessTimes: [],

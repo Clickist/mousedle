@@ -1,30 +1,20 @@
-import { Player, GuessFeedback, AttributeFeedback } from '../types';
+import { Mouse, GuessFeedback, AttributeFeedback } from '../types';
 
-const AGE_CLOSE_RANGE = 3;
-const MAJOR_CHAMPIONSHIPS_CLOSE_RANGE = 1;
-const MAJOR_APPEARANCES_CLOSE_RANGE = 1;
+const WEIGHT_CLOSE_RANGE = 5; // 克
+const LENGTH_CLOSE_RANGE = 5; // 毫米
+const SIDE_BUTTONS_CLOSE_RANGE = 0; // 侧键数只分对错,不做接近
 
 function textAttr(guess: string, target: string): AttributeFeedback {
   return { value: guess, level: guess === target ? 'correct' : 'wrong' };
 }
 
-function teamAttr(guess: Player, target: Player): AttributeFeedback {
-  if (guess.team === target.team) {
-    return { value: guess.team, level: 'correct' };
-  }
-  if (guess.team && target.team_history.includes(guess.team)) {
-    return { value: guess.team, level: 'close' };
-  }
-  return { value: guess.team, level: 'wrong' };
-}
-
-/** 国家或地区:相同 correct;不同但同赛区 close */
-function nationalityAttr(guess: Player, target: Player): AttributeFeedback {
-  if (guess.nationality === target.nationality)
-    return { value: guess.nationality, level: 'correct' };
-  if (guess.region && guess.region === target.region)
-    return { value: guess.nationality, level: 'close' };
-  return { value: guess.nationality, level: 'wrong' };
+/** 产地:相同 correct;不同但同大洲 close */
+function countryAttr(guess: Mouse, target: Mouse): AttributeFeedback {
+  if (guess.country === target.country)
+    return { value: guess.country, level: 'correct' };
+  if (guess.country && target.continent && guess.continent === target.continent)
+    return { value: guess.country, level: 'close' };
+  return { value: guess.country, level: 'wrong' };
 }
 
 function numberAttr(
@@ -41,48 +31,29 @@ function numberAttr(
   };
 }
 
-/** 逐属性对比猜测选手与目标选手,产出反馈 */
-export function compareGuess(guess: Player, target: Player): GuessFeedback {
+/** 逐属性对比猜测鼠标与目标鼠标,产出反馈 */
+export function compareGuess(guess: Mouse, target: Mouse): GuessFeedback {
   const correct = guess.id === target.id;
   return {
-    playerId: guess.id,
-    nickname: guess.nickname,
+    mouseId: guess.id,
+    name: guess.name,
     correct,
     attributes: {
-      nationality: nationalityAttr(guess, target),
-      region: textAttr(guess.region, target.region),
-      team: teamAttr(guess, target),
-      age: numberAttr(guess.age, target.age, AGE_CLOSE_RANGE),
-      role: textAttr(guess.role, target.role),
-      majorChampionships: numberAttr(
-        guess.major_championships,
-        target.major_championships,
-        MAJOR_CHAMPIONSHIPS_CLOSE_RANGE
+      brand: textAttr(guess.brand, target.brand),
+      country: countryAttr(guess, target),
+      shape: textAttr(guess.shape, target.shape),
+      size: textAttr(guess.size, target.size),
+      weight: numberAttr(guess.weight, target.weight, WEIGHT_CLOSE_RANGE),
+      lengthMm: numberAttr(guess.length_mm, target.length_mm, LENGTH_CLOSE_RANGE),
+      sideButtons: numberAttr(
+        guess.side_buttons,
+        target.side_buttons,
+        SIDE_BUTTONS_CLOSE_RANGE
       ),
-      majorAppearances: numberAttr(
-        guess.major_appearances,
-        target.major_appearances,
-        MAJOR_APPEARANCES_CLOSE_RANGE
-      ),
-      isActive: {
-        value: Boolean(guess.is_active),
-        level: Boolean(guess.is_active) === Boolean(target.is_active) ? 'correct' : 'wrong',
+      wireless: {
+        value: Boolean(guess.wireless),
+        level: Boolean(guess.wireless) === Boolean(target.wireless) ? 'correct' : 'wrong',
       },
-    },
-  };
-}
-
-export function refreshGuessFeedback(
-  feedback: GuessFeedback,
-  guess?: Player,
-  target?: Player
-): GuessFeedback {
-  if (!guess || !target) return feedback;
-  return {
-    ...feedback,
-    attributes: {
-      ...feedback.attributes,
-      team: teamAttr(guess, target),
     },
   };
 }

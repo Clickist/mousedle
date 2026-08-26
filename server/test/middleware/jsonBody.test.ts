@@ -46,7 +46,7 @@ describe('json body routing', () => {
     server = http.createServer(app);
     await new Promise<void>((resolve) => server!.listen(0, resolve));
     const port = (server.address() as AddressInfo).port;
-    const body = JSON.stringify({ players: [{ nickname: 'x'.repeat(180 * 1024) }] });
+    const body = JSON.stringify({ players: [{ name: 'x'.repeat(180 * 1024) }] });
     const response = await fetch(`http://127.0.0.1:${port}/api/admin/players/import`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

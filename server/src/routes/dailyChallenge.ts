@@ -4,8 +4,8 @@ import { db } from '../db/knex';
 import { optionalAuth, userNameFromUsername } from '../middleware/auth';
 import { asyncHandler, HttpError, validateBody, validateParams } from '../middleware/common';
 import { rateLimit, requestIdentity } from '../middleware/rateLimit';
-import type { GuessFeedback, Player } from '../types';
-import { compareGuess, MAX_GUESSES, refreshGuessFeedback } from '../services/gameService';
+import type { GuessFeedback, Mouse } from '../types';
+import { compareGuess, MAX_GUESSES } from '../services/gameService';
 import { getEnabledPlayer, getPlayer } from '../services/playerCache';
 import { withKeyLock } from '../services/keyLock';
 import {
@@ -35,7 +35,7 @@ const difficultySchema = z.string().trim().regex(/^[a-z0-9][a-z0-9_-]{0,31}$/);
 const startSchema = z.object({ difficulty: difficultySchema });
 const difficultyParams = z.object({ difficulty: difficultySchema });
 const gameIdParams = z.object({ id: z.string().uuid() });
-const guessSchema = z.object({ playerId: z.number().int().positive() });
+const guessSchema = z.object({ mouseId: z.number().int().positive() });
 
 interface Owner {
   identityKey: string;
@@ -82,24 +82,23 @@ function ownerFor(req: {
   return null;
 }
 
-function answerView(target: Player) {
+function answerView(target: Mouse) {
   return {
     id: target.id,
-    nickname: target.nickname,
-    team: target.team,
-    nationality: target.nationality,
-    region: target.region,
-    role: target.role,
-    majorChampionships: target.major_championships,
-    majorAppearances: target.major_appearances,
+    name: target.name,
+    brand: target.brand,
+    country: target.country,
+    continent: target.continent,
+    shape: target.shape,
+        size: target.size,
+    lengthMm: target.length_mm,
+    sideButtons: target.side_buttons,
   };
 }
 
 function publicGuesses(game: SingleGameState): GuessFeedback[] {
-  const target = getPlayer(game.targetPlayerId);
-  return game.guesses.map((feedback) =>
-    refreshGuessFeedback(feedback, getPlayer(feedback.playerId), target)
-  );
+  const target = getPlayer(game.targetMouseId);
+  return game.guesses.map((feedback) => feedback);
 }
 
 function storedGuessIds(value: unknown): number[] {
@@ -119,10 +118,10 @@ function storedGuessIds(value: unknown): number[] {
 }
 
 function storedGuesses(challenge: DailyChallengeRecord, value: unknown): GuessFeedback[] {
-  const target = getPlayer(challenge.targetPlayerId);
+  const target = getPlayer(challenge.targetMouseId);
   if (!target) return [];
-  return storedGuessIds(value).flatMap((playerId) => {
-    const guess = getPlayer(playerId);
+  return storedGuessIds(value).flatMap((mouseId) => {
+    const guess = getPlayer(mouseId);
     return guess ? [compareGuess(guess, target)] : [];
   });
 }
@@ -148,7 +147,7 @@ async function loadOwnedDailyGame(id: string, owner: Owner): Promise<{
       id: game.dailyChallengeId,
       challengeDate: parsedMode.date,
       difficulty: parsedMode.difficulty,
-      targetPlayerId: game.targetPlayerId,
+      targetMouseId: game.targetMouseId,
     },
   };
 }
@@ -169,7 +168,7 @@ async function recordAttempt(
         display_name: owner.displayName,
         status,
         guess_count: game.guesses.length,
-        guesses: JSON.stringify(game.guesses.map((guess) => guess.playerId)),
+        guesses: JSON.stringify(game.guesses.map((guess) => guess.mouseId)),
         guess_times: JSON.stringify(game.guessTimes),
         created_at: new Date(game.createdAt),
         finished_at: trx.fn.now(),
@@ -247,7 +246,7 @@ router.get(
         owner.identityKey,
         dailyChallengeMode(window.date, challenge.difficulty)
       );
-      return game?.kind === 'daily' && game.targetPlayerId === challenge.targetPlayerId
+      return game?.kind === 'daily' && game.targetMouseId === challenge.targetMouseId
         ? game
         : null;
     }));
@@ -348,10 +347,10 @@ router.get(
       owner.identityKey,
       dailyChallengeMode(window.date, challenge.difficulty)
     );
-    const validActive = active?.kind === 'daily' && active.targetPlayerId === challenge.targetPlayerId
+    const validActive = active?.kind === 'daily' && active.targetMouseId === challenge.targetMouseId
       ? active
       : null;
-    const target = attempt ? getPlayer(challenge.targetPlayerId) : null;
+    const target = attempt ? getPlayer(challenge.targetMouseId) : null;
 
     res.json({
       date: window.date,
@@ -408,7 +407,7 @@ router.post(
         const result = await createOrResumeSingleGameWithStatus({
           ...owner,
           mode: dailyChallengeMode(window.date, difficulty),
-          targetPlayerId: challenge.targetPlayerId,
+          targetMouseId: challenge.targetMouseId,
           kind: 'daily',
           expiresAt: window.nextRefreshAt,
           dailyChallengeId: challenge.id,
@@ -443,11 +442,11 @@ router.post(
     if (!owner) throw new HttpError(400, 'GUEST_KEY_REQUIRED');
     const response = await withKeyLock(`single-game:${req.params.id}`, async () => {
       const { game, challenge } = await loadOwnedDailyGame(req.params.id, owner);
-      const guess = getEnabledPlayer(req.body.playerId);
+      const guess = getEnabledPlayer(req.body.mouseId);
       if (!guess) throw new HttpError(404, 'PLAYER_NOT_FOUND');
-      const target = getPlayer(game.targetPlayerId);
+      const target = getPlayer(game.targetMouseId);
       if (!target) throw new HttpError(500, 'INTERNAL_ERROR');
-      if (game.guesses.some((item) => item.playerId === guess.id)) {
+      if (game.guesses.some((item) => item.mouseId === guess.id)) {
         throw new HttpError(400, 'ALREADY_GUESSED');
       }
 
@@ -490,7 +489,7 @@ router.post(
     if (!owner) throw new HttpError(400, 'GUEST_KEY_REQUIRED');
     const response = await withKeyLock(`single-game:${req.params.id}`, async () => {
       const { game, challenge } = await loadOwnedDailyGame(req.params.id, owner);
-      const target = getPlayer(game.targetPlayerId);
+      const target = getPlayer(game.targetMouseId);
       if (!target) throw new HttpError(500, 'INTERNAL_ERROR');
       await recordAttempt(game, challenge, 'lost', owner);
       return {

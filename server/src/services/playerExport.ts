@@ -1,64 +1,63 @@
 import { db } from '../db/knex';
-import { normalizeTeamHistory } from './teamHistory';
 
 export interface ExportedPlayer {
-  playerId: number;
-  nickname: string;
-  nationality: string;
-  region: string;
-  team: string;
-  team_history: string[];
-  age: number;
-  role: string;
-  major_championships: number;
-  major_appearances: number;
+  mouseId: number;
+  name: string;
+  brand: string;
+  country: string;
+  continent: string;
+  shape: string;
+  size: string;
+  weight: number;
+  length_mm: number;
+  side_buttons: number;
   difficulties: string[];
-  is_active: boolean;
+  wireless: boolean;
   is_enabled: boolean;
 }
 
 export async function exportPlayers(): Promise<ExportedPlayer[]> {
   const [players, memberships] = await Promise.all([
-    db('players')
+    db('mice')
       .select(
         'id',
-        'nickname',
-        'nationality',
-        'region',
-        'team',
-        'team_history',
-        'age',
-        'role',
-        'major_championships',
-        'major_appearances',
-        'is_active',
+        'name',
+        'brand',
+        'country',
+        'continent',
+        'shape',
+        'size',
+        'weight',
+        'length_mm',
+        'side_buttons',
+        'wireless',
         'is_enabled'
       )
-      .orderBy('nickname'),
-    db('player_difficulties')
+      .orderBy('name'),
+    db('mouse_difficulties')
       .orderBy('difficulty_key')
-      .select('player_id', 'difficulty_key'),
+      .select('mouse_id', 'difficulty_key'),
   ]);
   const difficultiesByPlayer = new Map<number, string[]>();
   for (const membership of memberships) {
-    const playerId = Number(membership.player_id);
-    const difficulties = difficultiesByPlayer.get(playerId) ?? [];
+    const mouseId = Number(membership.mouse_id);
+    const difficulties = difficultiesByPlayer.get(mouseId) ?? [];
     difficulties.push(String(membership.difficulty_key));
-    difficultiesByPlayer.set(playerId, difficulties);
+    difficultiesByPlayer.set(mouseId, difficulties);
   }
   return players.map((player) => ({
-    playerId: Number(player.id),
-    nickname: String(player.nickname),
-    nationality: String(player.nationality),
-    region: String(player.region),
-    team: String(player.team),
-    team_history: normalizeTeamHistory(player.team_history),
-    age: Number(player.age),
-    role: String(player.role),
-    major_championships: Number(player.major_championships),
-    major_appearances: Number(player.major_appearances),
+    mouseId: Number(player.id),
+    name: String(player.name),
+    brand: String(player.brand),
+    country: String(player.country),
+    continent: String(player.continent),
+    shape: String(player.shape),
+    size: String(player.size),
+    weight: Number(player.weight),
+    length_mm: Number(player.length_mm),
+    side_buttons: Number(player.side_buttons),
     difficulties: difficultiesByPlayer.get(Number(player.id)) ?? [],
-    is_active: Boolean(player.is_active),
+    wireless: Boolean(player.wireless),
     is_enabled: Boolean(player.is_enabled),
   }));
 }

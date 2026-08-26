@@ -1,6 +1,6 @@
 import { getDifficultyPlayers, pickCachedTarget } from './playerCache';
 import { evalStateScript, redisKey, redisState } from '../redis';
-import type { Player } from '../types';
+import type { Mouse } from '../types';
 
 const HISTORY_WINDOW_MS = 60 * 60_000;
 const HISTORY_TTL_SECONDS = 2 * 60 * 60;
@@ -9,7 +9,7 @@ const MIN_CANDIDATES = 5;
 const MAX_LOCAL_HISTORY_KEYS = 10_000;
 
 interface TargetHistoryEntry {
-  playerId: number;
+  mouseId: number;
   selectedAt: number;
 }
 
@@ -40,13 +40,13 @@ function readLocalHistory(identity: string, mode: string, cutoff: number): Targe
   return active;
 }
 
-function rememberLocally(identities: readonly string[], mode: string, playerId: number, now: number): void {
+function rememberLocally(identities: readonly string[], mode: string, mouseId: number, now: number): void {
   const cutoff = now - HISTORY_WINDOW_MS;
   for (const identity of identities) {
     const key = localKey(identity, mode);
     const current = readLocalHistory(identity, mode, cutoff)
-      .filter((entry) => entry.playerId !== playerId);
-    current.push({ playerId, selectedAt: now });
+      .filter((entry) => entry.mouseId !== mouseId);
+    current.push({ mouseId, selectedAt: now });
     localHistory.delete(key);
     localHistory.set(key, current.slice(-MAX_HISTORY_TARGETS));
   }
@@ -64,7 +64,7 @@ async function recentEntries(
   const byPlayer = new Map<number, number>();
   for (const identity of identities) {
     for (const entry of readLocalHistory(identity, mode, cutoff)) {
-      byPlayer.set(entry.playerId, Math.max(byPlayer.get(entry.playerId) ?? 0, entry.selectedAt));
+      byPlayer.set(entry.mouseId, Math.max(byPlayer.get(entry.mouseId) ?? 0, entry.selectedAt));
     }
   }
 
@@ -76,9 +76,9 @@ async function recentEntries(
       ));
       for (const history of histories) {
         for (const entry of history) {
-          const playerId = Number(entry.value);
-          if (!Number.isInteger(playerId) || playerId <= 0 || entry.score < cutoff) continue;
-          byPlayer.set(playerId, Math.max(byPlayer.get(playerId) ?? 0, entry.score));
+          const mouseId = Number(entry.value);
+          if (!Number.isInteger(mouseId) || mouseId <= 0 || entry.score < cutoff) continue;
+          byPlayer.set(mouseId, Math.max(byPlayer.get(mouseId) ?? 0, entry.score));
         }
       }
     } catch {
@@ -87,7 +87,7 @@ async function recentEntries(
   }
 
   return [...byPlayer.entries()]
-    .map(([playerId, selectedAt]) => ({ playerId, selectedAt }))
+    .map(([mouseId, selectedAt]) => ({ mouseId, selectedAt }))
     .sort((a, b) => b.selectedAt - a.selectedAt);
 }
 
@@ -96,12 +96,12 @@ export async function pickTargetAvoidingRecent(input: {
   identities: readonly string[];
   hardExcludedIds?: readonly number[];
   now?: number;
-}): Promise<Player | null> {
+}): Promise<Mouse | null> {
   const pool = getDifficultyPlayers(input.mode);
   if (!pool.length) return null;
   const poolIds = new Set(pool.map((player) => player.id));
   const hardExcluded = new Set(
-    (input.hardExcludedIds ?? []).filter((playerId) => poolIds.has(playerId))
+    (input.hardExcludedIds ?? []).filter((mouseId) => poolIds.has(mouseId))
   );
   const withoutHardExclusions = pool.filter((player) => !hardExcluded.has(player.id));
   const basePool = withoutHardExclusions.length ? withoutHardExclusions : pool;
@@ -117,9 +117,9 @@ export async function pickTargetAvoidingRecent(input: {
     basePool.length - minimumCandidateCount
   );
   const recentExcluded = recent
-    .filter((entry) => baseIds.has(entry.playerId))
+    .filter((entry) => baseIds.has(entry.mouseId))
     .slice(0, maximumRecentExclusions)
-    .map((entry) => entry.playerId);
+    .map((entry) => entry.mouseId);
   const excluded = withoutHardExclusions.length
     ? new Set([...hardExcluded, ...recentExcluded])
     : new Set(recentExcluded);
@@ -129,13 +129,13 @@ export async function pickTargetAvoidingRecent(input: {
 export async function rememberTargetSelection(input: {
   mode: string;
   identities: readonly string[];
-  playerId: number;
+  mouseId: number;
   now?: number;
 }): Promise<void> {
   const identities = normalizedIdentities(input.identities);
   if (!identities.length) return;
   const now = input.now ?? Date.now();
-  rememberLocally(identities, input.mode, input.playerId, now);
+  rememberLocally(identities, input.mode, input.mouseId, now);
   const client = redisState();
   if (!client) return;
   try {
@@ -155,7 +155,7 @@ export async function rememberTargetSelection(input: {
       [
         String(now),
         String(now - HISTORY_WINDOW_MS),
-        String(input.playerId),
+        String(input.mouseId),
         String(HISTORY_TTL_SECONDS),
       ]
     );

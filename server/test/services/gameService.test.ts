@@ -1,27 +1,27 @@
 import { describe, it, expect } from 'vitest';
 import { compareGuess } from '../../src/services/gameService';
-import { Player } from '../../src/types';
+import { Mouse } from '../../src/types';
 
-function makePlayer(overrides: Partial<Player>): Player {
+function makeMouse(overrides: Partial<Mouse>): Mouse {
   return {
     id: 1,
-    nickname: 'test',
-    nationality: '瑞典',
-    region: '欧洲',
-    team: 'NIP',
-    team_history: [],
-    age: 35,
-    role: 'Rifler',
-    major_championships: 1,
-    major_appearances: 12,
-    is_active: true,
+    name: 'test',
+    brand: 'Logitech',
+    country: '瑞士',
+    continent: '欧洲',
+    shape: '对称',
+    size: '中型',
+    weight: 60,
+    length_mm: 125,
+    side_buttons: 2,
+    wireless: true,
     created_at: '',
     ...overrides,
   };
 }
 
 describe('compareGuess', () => {
-  const target = makePlayer({ id: 10, nickname: 'friberg' });
+  const target = makeMouse({ id: 10, name: 'Logitech G Pro X Superlight 2' });
 
   it('猜中时所有属性 correct', () => {
     const fb = compareGuess(target, target);
@@ -29,82 +29,68 @@ describe('compareGuess', () => {
     expect(Object.values(fb.attributes).every((a) => a.level === 'correct')).toBe(true);
   });
 
-  it('同赛区不同国家或地区给 close', () => {
-    const guess = makePlayer({ id: 2, nationality: '丹麦', region: '欧洲' });
-    expect(compareGuess(guess, target).attributes.nationality.level).toBe('close');
+  it('同大洲不同产地给 close', () => {
+    const guess = makeMouse({ id: 2, country: '德国', continent: '欧洲' });
+    expect(compareGuess(guess, target).attributes.country.level).toBe('close');
   });
 
-  it('不同赛区的国家或地区给 wrong', () => {
-    const guess = makePlayer({ id: 2, nationality: '巴西', region: '南美' });
+  it('不同大洲的产地给 wrong', () => {
+    const guess = makeMouse({ id: 2, country: '中国', continent: '亚洲' });
     const fb = compareGuess(guess, target);
-    expect(fb.attributes.nationality.level).toBe('wrong');
-    expect(fb.attributes.region.level).toBe('wrong');
+    expect(fb.attributes.country.level).toBe('wrong');
   });
 
-  it('年龄相差 3 岁给 close 并带方向提示', () => {
-    const guess = makePlayer({ id: 2, age: target.age - 3 });
+  it('品牌不同给 wrong,相同给 correct', () => {
+    const guess = makeMouse({ id: 2, brand: 'Razer' });
+    expect(compareGuess(guess, target).attributes.brand.level).toBe('wrong');
+    const sameBrand = makeMouse({ id: 3, brand: 'Logitech' });
+    expect(compareGuess(sameBrand, target).attributes.brand.level).toBe('correct');
+  });
+
+  it('重量相差 5g 给 close 并带方向提示', () => {
+    const guess = makeMouse({ id: 2, weight: target.weight - 5 });
     const fb = compareGuess(guess, target);
-    expect(fb.attributes.age.level).toBe('close');
-    // 猜的人更年轻,目标年龄更大
-    expect(fb.attributes.age.hint).toBe('higher');
+    expect(fb.attributes.weight.level).toBe('close');
+    // 猜的更轻,目标更重
+    expect(fb.attributes.weight.hint).toBe('higher');
   });
 
-  it('年龄相差 4 岁给 wrong', () => {
-    const guess = makePlayer({ id: 2, age: target.age - 4 });
-    expect(compareGuess(guess, target).attributes.age.level).toBe('wrong');
+  it('重量相差 6g 给 wrong', () => {
+    const guess = makeMouse({ id: 2, weight: target.weight - 6 });
+    expect(compareGuess(guess, target).attributes.weight.level).toBe('wrong');
   });
 
-  it('当前队伍相同为 correct，即使该队伍也出现在历史队伍中', () => {
-    const targetWithHistory = makePlayer({ team: 'NIP', team_history: ['NIP', 'Fnatic'] });
-    const guess = makePlayer({ id: 2, team: 'NIP' });
-    expect(compareGuess(guess, targetWithHistory).attributes.team).toEqual({
-      value: 'NIP',
-      level: 'correct',
-    });
-  });
-
-  it('猜测队伍命中历史队伍时为 close', () => {
-    const targetWithHistory = makePlayer({ team: 'NIP', team_history: ['Fnatic', 'NIP'] });
-    const guess = makePlayer({ id: 2, team: 'Fnatic' });
-    expect(compareGuess(guess, targetWithHistory).attributes.team).toEqual({
-      value: 'Fnatic',
-      level: 'close',
-    });
-  });
-
-  it('Major 参赛次数相差 1 给 close 并带方向提示', () => {
-    const guess = makePlayer({ id: 2, major_appearances: target.major_appearances - 1 });
+  it('长度相差 5mm 给 close 并带方向提示', () => {
+    const guess = makeMouse({ id: 2, length_mm: target.length_mm - 5 });
     const fb = compareGuess(guess, target);
-    expect(fb.attributes.majorAppearances.level).toBe('close');
-    expect(fb.attributes.majorAppearances.hint).toBe('higher');
+    expect(fb.attributes.lengthMm.level).toBe('close');
+    expect(fb.attributes.lengthMm.hint).toBe('higher');
   });
 
-  it('Major 参赛次数相差 2 给 wrong 并带方向提示', () => {
-    const guess = makePlayer({ id: 2, major_appearances: target.major_appearances - 2 });
+  it('长度相差 6mm 给 wrong', () => {
+    const guess = makeMouse({ id: 2, length_mm: target.length_mm + 6 });
+    expect(compareGuess(guess, target).attributes.lengthMm.level).toBe('wrong');
+  });
+
+  it('侧键数只分对错,相差 1 也是 wrong 并带方向提示', () => {
+    const guess = makeMouse({ id: 2, side_buttons: target.side_buttons + 1 });
     const fb = compareGuess(guess, target);
-    expect(fb.attributes.majorAppearances.level).toBe('wrong');
-    expect(fb.attributes.majorAppearances.hint).toBe('higher');
+    expect(fb.attributes.sideButtons.level).toBe('wrong');
+    expect(fb.attributes.sideButtons.hint).toBe('lower');
   });
 
-  it('Major 冠军数相差 1 给 close 并带方向提示', () => {
-    const guess = makePlayer({ id: 2, major_championships: 0 });
-    const fb = compareGuess(guess, target);
-    expect(fb.attributes.majorChampionships.level).toBe('close');
-    expect(fb.attributes.majorChampionships.hint).toBe('higher');
+  it('形状不同给 wrong', () => {
+    const guess = makeMouse({ id: 2, shape: '人体工学' });
+    expect(compareGuess(guess, target).attributes.shape.level).toBe('wrong');
   });
 
-  it('Major 冠军数相差 2 给 wrong', () => {
-    const guess = makePlayer({ id: 2, major_championships: target.major_championships + 2 });
-    expect(compareGuess(guess, target).attributes.majorChampionships.level).toBe('wrong');
+  it('大小档不同给 wrong', () => {
+    const guess = makeMouse({ id: 2, size: '大型' });
+    expect(compareGuess(guess, target).attributes.size.level).toBe('wrong');
   });
 
-  it('位置不同时给 wrong', () => {
-    const guess = makePlayer({ id: 2, role: 'AWPer' });
-    expect(compareGuess(guess, target).attributes.role.level).toBe('wrong');
-  });
-
-  it('现役状态不同给 wrong', () => {
-    const guess = makePlayer({ id: 2, is_active: false });
-    expect(compareGuess(guess, target).attributes.isActive.level).toBe('wrong');
+  it('无线状态不同给 wrong', () => {
+    const guess = makeMouse({ id: 2, wireless: false });
+    expect(compareGuess(guess, target).attributes.wireless.level).toBe('wrong');
   });
 });

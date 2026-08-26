@@ -39,14 +39,14 @@ export interface MatchResultPayload {
   }[];
   rounds: Array<{
     round: number;
-    targetPlayerId: number;
+    targetMouseId: number;
     winnerKey: string | null;
     reason: string;
     guessesByPlayer: Record<string, number[]>;
     guessTimesByPlayer: Record<string, Array<number | null>>;
-    sharedGuesses?: Array<{ actorKey: string; playerId: number; guessedAt: number; guessTime: number }>;
+    sharedGuesses?: Array<{ actorKey: string; mouseId: number; guessedAt: number; guessTime: number }>;
     winnerTeam?: 'a' | 'b' | null;
-    teamGuesses?: Record<'a' | 'b', Array<{ actorKey: string; playerId: number; guessedAt: number; guessTime: number }>>;
+    teamGuesses?: Record<'a' | 'b', Array<{ actorKey: string; mouseId: number; guessedAt: number; guessTime: number }>>;
     teamScores?: { a: number; b: number };
   }>;
 }

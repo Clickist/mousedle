@@ -20,16 +20,16 @@ import { setLocalTimer } from './timers';
 
 export function appendReplayRound(room: StoredRoom): void {
   const result = room.roundResult;
-  if (!result || !room.targetPlayerId) return;
+  if (!result || !room.targetMouseId) return;
   if (room.replayRounds.some((round) => round.round === result.round)) return;
   room.replayRounds.push({
     round: result.round,
-    targetPlayerId: room.targetPlayerId,
+    targetMouseId: room.targetMouseId,
     winnerKey: result.winnerKey,
     reason: result.reason,
     winnerTeam: result.winnerTeam ?? null,
     guessesByPlayer: Object.fromEntries(
-      room.players.map((player) => [player.key, player.guesses.map((guess) => guess.playerId)])
+      room.players.map((player) => [player.key, player.guesses.map((guess) => guess.mouseId)])
     ),
     guessTimesByPlayer: Object.fromEntries(
       room.players.map((player) => [player.key, player.guessTimes.slice()])
@@ -37,7 +37,7 @@ export function appendReplayRound(room: StoredRoom): void {
     ...(room.gameMode === 'relay' ? {
       sharedGuesses: room.relayGuesses.map((guess) => ({
         actorKey: guess.actorKey,
-        playerId: guess.playerId,
+        mouseId: guess.mouseId,
         guessedAt: guess.guessedAt,
         guessTime: guess.guessTime,
       })),
@@ -45,12 +45,12 @@ export function appendReplayRound(room: StoredRoom): void {
     ...(room.gameMode === 'relay2v2' ? {
       teamGuesses: { a: room.teamGuesses.a.map((guess) => ({
         actorKey: guess.actorKey,
-        playerId: guess.playerId,
+        mouseId: guess.mouseId,
         guessedAt: guess.guessedAt,
         guessTime: guess.guessTime,
       })), b: room.teamGuesses.b.map((guess) => ({
         actorKey: guess.actorKey,
-        playerId: guess.playerId,
+        mouseId: guess.mouseId,
         guessedAt: guess.guessedAt,
         guessTime: guess.guessTime,
       })) },
@@ -167,7 +167,7 @@ export function resetForRematch(room: StoredRoom, autoStart = false): void {
   room.matchmaking = false;
   room.readyCheckEndsAt = null;
   room.round = 0;
-  room.targetPlayerId = null;
+  room.targetMouseId = null;
   room.roundEndsAt = null;
   room.nextRoundAt = null;
   room.eventResults = {};
@@ -263,7 +263,7 @@ export async function eliminatePlayer(
       return { room, finished: false as const, roundFinished };
     }
     const winnerKey = remaining[0]?.key ?? null;
-    if (room.status === 'playing' && room.targetPlayerId) {
+    if (room.status === 'playing' && room.targetMouseId) {
       room.roundResult = {
         round: room.round,
         winnerKey,
