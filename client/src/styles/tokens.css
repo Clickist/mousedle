@@ -71,6 +71,7 @@
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
+  --radius-pill: 999px;
 
   --text-micro: 11px;
   --text-caption: 12px;
@@ -209,6 +210,8 @@ html[data-theme='dark'] {
   --text: var(--on-background);
   --text-sec: var(--on-surface-variant);
   --text-light: var(--outline);
+  --muted: var(--on-surface-variant);
+  --radius: var(--radius-md);
   --input-bg: var(--surface-container-lowest);
   --primary-hover: color-mix(in srgb, var(--primary) 90%, #000000);
   --primary-soft: color-mix(in srgb, var(--primary) 12%, transparent);

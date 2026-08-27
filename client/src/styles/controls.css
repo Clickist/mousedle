@@ -13,12 +13,11 @@
   text-decoration: none;
   color: #fff;
   background: var(--primary);
-  box-shadow: 0 5px 12px none;
   transition: transform 0.16s ease, background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
   line-height: 1.2;
   min-height: 42px;
 }
-.btn:hover:not(:disabled) { background: var(--primary-hover); box-shadow: 0 8px 16px none; transform: translateY(-1px); }
+.btn:hover:not(:disabled) { background: var(--primary-hover); transform: translateY(-1px); }
 .btn:active:not(:disabled) { transform: translateY(0); box-shadow: none; }
 .btn:disabled { opacity: 0.52; cursor: not-allowed; box-shadow: none; }
 .btn:focus-visible, .input:focus-visible, .opt-btn:focus-visible, .room-code-toggle:focus-visible, .menu-card:focus-visible, .confirm-close:focus-visible {
