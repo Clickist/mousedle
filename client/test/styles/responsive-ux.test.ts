@@ -44,11 +44,9 @@ describe('desktop/mobile layout contracts', () => {
     expect(home).toMatch(
       /\.single-difficulty-option\.active\s+\.single-difficulty-check\s*\{[^}]*background:\s*var\(--primary\)/s
     );
-    expect(home).toMatch(/\.single-difficulty-check\s*\{[^}]*color:\s*#201118/s);
     expect(home).toMatch(
-      /\.home-hero::before,\s*\n?\s*\.home-hero::after\s*\{[^}]*z-index:\s*0/s
+      /\.single-difficulty-check\s*\{[^}]*color:\s*var\(--on-surface\)/s
     );
-    expect(home).toMatch(/\.home-hero\s*>\s*\*\s*\{[^}]*z-index:\s*1/s);
 
     const responsive = readCss('../../src/styles/responsive.css');
     expect(responsive).toMatch(
@@ -58,7 +56,9 @@ describe('desktop/mobile layout contracts', () => {
       /@media\s*\(max-width:\s*640px\)\s*\{[\s\S]*\.single-lobby-action\s+\.btn\s*\{[^}]*width:\s*100%/
     );
     expect(home).toMatch(/\.thanks-dialog\s*\{[^}]*max-height:\s*calc\(100dvh - 40px\)/s);
-    expect(home).toMatch(/\.home-sponsor-link\s*\{[^}]*font-size:\s*0\.72rem/s);
+    expect(home).toMatch(
+      /\.home-sponsor-link\s*\{[^}]*font-size:\s*var\(--text-micro\)/s
+    );
     const game = readCss('../../src/styles/game.css');
     expect(game).not.toMatch(/\.input-dock\s*\{[^}]*backdrop-filter/s);
   });

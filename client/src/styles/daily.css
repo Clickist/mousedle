@@ -7,7 +7,7 @@
   gap: 12px;
   margin-top: 12px;
   color: var(--danger);
-  font-size: var(--fs-xs);
+  font-size: var(--text-caption);
 }
 .daily-lobby-status { color: var(--text-light); }
 .daily-lobby-status-playing { color: var(--warning); }
@@ -57,8 +57,8 @@
 }
 .daily-section-heading h2,
 .daily-section-heading p { margin: 0; }
-.daily-section-heading h2 { font-size: 1.05rem; letter-spacing: 0; }
-.daily-section-heading p { margin-top: 3px; color: var(--text-light); font-size: var(--fs-xs); }
+.daily-section-heading h2 { font-size: var(--text-title); letter-spacing: 0; }
+.daily-section-heading p { margin-top: 3px; color: var(--text-light); font-size: var(--text-caption); }
 .daily-section-icon {
   display: grid;
   place-items: center;
@@ -66,7 +66,7 @@
   width: 40px;
   height: 40px;
   border: 1px solid color-mix(in srgb, var(--diff-color, var(--primary)) 35%, var(--border));
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   background: color-mix(in srgb, var(--diff-color, var(--primary)) 12%, var(--card));
   color: var(--diff-color, var(--primary));
 }
@@ -77,9 +77,9 @@
   min-width: 70px;
   padding: 6px 9px;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   color: var(--text-sec);
-  font-size: var(--fs-xs);
+  font-size: var(--text-caption);
   font-weight: 800;
   text-align: center;
 }
@@ -98,7 +98,7 @@
   text-align: center;
 }
 .daily-game-empty > svg { color: var(--primary); }
-.daily-game-empty > strong { color: var(--text); font-size: 1.05rem; }
+.daily-game-empty > strong { color: var(--text); font-size: var(--text-title); }
 .daily-game-empty > span { color: var(--text-light); }
 .daily-loading p { margin: 0; }
 
@@ -111,7 +111,7 @@
   padding: 12px 14px;
   border: 1px solid var(--border);
   border-left: 4px solid var(--border-strong);
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   background: var(--card-soft);
 }
 .daily-result-won { border-left-color: var(--success); }
@@ -120,7 +120,7 @@
 .daily-result > div { display: grid; gap: 3px; min-width: 0; }
 .daily-result strong,
 .daily-result span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.daily-result span { color: var(--text-light); font-size: var(--fs-xs); }
+.daily-result span { color: var(--text-light); font-size: var(--text-caption); }
 .daily-result .daily-solve-order {
   color: var(--success);
   overflow: visible;
