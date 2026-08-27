@@ -34,31 +34,21 @@
   gap: 10px;
   padding: 15px var(--page-inline);
   padding-top: calc(15px + env(safe-area-inset-top));
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
-  box-shadow: 0 4px 18px rgba(38, 64, 99, 0.04);
   flex-shrink: 0;
   z-index: 10;
 }
 .header-bar .title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 700;
-  font-size: 1.2rem;
-  letter-spacing: -0.01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
 }
-.header-bar .btns { display: flex; gap: 8px; align-items: center; min-width: 0; flex-shrink: 0; }
+.header-bar .btns { min-width: 0; flex-shrink: 0; }
 .theme-toggle { min-width: 38px; }
 .auth-pending {
   width: 112px;
   height: 32px;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   background: linear-gradient(90deg, var(--bg) 25%, var(--border) 50%, var(--bg) 75%);
   background-size: 200% 100%;
   animation: loading-shimmer 1.2s linear infinite;
@@ -73,7 +63,7 @@
   z-index: 300;
   padding: 9px 16px;
   border: 1px solid var(--border-strong);
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   background: var(--card);
   color: var(--text);
   font-weight: 600;
@@ -89,7 +79,7 @@
 }
 .table-skeleton i {
   height: 16px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: linear-gradient(90deg, var(--bg) 25%, var(--border) 50%, var(--bg) 75%);
   background-size: 200% 100%;
   animation: loading-shimmer 1.2s linear infinite;
@@ -99,10 +89,6 @@
 /* ===== 状态栏 ===== */
 .status-bar {
   padding: 10px var(--page-inline);
-  font-size: 0.95rem;
-  color: var(--text-sec);
-  background: rgba(255, 255, 255, 0.76);
-  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   gap: 10px;

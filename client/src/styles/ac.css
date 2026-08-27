@@ -446,7 +446,7 @@ html[data-theme='dark'] {
   border-radius: var(--radius-md);
   background: var(--surface);
   box-shadow: var(--shadow-overlay);
-  overflow: hidden;
+  overflow-y: auto;
 }
 .autocomplete-list li { border-radius: 0; }
 .autocomplete-list li:hover,

@@ -5,5 +5,6 @@
 @import './game.css';
 @import './daily.css';
 @import './home-multiplayer.css';
-@import './responsive.css';
 @import './ac.css';
+/* 断点层最后加载:移动端布局/触控微调要能覆盖 ac 覆盖层的桌面值 */
+@import './responsive.css';
