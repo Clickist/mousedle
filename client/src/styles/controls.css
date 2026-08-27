@@ -1,51 +1,4 @@
-/* ===== 按钮 ===== */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  padding: 10px 18px;
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
-  color: #fff;
-  background: var(--primary);
-  transition: transform 0.16s ease, background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
-  line-height: 1.2;
-  min-height: 42px;
-}
-.btn:hover:not(:disabled) { background: var(--primary-hover); transform: translateY(-1px); }
-.btn:active:not(:disabled) { transform: translateY(0); box-shadow: none; }
-.btn:disabled { opacity: 0.52; cursor: not-allowed; box-shadow: none; }
-.btn:focus-visible, .input:focus-visible, .opt-btn:focus-visible, .room-code-toggle:focus-visible, .menu-card:focus-visible, .confirm-close:focus-visible {
-  outline: 3px solid var(--outline);
-  outline-offset: 2px;
-}
-.btn-sm { padding: 7px 12px; font-size: 0.85rem; min-height: 34px; }
-.btn-lg { padding: 13px 26px; font-size: 1.05rem; }
-.btn-success { background: var(--success); }
-.btn-success:hover { background: #15803d; }
-.btn-warning { background: var(--warning); }
-.btn-warning:hover { background: #b45309; }
-.btn-danger { background: var(--danger); }
-.btn-danger:hover { background: #b91c1c; }
-.btn-accent { background: var(--accent); }
-.btn-accent:hover { background: #6d28d9; }
-.btn-green { background: var(--success); }
-.btn-red { background: var(--danger); }
-.btn-green:hover:not(:disabled) { background: #117448; }
-.btn-red:hover:not(:disabled) { background: #b92f32; }
-.btn-ghost {
-  background: rgba(255, 255, 255, 0.72);
-  color: var(--text-sec);
-  border-color: var(--border);
-  box-shadow: none;
-}
-.btn-ghost:hover:not(:disabled) { background: var(--primary-soft); border-color: #bed2f3; color: var(--primary-hover); box-shadow: none; }
-.btn svg { flex-shrink: 0; }
+/* ===== 按钮(视觉由 ac.css 定义,此处仅保留 ac 未覆盖的控件) ===== */
 .difficulty-multi-select {
   position: relative;
   min-width: 220px;
@@ -178,7 +131,7 @@
 }
 .language-option-code {
   color: var(--text-light);
-  font-family: Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: var(--fs-2xs);
   font-weight: 700;
 }
@@ -189,22 +142,17 @@
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* ===== 卡片 ===== */
+/* ===== 卡片(视觉由 ac.css 定义) ===== */
 .card {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 255, 0.96));
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
   /* 上下界用 rem:卡片内边距要跟着根字号补偿,否则会挤压容器查询容器的宽度 */
   padding: clamp(1.125rem, 2.25vw, 1.5rem);
   margin: 0 0 0.875rem;
-  box-shadow: var(--shadow);
   min-width: 0;
   max-width: 100%;
 }
 .page-scroll > .card { margin-bottom: 0; }
 .card h3 {
   margin: 0 0 0.75rem;
-  font-size: 1.08rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -234,21 +182,12 @@
   font-weight: 700;
 }
 .auth-pow-ring::before { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--primary); }
-.auth-pow-ring span { position: relative; z-index: 1; color: #fff; }
+.auth-pow-ring span { position: relative; z-index: 1; color: var(--on-primary); }
 .input, select.input, textarea.input {
-  padding: 12px 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 1rem;
   width: 100%;
-  background: var(--input-bg);
-  color: var(--text);
   font-family: inherit;
-  transition: border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
 }
-.input:hover:not(:disabled) { border-color: var(--border-strong); }
-.input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(20, 20, 19, 0.08); }
 
-.error { color: var(--danger); font-size: 0.9rem; overflow-wrap: anywhere; }
-.success { color: var(--success); font-size: 0.9rem; overflow-wrap: anywhere; }
-.muted { color: var(--text-light); font-size: 0.9rem; overflow-wrap: anywhere; }
+.error { color: var(--danger); font-size: var(--text-ui); overflow-wrap: anywhere; }
+.success { color: var(--success); font-size: var(--text-ui); overflow-wrap: anywhere; }
+.muted { color: var(--text-light); font-size: var(--text-ui); overflow-wrap: anywhere; }

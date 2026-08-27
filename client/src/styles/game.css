@@ -420,7 +420,7 @@
   transition: transform 0.16s ease, background 0.16s ease;
 }
 .settings-switch:checked { border-color: var(--primary); background: var(--primary); }
-.settings-switch:checked::after { transform: translateX(20px); background: #fff; }
+.settings-switch:checked::after { transform: translateX(20px); background: var(--on-primary); }
 .settings-switch:focus-visible { outline: 3px solid var(--primary-soft); outline-offset: 2px; }
 .settings-email {
   display: grid;
