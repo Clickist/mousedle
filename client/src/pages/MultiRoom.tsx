@@ -1318,6 +1318,7 @@ export default function MultiRoom() {
           <GuessInputBar
             onPick={(p) => submitGuess(p.id)}
             onFocusChange={setInputFocused}
+            difficulty={room.dbType}
             statusText={room.gameMode === 'relay' && room.currentTurnKey !== myKey
               ? t('multi.waitingForTurn', {
                 player: room.players.find((player) => player.key === room.currentTurnKey)?.name ?? '-',

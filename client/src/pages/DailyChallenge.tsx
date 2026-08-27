@@ -323,6 +323,7 @@ export default function DailyChallenge() {
         <GuessInputBar
           onPick={(player) => guess(player.id)}
           onFocusChange={setInputFocused}
+          difficulty={mode}
           disabled={busy || !challenge.gameId}
         />
       ) : undefined}

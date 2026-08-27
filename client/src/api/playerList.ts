@@ -3,6 +3,8 @@ import { api } from './client';
 export interface PlayerSuggestion {
   id: number;
   name: string;
+  /** 难度归属(潮男含小白,故多为两项);旧缓存条目可能缺省 */
+  d?: string[];
 }
 
 interface CachedPlayerList {
@@ -10,7 +12,7 @@ interface CachedPlayerList {
   players: PlayerSuggestion[];
 }
 
-const STORAGE_KEY = 'player-list-v1';
+const STORAGE_KEY = 'player-list-v2';
 const REVALIDATE_INTERVAL_MS = 30_000;
 const LEET_EQUIVALENTS: Record<string, string> = {
   '0': 'o',

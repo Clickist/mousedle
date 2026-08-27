@@ -33,7 +33,7 @@ describe('playerList cache', () => {
   it('returns stored players immediately and revalidates once in the background', async () => {
     const cached = [{ id: 1, name: 'cached' }];
     const updated = [{ id: 2, name: 'updated' }];
-    localStorage.setItem('player-list-v1', JSON.stringify({ version: '1', players: cached }));
+    localStorage.setItem('player-list-v2', JSON.stringify({ version: '1', players: cached }));
     const request = deferred<any>();
     get.mockReturnValue(request.promise);
     const listener = vi.fn();

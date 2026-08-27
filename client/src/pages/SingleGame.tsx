@@ -270,6 +270,7 @@ export default function SingleGame() {
             <GuessInputBar
               onPick={(p) => guess(p.id)}
               onFocusChange={setInputFocused}
+              difficulty={mode}
               disabled={busy || !gameId}
             />
           </>

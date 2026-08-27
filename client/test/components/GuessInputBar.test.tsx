@@ -162,4 +162,33 @@ describe('GuessInputBar', () => {
     fireEvent.keyDown(input, { key: 'Tab', shiftKey: true });
     expect(input).toHaveValue('s1mple');
   });
+
+  it('only suggests mice from the active difficulty pool when difficulty is set', () => {
+    renderWithProviders(<GuessInputBar onPick={vi.fn()} difficulty="beginner" />);
+    act(() => playerListListener?.([
+      { id: 1, name: 'Logitech G Pro', d: ['normal', 'easy', 'beginner'] },
+      { id: 2, name: 'GameSense Hed', d: ['normal'] },
+      { id: 3, name: 'No Pool Mouse', d: [] },
+    ] as never));
+
+    const input = screen.getByPlaceholderText('输入鼠标名称...');
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: 'g' } });
+
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByText('Logitech G Pro')).toBeInTheDocument();
+    expect(screen.queryByText('GameSense Hed')).not.toBeInTheDocument();
+    expect(screen.queryByText('No Pool Mouse')).not.toBeInTheDocument();
+  });
+
+  it('still suggests everything when the list carries no difficulty tags (legacy cache)', () => {
+    renderWithProviders(<GuessInputBar onPick={vi.fn()} difficulty="beginner" />);
+    act(() => playerListListener?.([{ id: 9, name: 'glover' }] as never));
+
+    const input = screen.getByPlaceholderText('输入鼠标名称...');
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: 'g' } });
+
+    expect(screen.getByText('glover')).toBeInTheDocument();
+  });
 });

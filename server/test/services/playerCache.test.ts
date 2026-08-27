@@ -36,14 +36,14 @@ describe('player cache invalidation', () => {
 
     await refreshPlayerCache();
     const before = await getPublicPlayerList();
-    expect(before.players).toContainEqual({ id, name });
+    expect(before.players).toContainEqual({ id, name, d: [] });
 
     await db('mice').where({ id }).update({ is_enabled: false });
     await invalidatePlayerCache();
 
     const after = await getPublicPlayerList();
     expect(after.version).not.toBe(before.version);
-    expect(after.players).not.toContainEqual({ id, name });
+    expect(after.players).not.toContainEqual({ id, name, d: [] });
   });
 
   it('refreshes a stale instance before serving the public list', async () => {
@@ -61,12 +61,12 @@ describe('player cache invalidation', () => {
     const id = typeof row === 'object' ? row.id : row;
 
     await refreshPlayerCache();
-    expect((await getPublicPlayerList()).players).toContainEqual({ id, name });
+    expect((await getPublicPlayerList()).players).toContainEqual({ id, name, d: [] });
 
     await db('mice').where({ id }).update({ is_enabled: false });
     await redis()!.incr(redisKey('players:revision'));
 
-    expect((await getPublicPlayerList()).players).not.toContainEqual({ id, name });
+    expect((await getPublicPlayerList()).players).not.toContainEqual({ id, name, d: [] });
   });
 
   it('serves targets from the beginner difficulty pool', async () => {

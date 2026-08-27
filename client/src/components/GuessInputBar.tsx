@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 interface Suggestion {
   id: number;
   name: string;
+  d?: string[];
 }
 
 interface Props {
@@ -16,6 +17,8 @@ interface Props {
   disabled?: boolean;
   placeholder?: string;
   buttonText?: string;
+  /** 当前对局难度:传入后联想只提示该池内鼠标(查鼠标页不传,搜全库) */
+  difficulty?: string;
 }
 
 /**
@@ -29,6 +32,7 @@ export default function GuessInputBar({
   disabled,
   placeholder,
   buttonText,
+  difficulty,
 }: Props) {
   const { t } = useTranslation();
   const [text, setText] = useState('');
@@ -58,11 +62,15 @@ export default function GuessInputBar({
       setOpen(false);
       return;
     }
-    const next = searchPlayerList(list, query);
+    // 联想只出当前难度池内的鼠标;名单完全没有难度标签时(旧缓存/旧测试夹具)退化为不过滤
+    const pool = difficulty && list.some((player) => Array.isArray(player.d))
+      ? list.filter((player) => player.d?.includes(difficulty))
+      : list;
+    const next = searchPlayerList(pool, query);
     setItems(next);
     setActive((current) => resetActive ? 0 : Math.min(current, Math.max(0, next.length - 1)));
     setOpen(focused.current && next.length > 0);
-  }, []);
+  }, [difficulty]);
 
   const applyPlayerList = useCallback((list: Suggestion[]) => {
     players.current = list;
