@@ -23,7 +23,7 @@ const BRAND_COUNTRY = {
   RAWM: '中国', 'Cooler Master': '中国台湾', 'Ardor Gaming': '俄罗斯', Zaopin: '中国',
   ThundeRobot: '中国', Hator: '乌克兰', VXE: '中国', Ninjutso: '新加坡', Xinmeng: '中国',
   Ausdom: '中国', 'Turtle Beach': '美国', RAKK: '菲律宾', Mionix: '瑞典', Waizowl: '中国',
-  Xtrfy: '瑞典', 'Cherry Xtrfy': '德国', Microsoft: '美国', ELECOM: '日本', Metaphyuni: '中国',
+  Xtrfy: '瑞典', Microsoft: '美国', ELECOM: '日本', Metaphyuni: '中国',
   Epomaker: '中国', MACHENIKE: '中国', Kreo: '印度', SOLAKAKA: '中国', Vancer: '中国',
   Monka: '中国', Lenovo: '中国', GravaStar: '中国',
   MSI: '中国台湾', Xiaomi: '中国', Edifier: '中国', A4Tech: '中国台湾', Cherry: '德国',
@@ -62,6 +62,9 @@ const COUNTRY_CONTINENT = {
   '罗马尼亚': '欧洲', '塞浦路斯': '欧洲', '加拿大': '美洲', '中国香港': '亚洲', '摩洛哥': '非洲',
   '土耳其': '亚洲', '印度尼西亚': '亚洲', '澳大利亚': '大洋洲',
 };
+
+// 品牌别名归一:同品牌在快照里的不同写法统一成一个名字。
+const BRAND_ALIASES = new Map([['Cherry Xtrfy', 'Xtrfy']]);
 
 // 难度分档按瞄准圈知名度:beginner 是圈内人尽皆知的品牌,easy 再加一圈,normal 全量。
 const BEGINNER_BRANDS = new Set([
@@ -111,7 +114,7 @@ const skipped = [];
 const unmatchedBrands = new Set();
 
 for (const e of entries) {
-  const brand = e.general__brand_names?.[0];
+  const brand = BRAND_ALIASES.get(e.general__brand_names?.[0]) ?? e.general__brand_names?.[0];
   const model = e.general__model;
   if (!brand || !model || !e.mouse__length || !e.mouse__weight || !e.mouse__shape_v2 || !e.mouse__size_category) {
     skipped.push(`${brand ?? '?'} ${model ?? e.general__handle ?? '?'}`);
