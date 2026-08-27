@@ -52,11 +52,23 @@ describe('compareGuess', () => {
     expect(fb.sibling).toBe(true);
   });
 
-  it('规格不同(哪怕只差 DPI)不判对', () => {
+  it('只差游戏不展示的字段(DPI/侧键)仍判同款', () => {
     const guess = makeMouse({
       id: 2,
       name: '高配版',
-      display: JSON.stringify({ width: 64, height: 40, sensor: 'PixArt PAW3395', dpi: 42000 }),
+      side_buttons: 0,
+      display: JSON.stringify({ width: 64, height: 40, sensor: 'PixArt PAW3395', dpi: 42000, polling_rate: 8000 }),
+    });
+    const fb = compareGuess(guess, target);
+    expect(fb.correct).toBe(true);
+    expect(fb.sibling).toBe(true);
+  });
+
+  it('游戏可见字段不同(传感器不同)不判对', () => {
+    const guess = makeMouse({
+      id: 2,
+      name: '高配版',
+      display: JSON.stringify({ width: 64, height: 40, sensor: 'PixArt PAW3950', dpi: 42000 }),
     });
     const fb = compareGuess(guess, target);
     expect(fb.correct).toBe(false);

@@ -112,7 +112,9 @@ export function mouseAnswerView(target: Mouse) {
   };
 }
 
-/** 除名字/id 外的全规格指纹(皮肤图 URL 不参与):指纹一致即视为同款,猜任意一只都判对 */
+/** 规格指纹 = 游戏可见字段(猜测网格 + 揭晓卡)。
+ * 侧键/DPI/轮询率/连接细分/皮肤图不展示,不参与:只差这些的鼠标在游戏里无法区分,
+ * 猜任意一只都判对。 */
 function specFingerprint(mouse: Mouse): string {
   const d = parseDisplay(mouse.display);
   return JSON.stringify([
@@ -123,16 +125,12 @@ function specFingerprint(mouse: Mouse): string {
     mouse.size,
     mouse.weight,
     mouse.length_mm,
-    mouse.side_buttons,
     Boolean(mouse.wireless),
     d.width ?? null,
     d.height ?? null,
     d.sensor ?? null,
-    d.dpi ?? null,
-    d.polling_rate ?? null,
     d.hump ?? null,
     d.hand ?? null,
-    d.connection ?? null,
   ]);
 }
 
