@@ -14,7 +14,7 @@ const outputPath =
 // 品牌 -> 品牌所属公司/总部所在国。没把握的标记 UNKNOWN,不做猜测。
 const BRAND_COUNTRY = {
   Logitech: '瑞士', Pulsar: '韩国', Razer: '新加坡', ATK: '中国', Zowie: '中国台湾',
-  MCHOSE: '中国', Rapoo: '中国', Corsair: '美国', ASUS: '中国台湾', Keychron: '中国',
+  MCHOSE: '中国', Rapoo: '中国', Corsair: '美国', ASUS: '中国台湾', ROG: '中国台湾', Keychron: '中国',
   'G-Wolves': '中国', EWEADN: '中国', PMM: '泰国', SteelSeries: '丹麦', Glorious: '美国',
   'Attack Shark': '中国', AJAZZ: '中国', Finalmouse: '美国', VGN: '中国', LAMZU: '中国',
   Darmoshark: '中国', Redragon: '中国', VAXEE: '中国台湾', Kysona: '中国', Bloody: '中国台湾',
@@ -66,6 +66,13 @@ const COUNTRY_CONTINENT = {
 // 品牌别名归一:同品牌在快照里的不同写法统一成一个名字。
 const BRAND_ALIASES = new Map([['Cherry Xtrfy', 'Xtrfy']]);
 
+// 华硕的游戏鼠按产品线拆牌:ROG 系独立成牌(玩家认知),TUF/ProArt 留在 ASUS。
+function resolveBrand(rawBrand, model) {
+  const brand = BRAND_ALIASES.get(rawBrand) ?? rawBrand;
+  if (brand === 'ASUS' && model?.startsWith('ROG ')) return 'ROG';
+  return brand;
+}
+
 // 难度分档按瞄准圈知名度:beginner 是圈内人尽皆知的品牌,easy 再加一圈,normal 全量。
 const BEGINNER_BRANDS = new Set([
   'Logitech', 'Razer', 'Zowie', 'Pulsar', 'Finalmouse', 'LAMZU', 'VAXEE', 'ATK', 'VXE', 'G-Wolves',
@@ -73,7 +80,7 @@ const BEGINNER_BRANDS = new Set([
 const EASY_BRANDS = new Set([
   ...BEGINNER_BRANDS,
   'MCHOSE', 'Ninjutso', 'WLMOUSE', 'VGN', 'Darmoshark', 'Kysona', 'Waizowl', 'RAWM',
-  'Corsair', 'ASUS', 'HyperX', 'SteelSeries', 'Glorious', 'Xtrfy', 'Endgame Gear',
+  'Corsair', 'ASUS', 'ROG', 'HyperX', 'SteelSeries', 'Glorious', 'Xtrfy', 'Endgame Gear',
   'Rapoo', 'EWEADN', 'Attack Shark', 'Scyrox',
 ]);
 
@@ -114,7 +121,7 @@ const skipped = [];
 const unmatchedBrands = new Set();
 
 for (const e of entries) {
-  const brand = BRAND_ALIASES.get(e.general__brand_names?.[0]) ?? e.general__brand_names?.[0];
+  const brand = resolveBrand(e.general__brand_names?.[0], e.general__model);
   const model = e.general__model;
   if (!brand || !model || !e.mouse__length || !e.mouse__weight || !e.mouse__shape_v2 || !e.mouse__size_category) {
     skipped.push(`${brand ?? '?'} ${model ?? e.general__handle ?? '?'}`);
