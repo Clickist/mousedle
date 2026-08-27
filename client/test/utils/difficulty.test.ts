@@ -23,10 +23,10 @@ describe('difficulty helpers', () => {
 
   it('resolves localized labels and descriptions', () => {
     const t = i18n.t.bind(i18n);
-    expect(difficultyLabel(t, 'beginner')).toBe('入门版');
-    expect(difficultyDescription(t, 'beginner')).toBe('最大众鼠标池 · 熟悉规则');
-    expect(difficultyLabel(t, 'easy')).toBe('简单版');
-    expect(difficultyDescription(t, 'easy')).toBe('知名鼠标池 · 快速上手');
+    expect(difficultyLabel(t, 'beginner')).toBe('小白');
+    expect(difficultyDescription(t, 'beginner')).toBe('人尽皆知的大牌 · 新手友好');
+    expect(difficultyLabel(t, 'easy')).toBe('潮男');
+    expect(difficultyDescription(t, 'easy')).toBe('圈内热门品牌 · 进阶体验');
     expect(difficultyDescription(t, 'missing')).toBe('');
   });
 });

@@ -73,15 +73,31 @@ function resolveBrand(rawBrand, model) {
   return brand;
 }
 
-// 难度分档按瞄准圈知名度:beginner 是圈内人尽皆知的品牌,easy 再加一圈,normal 全量。
+// 难度分档名单由 tier-editor.html 拖拽产出(scripts/apply-tier-assignment.mjs 落库),
+// 此处与 2026-08-28 点点排定的名单保持一致。
 const BEGINNER_BRANDS = new Set([
-  'Logitech', 'Razer', 'Zowie', 'Pulsar', 'Finalmouse', 'LAMZU', 'VAXEE', 'ATK', 'VXE', 'G-Wolves',
+  'ATK', 'Finalmouse', 'G-Wolves', 'LAMZU', 'Logitech', 'Pulsar', 'ROG', 'Razer',
+  'VAXEE', 'VXE', 'Zowie',
 ]);
 const EASY_BRANDS = new Set([
   ...BEGINNER_BRANDS,
-  'MCHOSE', 'Ninjutso', 'WLMOUSE', 'VGN', 'Darmoshark', 'Kysona', 'Waizowl', 'RAWM',
-  'Corsair', 'ASUS', 'ROG', 'HyperX', 'SteelSeries', 'Glorious', 'Xtrfy', 'Endgame Gear',
-  'Rapoo', 'EWEADN', 'Attack Shark', 'Scyrox',
+  'ARYE', 'Angry Miao', 'Arbiter Studio', 'CRDRAKO', 'Cooler Master', 'Darmoshark',
+  'Endgame Gear', 'FineMax', 'Fnatic', 'Glorious', 'Hitscan', 'HyperX', 'MCHOSE',
+  'MelGeek', 'Ninjutso', 'Pwnage', 'RAWM', 'Rapoo', 'Scyrox', 'Sprime', 'SteelSeries',
+  'Teevolution', 'UNIUS', 'VGN', 'Vancer', 'WLMOUSE', 'Waizowl', 'XBAB', 'Xtrfy', 'Zaopin',
+]);
+// 禁用品牌:保留数据但不进任何难度(is_enabled=false)。
+const DISABLED_BRANDS = new Set([
+  'A4Tech', 'ABKO', 'Acer', 'Aigo', 'Amazon', 'Aqirys', 'Atompalm', 'Bloody', 'COMMATECH',
+  'CROCIRIS', 'Chilkey', 'CryoMods', 'Cybeart', 'Dark Project', 'Dornfinger', 'Drevo',
+  'Ducky', 'EVGA', 'Epomaker', 'Fallen', 'Fiberaim', 'Flick', 'Freewolf', 'GITOPER',
+  'Gamesense', 'GravaStar', 'HK Gaming', 'HUO JI', 'Hator', 'Higround', 'IFYOO', 'Irocks',
+  'KlasseGear', 'Kreo', 'LTC', 'Lenovo', 'Lofree', 'MAMBASNAKE', 'MLOONG', 'MSI', 'Madlions',
+  'Metaphyuni', 'Midnight Thread', 'Mountain', 'Noir', 'PALMLAB', 'Pichau', 'Press Play',
+  'PureTrak', 'RAKK', 'REDMAGIC', 'RK Royal Kludge', 'Rampage', 'Realforce', 'Rexus',
+  'SOLAKAKA', 'SPC Gear', 'Swiftpoint', 'SyLical', 'TMKB', 'Teamwolf', 'Tecware',
+  'The G-Lab', 'UluGames', 'VARO', 'VortexSeries', 'XIBERIA', 'Xenics', 'Xinshuntian',
+  'Xyder', 'YUNZII', 'be quiet!', 'strayfe', 'xtro',
 ]);
 
 // 形状/尺寸按 eloshapes 原始细分保留(不再强制归并)。
@@ -154,6 +170,7 @@ for (const e of entries) {
   mice.push({
     name: [brand, model, variant].filter(Boolean).join(' '),
     brand,
+    is_enabled: !DISABLED_BRANDS.has(brand),
     country,
     continent,
     shape: SHAPE_ZH[e.mouse__shape_v2] ?? '对称',
@@ -200,6 +217,6 @@ await writeFile(outputPath, JSON.stringify(mice, null, 2) + '\n', 'utf-8');
 const beginnerCount = mice.filter((m) => m.difficulties.includes('beginner')).length;
 const easyCount = mice.filter((m) => m.difficulties.includes('easy')).length;
 console.log(`total: ${entries.length} -> ${mice.length} (skipped ${skipped.length}, duplicates ${duplicates})`);
-console.log(`beginner: ${beginnerCount}, easy: ${easyCount}, normal: ${mice.length}`);
+console.log(`beginner: ${beginnerCount}, easy: ${easyCount}, normal: ${mice.length}, disabled: ${mice.length - mice.filter((m) => m.is_enabled !== false).length}`);
 console.log(`country known: ${mice.filter((m) => m.country && m.country !== 'UNKNOWN').length}/${mice.length}`);
 if (skipped.length) console.log(`skipped:`, skipped.slice(0, 6).join(' | '), skipped.length > 6 ? '...' : '');

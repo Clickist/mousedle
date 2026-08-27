@@ -54,7 +54,7 @@ describe('MultiLobby matchmaking', () => {
     const user = userEvent.setup();
     const first = renderAtRoute(<MultiLobby />, { route: '/multi', path: '/multi' });
 
-    const easyButtons = await screen.findAllByRole('button', { name: '简单版' });
+    const easyButtons = await screen.findAllByRole('button', { name: '潮男' });
     await user.click(easyButtons[0]);
     await user.click(screen.getByRole('button', { name: 'BO5' }));
     await user.selectOptions(screen.getByRole('combobox', { name: '房间人数上限' }), '4');
@@ -88,7 +88,7 @@ describe('MultiLobby matchmaking', () => {
 
     first.unmount();
     renderAtRoute(<MultiLobby />, { route: '/multi', path: '/multi' });
-    const restoredEasyButtons = await screen.findAllByRole('button', { name: '简单版' });
+    const restoredEasyButtons = await screen.findAllByRole('button', { name: '潮男' });
     expect(restoredEasyButtons[0]).toHaveClass('active');
     expect(restoredEasyButtons[1]).toHaveClass('active');
     expect(screen.getByRole('button', { name: 'BO5' })).toHaveClass('active');

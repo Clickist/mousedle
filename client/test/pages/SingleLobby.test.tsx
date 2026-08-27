@@ -13,16 +13,16 @@ describe('SingleLobby', () => {
   it('defaults to recommended beginner with distinct card copy', () => {
     renderAtRoute(<SingleLobby />, { route: '/single', path: '/single' });
 
-    const beginner = screen.getByRole('button', { name: /入门版/ });
-    const easy = screen.getByRole('button', { name: /简单版/ });
-    const normal = screen.getByRole('button', { name: /完整版/ });
+    const beginner = screen.getByRole('button', { name: /小白/ });
+    const easy = screen.getByRole('button', { name: /潮男/ });
+    const normal = screen.getByRole('button', { name: /扫地僧/ });
 
     expect(beginner).toHaveClass('active');
     expect(beginner.querySelector('.single-difficulty-badge')).toHaveTextContent('推荐');
     expect(easy.querySelector('.single-difficulty-badge')).toBeNull();
     expect(normal.querySelector('.single-difficulty-badge')).toBeNull();
-    expect(beginner).toHaveTextContent('最大众鼠标池 · 熟悉规则');
-    expect(easy).toHaveTextContent('知名鼠标池 · 快速上手');
+    expect(beginner).toHaveTextContent('人尽皆知的大牌 · 新手友好');
+    expect(easy).toHaveTextContent('圈内热门品牌 · 进阶体验');
     expect(normal).toHaveTextContent('完整数据库 · 终极挑战');
     expect(beginner.style.getPropertyValue('--diff-color')).toBe('var(--primary)');
     expect(easy.style.getPropertyValue('--diff-color')).toBe('var(--success)');
@@ -43,8 +43,8 @@ describe('SingleLobby', () => {
       }
     );
 
-    await user.click(screen.getByRole('button', { name: /完整版/ }));
-    expect(screen.getByRole('button', { name: /完整版/ })).toHaveClass('active');
+    await user.click(screen.getByRole('button', { name: /扫地僧/ }));
+    expect(screen.getByRole('button', { name: /扫地僧/ })).toHaveClass('active');
     await user.click(screen.getByRole('button', { name: /开始游戏/ }));
 
     expect(await screen.findByTestId('game-route')).toBeInTheDocument();

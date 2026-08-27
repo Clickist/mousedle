@@ -52,7 +52,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "a4tech-bloody-v7"
   },
   {
@@ -80,7 +80,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "a4tech-xl-750bh"
   },
   {
@@ -108,7 +108,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "a4tech-xl-750bk"
   },
   {
@@ -136,7 +136,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "abko-a102-pro-8k"
   },
   {
@@ -164,7 +164,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "acer-cestus-330"
   },
   {
@@ -192,7 +192,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "aigo-gm80"
   },
   {
@@ -220,7 +220,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "aigo-gm80-plus"
   },
   {
@@ -248,7 +248,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "aigo-gm80-pro"
   },
   {
@@ -1676,7 +1676,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "amazon-basics-mouse"
   },
   {
@@ -1702,7 +1702,8 @@
       "image": "angry-miao-am-infinity-97.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "angry-miao-am-infinity-97"
@@ -1730,7 +1731,8 @@
       "image": "angry-miao-am-infinity-mouse.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "angry-miao-am-infinity-mouse"
@@ -1816,7 +1818,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "aqirys-tga-alpha"
   },
   {
@@ -1842,7 +1844,8 @@
       "image": "arbiter-studio-akitsu-medium.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "arbiter-studio-akitsu-medium"
@@ -2262,7 +2265,8 @@
       "image": "arye-fcc-1.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "arye-fcc-1"
@@ -2290,7 +2294,8 @@
       "image": "arye-rcc-1.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "arye-rcc-1"
@@ -2318,8 +2323,7 @@
       "image": "asus-proart-md300.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "asus-proart-md300"
@@ -2347,8 +2351,7 @@
       "image": "asus-proart-md301.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "asus-proart-md301"
@@ -2377,7 +2380,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-chakram"
@@ -2406,7 +2410,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-chakram-core"
@@ -2435,7 +2440,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-chakram-x"
@@ -2464,7 +2470,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-gladius-ii"
@@ -2493,7 +2500,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-gladius-ii-core"
@@ -2522,7 +2530,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-gladius-ii-origin"
@@ -2551,7 +2560,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-gladius-ii-wireless"
@@ -2580,7 +2590,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-gladius-iii"
@@ -2609,7 +2620,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-gladius-iii-wireless"
@@ -2638,7 +2650,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-gladius-iii-core"
@@ -2667,7 +2680,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-gladius-iii-wireless-aimpoint"
@@ -2696,7 +2710,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-harpe-ace"
@@ -2725,7 +2740,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-harpe-ace-extreme"
@@ -2754,7 +2770,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-harpe-ace-mini"
@@ -2783,7 +2800,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-harpe-ii-ace"
@@ -2812,7 +2830,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-harpe-ii-extreme-edition-20"
@@ -2841,7 +2860,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-harpe-mini-core"
@@ -2870,7 +2890,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-keris"
@@ -2899,7 +2920,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-keris-wireless"
@@ -2928,7 +2950,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-keris-ii-ace"
@@ -2957,7 +2980,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-keris-ii-origin"
@@ -2986,7 +3010,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-pugio"
@@ -3015,7 +3040,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-sica"
@@ -3044,7 +3070,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-spatha"
@@ -3073,7 +3100,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-spatha-x"
@@ -3102,7 +3130,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-strix-carry"
@@ -3131,7 +3160,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-strix-evolve"
@@ -3160,7 +3190,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-strix-impact"
@@ -3189,7 +3220,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-strix-impact-ii"
@@ -3218,7 +3250,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-strix-impact-ii-wireless"
@@ -3247,7 +3280,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-strix-impact-iii"
@@ -3276,7 +3310,8 @@
     },
     "difficulties": [
       "normal",
-      "easy"
+      "easy",
+      "beginner"
     ],
     "is_enabled": true,
     "handle": "asus-rog-strix-impact-iii-wireless"
@@ -3304,8 +3339,7 @@
       "image": "asus-tuf-gaming-m3.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "asus-tuf-gaming-m3"
@@ -3333,8 +3367,7 @@
       "image": "asus-tuf-gaming-m3-gen-ii.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "asus-tuf-gaming-m3-gen-ii"
@@ -3362,8 +3395,7 @@
       "image": "asus-tuf-m4-air.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "asus-tuf-m4-air"
@@ -3391,8 +3423,7 @@
       "image": "asus-tuf-m4-wireless.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "asus-tuf-m4-wireless"
@@ -5252,7 +5283,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "atompalm-hydrogen"
   },
   {
@@ -5280,7 +5311,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "atompalm-hydrogen-2"
   },
   {
@@ -5306,8 +5337,7 @@
       "image": "attack-shark-g3.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-g3"
@@ -5335,8 +5365,7 @@
       "image": "attack-shark-g3.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-g3-pro"
@@ -5364,8 +5393,7 @@
       "image": "attack-shark-r1.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-r1"
@@ -5393,8 +5421,7 @@
       "image": "attack-shark-r11-ultra.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-r11-ultra"
@@ -5422,8 +5449,7 @@
       "image": "attack-shark-r2.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-r2"
@@ -5451,8 +5477,7 @@
       "image": "attack-shark-r3.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-r3"
@@ -5480,8 +5505,7 @@
       "image": "attack-shark-r5-ultra.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-r5-ultra"
@@ -5509,8 +5533,7 @@
       "image": "attack-shark-r6.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-r6"
@@ -5538,8 +5561,7 @@
       "image": "attack-shark-rs3-ultra.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-rs3-ultra"
@@ -5567,8 +5589,7 @@
       "image": "attack-shark-rs6-ultra.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-rs6-ultra"
@@ -5596,8 +5617,7 @@
       "image": "attack-shark-v2-air.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-v2-air"
@@ -5625,8 +5645,7 @@
       "image": "attack-shark-v3-pro.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-v3"
@@ -5654,8 +5673,7 @@
       "image": "attack-shark-v5.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-v5"
@@ -5683,8 +5701,7 @@
       "image": "attack-shark-v6.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-v6"
@@ -5712,8 +5729,7 @@
       "image": "attack-shark-v8.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-v8"
@@ -5741,8 +5757,7 @@
       "image": "attack-shark-x1.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-x1"
@@ -5770,8 +5785,7 @@
       "image": "attack-shark-x11.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-x11"
@@ -5799,8 +5813,7 @@
       "image": "attack-shark-x11.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-x11-se"
@@ -5828,8 +5841,7 @@
       "image": "attack-shark-x11-pro-v2.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-x11-pro-v2"
@@ -5857,8 +5869,7 @@
       "image": "attack-shark-x11-ultra.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-x11-ultra"
@@ -5886,8 +5897,7 @@
       "image": "attack-shark-x3.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-x3"
@@ -5915,8 +5925,7 @@
       "image": "attack-shark-x3.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-x3-max"
@@ -5944,8 +5953,7 @@
       "image": "attack-shark-x3.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-x3-pro"
@@ -5973,8 +5981,7 @@
       "image": "attack-shark-x6.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-x6"
@@ -6002,8 +6009,7 @@
       "image": "attack-shark-x8.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-x8-plus"
@@ -6031,8 +6037,7 @@
       "image": "attack-shark-x8.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-x8-pro"
@@ -6060,8 +6065,7 @@
       "image": "attack-shark-x8.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-x8-se"
@@ -6089,8 +6093,7 @@
       "image": "attack-shark-x8.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-x8-ultimate"
@@ -6118,8 +6121,7 @@
       "image": "attack-shark-x8.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "attack-shark-x8-ultra"
@@ -6933,7 +6935,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "be-quiet-dark-perk-ergo"
   },
   {
@@ -6961,7 +6963,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "be-quiet-dark-perk-sym"
   },
   {
@@ -6989,7 +6991,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-al90"
   },
   {
@@ -7017,7 +7019,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-p91-pro"
   },
   {
@@ -7045,7 +7047,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-r36-ultra"
   },
   {
@@ -7073,7 +7075,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-r72-pro"
   },
   {
@@ -7101,7 +7103,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-r72-ultra"
   },
   {
@@ -7129,7 +7131,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-r72-ultra-duo"
   },
   {
@@ -7157,7 +7159,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-r73-pro"
   },
   {
@@ -7185,7 +7187,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-r73-ultra"
   },
   {
@@ -7213,7 +7215,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-r73-ultra-duo"
   },
   {
@@ -7241,7 +7243,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-r80-plus"
   },
   {
@@ -7269,7 +7271,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-r90-plus"
   },
   {
@@ -7297,7 +7299,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-w60-max"
   },
   {
@@ -7325,7 +7327,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-w60-pro"
   },
   {
@@ -7353,7 +7355,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-w70-max"
   },
   {
@@ -7381,7 +7383,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-w70-pro"
   },
   {
@@ -7409,7 +7411,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-w72-ultra"
   },
   {
@@ -7437,7 +7439,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-w90-max"
   },
   {
@@ -7465,7 +7467,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-w90-pro"
   },
   {
@@ -7493,7 +7495,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-w95-max"
   },
   {
@@ -7521,7 +7523,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "bloody-w95-ultra"
   },
   {
@@ -7603,7 +7605,8 @@
       "image": "cherry-xtrfy-m50.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cherry-xtrfy-m50"
@@ -7631,7 +7634,8 @@
       "image": "cherry-xtrfy-m50-wireless.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cherry-xtrfy-m50-wireless"
@@ -7659,7 +7663,8 @@
       "image": "cherry-xtrfy-m64-wireless.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cherry-xtrfy-m64-pro-8k-wireless"
@@ -7687,7 +7692,8 @@
       "image": "cherry-xtrfy-m64-wireless.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cherry-xtrfy-m64-wireless"
@@ -7715,7 +7721,8 @@
       "image": "cherry-xtrfy-m68-wireless.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cherry-xtrfy-m68-pro-8k-wireless"
@@ -7743,7 +7750,8 @@
       "image": "cherry-xtrfy-m68-wireless.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cherry-xtrfy-m68-wireless"
@@ -7771,7 +7779,8 @@
       "image": "cherry-xtrfy-mw5500-pro.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cherry-xtrfy-mw5500-pro"
@@ -7801,7 +7810,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "chilkey-glacier-lw-8k-l"
   },
   {
@@ -7829,7 +7838,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "chilkey-glacier-lw-8k-m"
   },
   {
@@ -7857,7 +7866,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "commatech-fkmini4"
   },
   {
@@ -7883,7 +7892,8 @@
       "image": "cooler-master-cm110.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cooler-master-cm110"
@@ -7911,7 +7921,8 @@
       "image": "cooler-master-cm310.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cooler-master-cm310"
@@ -7939,7 +7950,8 @@
       "image": "cooler-master-mm310.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cooler-master-mm310"
@@ -7967,7 +7979,8 @@
       "image": "cooler-master-mm530.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cooler-master-mm530"
@@ -7995,7 +8008,8 @@
       "image": "cooler-master-mm530.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cooler-master-mm531"
@@ -8023,7 +8037,8 @@
       "image": "cooler-master-mm710.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cooler-master-mm710"
@@ -8051,7 +8066,8 @@
       "image": "cooler-master-mm710.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cooler-master-mm711"
@@ -8079,7 +8095,8 @@
       "image": "cooler-master-mm710.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cooler-master-mm711-lite"
@@ -8107,7 +8124,8 @@
       "image": "cooler-master-mm710.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cooler-master-mm712"
@@ -8135,7 +8153,8 @@
       "image": "cooler-master-mm720.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cooler-master-mm720"
@@ -8163,7 +8182,8 @@
       "image": "cooler-master-mm730.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cooler-master-mm730"
@@ -8191,7 +8211,8 @@
       "image": "cooler-master-mm731.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cooler-master-mm731"
@@ -8219,7 +8240,8 @@
       "image": "cooler-master-mm830.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cooler-master-mm830"
@@ -8247,7 +8269,8 @@
       "image": "cooler-master-mm831.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "cooler-master-mm831"
@@ -8359,8 +8382,7 @@
       "image": "corsair-dark-core-rgb-pro.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-dark-core-rgb-pro"
@@ -8388,8 +8410,7 @@
       "image": "corsair-dark-core-rgb-pro-se.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-dark-core-rgb-pro-se"
@@ -8417,8 +8438,7 @@
       "image": "corsair-darkstar-wireless.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-darkstar-wireless"
@@ -8446,8 +8466,7 @@
       "image": "corsair-glaive-pro.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-glaive-pro"
@@ -8475,8 +8494,7 @@
       "image": "corsair-glaive-rgb.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-glaive-rgb"
@@ -8504,8 +8522,7 @@
       "image": "corsair-harpoon-rgb.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-harpoon-rgb"
@@ -8533,8 +8550,7 @@
       "image": "corsair-harpoon-rgb-pro.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-harpoon-rgb-pro"
@@ -8562,8 +8578,7 @@
       "image": "corsair-harpoon-rgb-wireless.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-harpoon-rgb-wireless"
@@ -8591,8 +8606,7 @@
       "image": "corsair-ironclaw-rgb.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-ironclaw-rgb"
@@ -8620,8 +8634,7 @@
       "image": "corsair-ironclaw-rgb-wireless.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-ironclaw-rgb-wireless"
@@ -8649,8 +8662,7 @@
       "image": "corsair-ironclaw-wireless-se.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-ironclaw-wireless-se"
@@ -8678,8 +8690,7 @@
       "image": "corsair-katar-elite-wireless.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-katar-elite-wireless"
@@ -8707,8 +8718,7 @@
       "image": "corsair-katar-pro-wireless.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-katar-pro-wireless"
@@ -8736,8 +8746,7 @@
       "image": "corsair-katar-pro-xt.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-katar-pro-xt"
@@ -8765,8 +8774,7 @@
       "image": "corsair-m55-rgb-pro.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-m55-rgb-pro"
@@ -8794,8 +8802,7 @@
       "image": "corsair-m55-wired.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-m55-wired"
@@ -8823,8 +8830,7 @@
       "image": "corsair-m55-wireless.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-m55-wireless"
@@ -8852,8 +8858,7 @@
       "image": "corsair-m65-rgb-elite.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-m65-rgb-elite"
@@ -8881,8 +8886,7 @@
       "image": "corsair-m65-rgb-pro.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-m65-rgb-pro"
@@ -8910,8 +8914,7 @@
       "image": "corsair-m65-rgb-ultra.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-m65-rgb-ultra"
@@ -8939,8 +8942,7 @@
       "image": "corsair-m65-rgb-ultra-wireless.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-m65-rgb-ultra-wireless"
@@ -8968,8 +8970,7 @@
       "image": "corsair-m75.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-m75"
@@ -8997,8 +8998,7 @@
       "image": "corsair-m75-air-wireless.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-m75-air-wireless"
@@ -9026,8 +9026,7 @@
       "image": "corsair-m75-wireless.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-m75-wireless"
@@ -9055,8 +9054,7 @@
       "image": "corsair-nightsabre-wireless.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-nightsabre-wireless"
@@ -9084,8 +9082,7 @@
       "image": "corsair-nightsword-rgb.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-nightsword-rgb"
@@ -9113,8 +9110,7 @@
       "image": "corsair-nightsword-v2-wireless.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-nightsword-v2-wireless"
@@ -9142,8 +9138,7 @@
       "image": "corsair-sabre-pro.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-sabre-pro"
@@ -9171,8 +9166,7 @@
       "image": "corsair-sabre-rgb-pro.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-sabre-rgb-pro"
@@ -9200,8 +9194,7 @@
       "image": "corsair-sabre-rgb-pro-wireless.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-sabre-rgb-pro-wireless"
@@ -9229,8 +9222,7 @@
       "image": "corsair-sabre-v2-pro-XfQ8B.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-sabre-v2-pro"
@@ -9258,8 +9250,7 @@
       "image": "corsair-sabre-v2-pro-cf-91Dmq.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-sabre-v2-pro-cf"
@@ -9287,8 +9278,7 @@
       "image": "corsair-sabre-v2-pro-mg-i3La5.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-sabre-v2-pro-mg"
@@ -9316,8 +9306,7 @@
       "image": "corsair-scimitar-elite-wireless.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-scimitar-elite-wireless"
@@ -9345,8 +9334,7 @@
       "image": "corsair-scimitar-elite-wireless-se.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-scimitar-elite-wireless-se"
@@ -9374,8 +9362,7 @@
       "image": "corsair-scimitar-pro-rgb.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-scimitar-pro-rgb"
@@ -9403,8 +9390,7 @@
       "image": "corsair-scimitar-rgb.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-scimitar-rgb"
@@ -9432,8 +9418,7 @@
       "image": "corsair-scimitar-rgb-elite.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "corsair-scimitar-rgb-elite"
@@ -9461,7 +9446,8 @@
       "image": "crdrako-ko-one.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "crdrako-ko-one"
@@ -9491,7 +9477,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "crociris-x7"
   },
   {
@@ -9519,7 +9505,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "crociris-x7-pro-max"
   },
   {
@@ -9547,7 +9533,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "cryomods-fractal-wireless"
   },
   {
@@ -9575,7 +9561,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "cybeart-artemis"
   },
   {
@@ -9603,7 +9589,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "cybeart-ghost"
   },
   {
@@ -9631,7 +9617,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "cybeart-xeus"
   },
   {
@@ -10135,7 +10121,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "dark-project-nexus"
   },
   {
@@ -10163,7 +10149,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "dark-project-nexus-ultra"
   },
   {
@@ -10191,7 +10177,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "dark-project-novus"
   },
   {
@@ -10219,7 +10205,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "dark-project-novus-pro"
   },
   {
@@ -10247,7 +10233,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "dark-project-novus-se"
   },
   {
@@ -11676,7 +11662,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "dornfinger-veno-s"
   },
   {
@@ -12040,7 +12026,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "drevo-falcon"
   },
   {
@@ -12068,7 +12054,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "ducky-feather"
   },
   {
@@ -12096,7 +12082,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "ducky-secret-m-retro"
   },
   {
@@ -12925,7 +12911,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "epomaker-carbon-x"
   },
   {
@@ -12953,7 +12939,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "epomaker-carbonis"
   },
   {
@@ -12981,7 +12967,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "epomaker-click"
   },
   {
@@ -13009,7 +12995,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "epomaker-click-lite"
   },
   {
@@ -13037,7 +13023,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "epomaker-nex-lite"
   },
   {
@@ -13065,7 +13051,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "epomaker-nex-pro"
   },
   {
@@ -13093,7 +13079,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "evga-x12"
   },
   {
@@ -13121,7 +13107,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "evga-x15"
   },
   {
@@ -13149,7 +13135,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "evga-x17"
   },
   {
@@ -13177,7 +13163,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "evga-x20"
   },
   {
@@ -13203,8 +13189,7 @@
       "image": "eweadn-a5.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-a5"
@@ -13232,8 +13217,7 @@
       "image": "eweadn-a5.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-a5-pro"
@@ -13261,8 +13245,7 @@
       "image": "eweadn-a5.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-a5-ultra"
@@ -13290,8 +13273,7 @@
       "image": "eweadn-a6.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-a6"
@@ -13319,8 +13301,7 @@
       "image": "eweadn-a6.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-a6-max"
@@ -13348,8 +13329,7 @@
       "image": "eweadn-a6.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-a6-pro"
@@ -13377,8 +13357,7 @@
       "image": "eweadn-a7.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-a7"
@@ -13406,8 +13385,7 @@
       "image": "eweadn-a7.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-a7-pro"
@@ -13435,8 +13413,7 @@
       "image": "eweadn-a8-wb-ultra.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-a8-wb-ultra"
@@ -13464,8 +13441,7 @@
       "image": "eweadn-e11.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-e11"
@@ -13493,8 +13469,7 @@
       "image": "eweadn-e11.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-e11-pro"
@@ -13522,8 +13497,7 @@
       "image": "eweadn-e7.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-e7"
@@ -13551,8 +13525,7 @@
       "image": "eweadn-h3.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-h3"
@@ -13580,8 +13553,7 @@
       "image": "eweadn-h3.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-h3-pro"
@@ -13609,8 +13581,7 @@
       "image": "eweadn-l1.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-l1"
@@ -13638,8 +13609,7 @@
       "image": "eweadn-l1.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-l1-pro"
@@ -13667,8 +13637,7 @@
       "image": "eweadn-m9.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-m9"
@@ -13696,8 +13665,7 @@
       "image": "eweadn-s7.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-s7"
@@ -13725,8 +13693,7 @@
       "image": "eweadn-s7.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-s7-max"
@@ -13754,8 +13721,7 @@
       "image": "eweadn-s7.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-s7-pro"
@@ -13783,8 +13749,7 @@
       "image": "eweadn-s7.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-s7-ultra"
@@ -13812,8 +13777,7 @@
       "image": "eweadn-s9.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-s9"
@@ -13841,8 +13805,7 @@
       "image": "eweadn-s9-max.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-s9-max"
@@ -13870,8 +13833,7 @@
       "image": "eweadn-s9.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-s9-pro"
@@ -13899,8 +13861,7 @@
       "image": "eweadn-s9.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-s9-ultra"
@@ -13928,8 +13889,7 @@
       "image": "eweadn-s9-v2.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-s9-v2-pro"
@@ -13957,8 +13917,7 @@
       "image": "eweadn-s9-v2.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-s9-v2-ultra"
@@ -13986,8 +13945,7 @@
       "image": "eweadn-s9-plus.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-s9-plus-pro"
@@ -14015,8 +13973,7 @@
       "image": "eweadn-s9-plus.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-s9-plus-ultimate"
@@ -14044,8 +14001,7 @@
       "image": "eweadn-s9-plus.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-s9-plus-ultra"
@@ -14073,8 +14029,7 @@
       "image": "eweadn-x21.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-x21"
@@ -14102,8 +14057,7 @@
       "image": "eweadn-x21.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-x21-pro"
@@ -14131,8 +14085,7 @@
       "image": "eweadn-x23.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-x23"
@@ -14160,8 +14113,7 @@
       "image": "eweadn-x23.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-x23-max"
@@ -14189,8 +14141,7 @@
       "image": "eweadn-x23.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-x23-pro"
@@ -14218,8 +14169,7 @@
       "image": "eweadn-x23.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-x23-se"
@@ -14247,8 +14197,7 @@
       "image": "eweadn-z7.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "eweadn-z7"
@@ -14278,7 +14227,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "fallen-pantera-pro"
   },
   {
@@ -14754,7 +14703,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "fiberaim-hafif"
   },
   {
@@ -15590,7 +15539,8 @@
       "image": "finemax-noah.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "finemax-noah"
@@ -15620,7 +15570,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "flick-edge"
   },
   {
@@ -15648,7 +15598,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "flick-fire"
   },
   {
@@ -15674,7 +15624,8 @@
       "image": "fnatic-bolt.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "fnatic-bolt"
@@ -15702,7 +15653,8 @@
       "image": "fnatic-clutch-2.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "fnatic-clutch-2"
@@ -15732,7 +15684,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "freewolf-a6"
   },
   {
@@ -15760,7 +15712,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "freewolf-a7"
   },
   {
@@ -16928,7 +16880,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "gamesense-meta-wired"
   },
   {
@@ -16956,7 +16908,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "gamesense-mvp-wired"
   },
   {
@@ -16984,7 +16936,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "gamesense-mvp-wireless"
   },
   {
@@ -17068,7 +17020,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "gitoper-g1"
   },
   {
@@ -17096,7 +17048,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "gitoper-g2"
   },
   {
@@ -17124,7 +17076,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "gitoper-g3"
   },
   {
@@ -17964,7 +17916,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "gravastar-mercury-m1-pro"
   },
   {
@@ -17992,7 +17944,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "gravastar-mercury-m2"
   },
   {
@@ -18020,7 +17972,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "gravastar-mercury-x"
   },
   {
@@ -18048,7 +18000,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "gravastar-mercury-x-pro"
   },
   {
@@ -18076,7 +18028,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "gravastar-mercury-x-air"
   },
   {
@@ -18104,7 +18056,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "hator-pulsar-3"
   },
   {
@@ -18132,7 +18084,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "hator-pulsar-3-pro"
   },
   {
@@ -18160,7 +18112,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "hator-pulsar-3-ultra"
   },
   {
@@ -18188,7 +18140,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "hator-pulsar-3-wireless"
   },
   {
@@ -18216,7 +18168,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "hator-quasar-3-pro"
   },
   {
@@ -18244,7 +18196,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "hator-quasar-3-ultima"
   },
   {
@@ -18272,7 +18224,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "hator-quasar-3-ultra"
   },
   {
@@ -18300,7 +18252,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "hator-quasar-3-wireless"
   },
   {
@@ -18328,7 +18280,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "hator-quasar-3s-pro"
   },
   {
@@ -18356,7 +18308,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "hator-quasar-3s-ultima"
   },
   {
@@ -18384,7 +18336,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "hator-stellar-wireless"
   },
   {
@@ -18524,7 +18476,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "higround-yuma"
   },
   {
@@ -18550,7 +18502,8 @@
       "image": "hitscan-hyperlight.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "hitscan-hyperlight"
@@ -18580,7 +18533,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "hk-gaming-sirius-m"
   },
   {
@@ -18608,7 +18561,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "huo-ji-e-yooso"
   },
   {
@@ -19100,7 +19053,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "ifyoo-g03-long"
   },
   {
@@ -19128,7 +19081,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "ifyoo-g03-short"
   },
   {
@@ -19156,7 +19109,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "ifyoo-g63"
   },
   {
@@ -19828,7 +19781,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "irocks-m31r"
   },
   {
@@ -21340,7 +21293,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "klassegear-crosshair-ultra"
   },
   {
@@ -21368,7 +21321,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "kreo-anzu"
   },
   {
@@ -21396,7 +21349,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "kreo-arma"
   },
   {
@@ -21424,7 +21377,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "kreo-chimera-v2"
   },
   {
@@ -21452,7 +21405,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "kreo-harpy"
   },
   {
@@ -21480,7 +21433,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "kreo-hawk"
   },
   {
@@ -21508,7 +21461,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "kreo-ikarus"
   },
   {
@@ -21534,8 +21487,7 @@
       "image": "kysona-aztec.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-aztec"
@@ -21563,8 +21515,7 @@
       "image": "kysona-jupiter.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-jupiter-pro"
@@ -21592,8 +21543,7 @@
       "image": "kysona-jupiter.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-jupiter-se"
@@ -21621,8 +21571,7 @@
       "image": "kysona-jupiter.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-jupiter-ultra"
@@ -21650,8 +21599,7 @@
       "image": "kysona-jupiter-x-ultra.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-jupiter-x-ultra"
@@ -21679,8 +21627,7 @@
       "image": "kysona-m511.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-m511"
@@ -21708,8 +21655,7 @@
       "image": "kysona-m600.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-m600"
@@ -21737,8 +21683,7 @@
       "image": "kysona-m600-v2.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-m600-v2"
@@ -21766,8 +21711,7 @@
       "image": "kysona-m617.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-m617"
@@ -21795,8 +21739,7 @@
       "image": "kysona-m660.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-m660"
@@ -21824,8 +21767,7 @@
       "image": "kysona-mars-se.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-mars-se"
@@ -21853,8 +21795,7 @@
       "image": "kysona-mercury.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-mercury-pro"
@@ -21882,8 +21823,7 @@
       "image": "kysona-mercury.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-mercury-se"
@@ -21911,8 +21851,7 @@
       "image": "kysona-mercury.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-mercury-ultra"
@@ -21940,8 +21879,7 @@
       "image": "kysona-saturn.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-saturn-pro"
@@ -21969,8 +21907,7 @@
       "image": "kysona-saturn.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-saturn-se"
@@ -21998,8 +21935,7 @@
       "image": "kysona-uranus-pro.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-uranus-pro"
@@ -22027,8 +21963,7 @@
       "image": "kysona-uranus-pro.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-uranus-se"
@@ -22056,8 +21991,7 @@
       "image": "kysona-uranus-ultra.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-uranus-ultra"
@@ -22085,8 +22019,7 @@
       "image": "kysona-vela-ReHhE.png"
     },
     "difficulties": [
-      "normal",
-      "easy"
+      "normal"
     ],
     "is_enabled": true,
     "handle": "kysona-vela-se"
@@ -22806,7 +22739,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "lenovo-gm104"
   },
   {
@@ -22834,7 +22767,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "lenovo-legion-m300s"
   },
   {
@@ -22862,7 +22795,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "lenovo-legion-m410"
   },
   {
@@ -22890,7 +22823,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "lenovo-legion-m600s"
   },
   {
@@ -22918,7 +22851,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "lenovo-yoga-pro"
   },
   {
@@ -22974,7 +22907,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "lofree-hypace"
   },
   {
@@ -23002,7 +22935,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "lofree-touch"
   },
   {
@@ -25430,7 +25363,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "ltc-gm022"
   },
   {
@@ -25710,7 +25643,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "madlions-m3"
   },
   {
@@ -25738,7 +25671,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "madlions-m3-pro"
   },
   {
@@ -25766,7 +25699,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "madlions-mad-g"
   },
   {
@@ -25794,7 +25727,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "madlions-mad-g-max"
   },
   {
@@ -25822,7 +25755,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "mambasnake-m2"
   },
   {
@@ -25850,7 +25783,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "mambasnake-m3"
   },
   {
@@ -25878,7 +25811,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "mambasnake-m4"
   },
   {
@@ -25906,7 +25839,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "mambasnake-m5-ultra"
   },
   {
@@ -27034,7 +26967,8 @@
       "image": "melgeek-horus.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "melgeek-horus"
@@ -27064,7 +26998,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "metaphyuni-m6"
   },
   {
@@ -27092,7 +27026,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "metaphyuni-metapanda-p1"
   },
   {
@@ -27120,7 +27054,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "metaphyuni-metapanda-p1-pro"
   },
   {
@@ -27148,7 +27082,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "metaphyuni-metapanda-p1-pro-max"
   },
   {
@@ -27176,7 +27110,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "metaphyuni-p2"
   },
   {
@@ -27204,7 +27138,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "metaphyuni-p2-lite"
   },
   {
@@ -27232,7 +27166,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "metaphyuni-p2-pro"
   },
   {
@@ -27456,7 +27390,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "midnight-thread-c1"
   },
   {
@@ -27708,7 +27642,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "mloong-mx301-pro"
   },
   {
@@ -27988,7 +27922,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "mountain-makalu-67"
   },
   {
@@ -28016,7 +27950,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "mountain-makalu-max"
   },
   {
@@ -28044,7 +27978,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "msi-clutch-gm41"
   },
   {
@@ -28072,7 +28006,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "msi-x7m"
   },
   {
@@ -28473,7 +28407,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "noir-e1"
   },
   {
@@ -28501,7 +28435,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "noir-m1"
   },
   {
@@ -28529,7 +28463,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "noir-m1-lite"
   },
   {
@@ -28557,7 +28491,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "noir-m2"
   },
   {
@@ -28585,7 +28519,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "noir-m2-mg"
   },
   {
@@ -28613,7 +28547,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "noir-m2-nex"
   },
   {
@@ -28641,7 +28575,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "noir-m2-pro"
   },
   {
@@ -28669,7 +28603,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "noir-s1"
   },
   {
@@ -29285,7 +29219,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "palmlab-lancer-001"
   },
   {
@@ -29397,7 +29331,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "pichau-hive-s"
   },
   {
@@ -30293,7 +30227,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "press-play-atlas"
   },
   {
@@ -30321,7 +30255,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "press-play-icarus-v2-mini"
   },
   {
@@ -30349,7 +30283,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "press-play-icarus-v2-nearlink"
   },
   {
@@ -30377,7 +30311,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "press-play-iris"
   },
   {
@@ -30405,7 +30339,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "press-play-iris-v2-nearlink"
   },
   {
@@ -30433,7 +30367,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "press-play-ergo-nova"
   },
   {
@@ -30461,7 +30395,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "press-play-nova-ergo-v2"
   },
   {
@@ -30489,7 +30423,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "press-play-spirit"
   },
   {
@@ -30517,7 +30451,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "press-play-spirit-pro"
   },
   {
@@ -30545,7 +30479,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "press-play-spirit-pro-3395"
   },
   {
@@ -32643,7 +32577,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "puretrak-valor-wireless"
   },
   {
@@ -32669,7 +32603,8 @@
       "image": "pwnage-ambi-wireless.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "pwnage-ambi-wireless"
@@ -32697,7 +32632,8 @@
       "image": "pwnage-ergo.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "pwnage-ergo"
@@ -32725,7 +32661,8 @@
       "image": "pwnage-ergo-wireless.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "pwnage-ergo-wireless"
@@ -32753,7 +32690,8 @@
       "image": "pwnage-stormbreaker.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "pwnage-stormbreaker"
@@ -32781,7 +32719,8 @@
       "image": "pwnage-stormbreaker.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "pwnage-stormbreaker-v2"
@@ -32809,7 +32748,8 @@
       "image": "pwnage-stormbreaker.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "pwnage-stormbreaker-v3"
@@ -32837,7 +32777,8 @@
       "image": "pwnage-stormbreaker-max.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "pwnage-stormbreaker-max"
@@ -32865,7 +32806,8 @@
       "image": "pwnage-symm-1.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "pwnage-symm-1"
@@ -32893,7 +32835,8 @@
       "image": "pwnage-symm-1-wireless.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "pwnage-symm-1-wireless"
@@ -32921,7 +32864,8 @@
       "image": "pwnage-symm-2.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "pwnage-symm-2"
@@ -32949,7 +32893,8 @@
       "image": "pwnage-symm-2-wireless.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "pwnage-symm-2-wireless"
@@ -32977,7 +32922,8 @@
       "image": "pwnage-symm-3.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "pwnage-symm-3"
@@ -33005,7 +32951,8 @@
       "image": "pwnage-trinity-cf.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "pwnage-trinity-cf"
@@ -33033,7 +32980,8 @@
       "image": "pwnage-vanta.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "pwnage-vanta"
@@ -33063,7 +33011,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "rakk-bulus"
   },
   {
@@ -33091,7 +33039,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "rakk-gahum"
   },
   {
@@ -33119,7 +33067,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "rakk-kaptan-trimode"
   },
   {
@@ -33147,7 +33095,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "rakk-kaptan-wired"
   },
   {
@@ -33175,7 +33123,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "rakk-mag-an"
   },
   {
@@ -33203,7 +33151,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "rakk-talan"
   },
   {
@@ -33231,7 +33179,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "rakk-talan-aero"
   },
   {
@@ -33259,7 +33207,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "rakk-talan-air"
   },
   {
@@ -33287,7 +33235,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "rakk-tanaw"
   },
   {
@@ -33315,7 +33263,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "rampage-blitz-ultimate"
   },
   {
@@ -33343,7 +33291,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "rampage-prote-m5"
   },
   {
@@ -33371,7 +33319,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "rampage-zenith-pro"
   },
   {
@@ -36942,7 +36890,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "realforce-rm1"
   },
   {
@@ -36970,7 +36918,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "redmagic-09"
   },
   {
@@ -37642,7 +37590,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "rexus-daxa-air-iv"
   },
   {
@@ -37670,7 +37618,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "royal-kludge-m3"
   },
   {
@@ -37698,7 +37646,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "royal-kludge-m30"
   },
   {
@@ -37726,7 +37674,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "royal-kludge-m30-pro"
   },
   {
@@ -37754,7 +37702,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "royal-kludge-mg5"
   },
   {
@@ -37782,7 +37730,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "royal-kludge-mg6-pro"
   },
   {
@@ -38374,7 +38322,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "solakaka-sm802"
   },
   {
@@ -38402,7 +38350,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "solakaka-sm802-pro"
   },
   {
@@ -38430,7 +38378,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "solakaka-sm805"
   },
   {
@@ -38458,7 +38406,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "solakaka-sm809"
   },
   {
@@ -38486,7 +38434,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "solakaka-sm809-pro"
   },
   {
@@ -38514,7 +38462,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "solakaka-sm850"
   },
   {
@@ -38542,7 +38490,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "spc-gear-lix-plus-wireless"
   },
   {
@@ -38568,7 +38516,8 @@
       "image": "sprime-pm1.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "sprime-pm1"
@@ -39468,7 +39417,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "strayfe-m55-pro-8k"
   },
   {
@@ -39496,7 +39445,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "swiftpoint-creator"
   },
   {
@@ -39524,7 +39473,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "swiftpoint-ergopoint"
   },
   {
@@ -39552,7 +39501,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "swiftpoint-tracer"
   },
   {
@@ -39580,7 +39529,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "swiftpoint-z2"
   },
   {
@@ -39608,7 +39557,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "swiftpoint-z3"
   },
   {
@@ -39636,7 +39585,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "sylical-helix"
   },
   {
@@ -39664,7 +39613,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "teamwolf-lurker-mk-01"
   },
   {
@@ -39692,7 +39641,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "tecware-ex1"
   },
   {
@@ -39720,7 +39669,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "tecware-ex2"
   },
   {
@@ -39748,7 +39697,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "tecware-pulse-elite"
   },
   {
@@ -39774,7 +39723,8 @@
       "image": "fantech-aria-xd7.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "teevolution-aria-xd7"
@@ -39802,7 +39752,8 @@
       "image": "teevolution-helios-ii-pro.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "teevolution-helios-ii-pro"
@@ -39830,7 +39781,8 @@
       "image": "teevolution-terra.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "teevolution-terra"
@@ -39860,7 +39812,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "the-g-lab-kult-elite-m100"
   },
   {
@@ -39888,7 +39840,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "the-g-lab-kult-elite-m150"
   },
   {
@@ -40224,7 +40176,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "tmkb-falcon-m1"
   },
   {
@@ -40252,7 +40204,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "tmkb-falcon-m1se"
   },
   {
@@ -40560,7 +40512,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "ulugames-reload"
   },
   {
@@ -40588,7 +40540,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "ulugames-reload-pro"
   },
   {
@@ -40616,7 +40568,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "ulugames-reload-se"
   },
   {
@@ -40642,7 +40594,8 @@
       "image": "unius-black-lotus.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "unius-black-lotus"
@@ -40950,7 +40903,8 @@
       "image": "vancer-x-arbiter-akitsu.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "vancer-x-arbiter-akitsu"
@@ -40978,7 +40932,8 @@
       "image": "vancer-gemini-castor.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "vancer-gemini-castor"
@@ -41006,7 +40961,8 @@
       "image": "vancer-gemini-pollux.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "vancer-gemini-pollux"
@@ -41034,7 +40990,8 @@
       "image": "vancer-gretxa.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "vancer-gretxa"
@@ -41062,7 +41019,8 @@
       "image": "vancer-groove.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "vancer-groove"
@@ -41090,7 +41048,8 @@
       "image": "vancer-thrash.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "vancer-thrash"
@@ -41120,7 +41079,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "varo-v1-superlight"
   },
   {
@@ -42589,7 +42548,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "vortex-series-ignix-f1"
   },
   {
@@ -42617,7 +42576,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "vortex-series-ignix-f1-pro"
   },
   {
@@ -42645,7 +42604,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "vortex-series-ignix-f1-xtreme"
   },
   {
@@ -42673,7 +42632,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "vortex-series-ignix-f3"
   },
   {
@@ -42701,7 +42660,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "vortex-series-ignix-f3-pro"
   },
   {
@@ -42729,7 +42688,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "vortex-series-ignix-f3-xtreme"
   },
   {
@@ -42757,7 +42716,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "vortex-series-ignix-f5"
   },
   {
@@ -42785,7 +42744,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "vortex-series-ignix-f5-pro"
   },
   {
@@ -42813,7 +42772,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "vortex-series-ignix-f5-xtreme"
   },
   {
@@ -42841,7 +42800,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "vortex-series-ignix-f7"
   },
   {
@@ -42869,7 +42828,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "vortex-series-ignix-f7-pro"
   },
   {
@@ -42897,7 +42856,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "vortex-series-ignix-f7-xtreme"
   },
   {
@@ -42925,7 +42884,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "vortex-series-ignix-r1"
   },
   {
@@ -42953,7 +42912,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "vortex-series-ignix-r1-pro"
   },
   {
@@ -42981,7 +42940,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "vortex-series-moxanic-lumi-g1"
   },
   {
@@ -43009,7 +42968,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "vortex-series-moxanic-lumi-g5"
   },
   {
@@ -44117,7 +44076,8 @@
       "image": "xbab-xa25.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "xbab-xa25"
@@ -44147,7 +44107,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "xenics-titan-gx-air-wireless"
   },
   {
@@ -44259,7 +44219,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "xiberia-ex"
   },
   {
@@ -44567,7 +44527,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "xinshuntian-g820"
   },
   {
@@ -44827,7 +44787,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "xtro-eris"
   },
   {
@@ -44855,7 +44815,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "xyder-amalight-4k"
   },
   {
@@ -44883,7 +44843,7 @@
     "difficulties": [
       "normal"
     ],
-    "is_enabled": true,
+    "is_enabled": false,
     "handle": "yunzii-m1"
   },
   {
@@ -44909,7 +44869,8 @@
       "image": "zaopin-z1.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "zaopin-z1"
@@ -44937,7 +44898,8 @@
       "image": "zaopin-z1-pro.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "zaopin-z1-pro"
@@ -44965,7 +44927,8 @@
       "image": "zaopin-z1-pro.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "zaopin-z1-pro-max"
@@ -44993,7 +44956,8 @@
       "image": "zaopin-z11.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "zaopin-z11"
@@ -45021,7 +44985,8 @@
       "image": "zaopin-z11.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "zaopin-z11-pro"
@@ -45049,7 +45014,8 @@
       "image": "zaopin-z2.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "zaopin-z2"
@@ -45077,7 +45043,8 @@
       "image": "zaopin-z2.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "zaopin-z2-max"
@@ -45105,7 +45072,8 @@
       "image": "zaopin-z2-mini.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "zaopin-z2-mini"
@@ -45133,7 +45101,8 @@
       "image": "zaopin-z2-mini.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "zaopin-z2-mini-4k"
@@ -45161,7 +45130,8 @@
       "image": "zaopin-z2-mini.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "zaopin-z2-mini-max-8k"
@@ -45189,7 +45159,8 @@
       "image": "zaopin-zpw.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "zaopin-zpw"
@@ -45217,7 +45188,8 @@
       "image": "zaopin-zpw.png"
     },
     "difficulties": [
-      "normal"
+      "normal",
+      "easy"
     ],
     "is_enabled": true,
     "handle": "zaopin-zpw-max"

@@ -89,6 +89,6 @@ describe('AnswerOverlay', () => {
     );
 
     expect(screen.getByText('所属难度')).toBeInTheDocument();
-    expect(screen.getByText('入门版, 完整版')).toBeInTheDocument();
+    expect(screen.getByText('小白, 扫地僧')).toBeInTheDocument();
   });
 });

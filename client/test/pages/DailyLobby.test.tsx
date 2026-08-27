@@ -42,7 +42,7 @@ describe('DailyLobby', () => {
 
     expect(await screen.findByText('选择每日挑战难度')).toBeInTheDocument();
     expect(get).toHaveBeenCalledWith('/daily-challenge/overview');
-    expect(screen.getByRole('button', { name: /入门版/ })).toHaveClass('active');
+    expect(screen.getByRole('button', { name: /小白/ })).toHaveClass('active');
     expect(await screen.findByText('未开始')).toBeInTheDocument();
     expect(screen.getByText('进行中')).toBeInTheDocument();
     expect(screen.getByText('已完成')).toBeInTheDocument();
@@ -59,7 +59,7 @@ describe('DailyLobby', () => {
       }
     );
 
-    await user.click(screen.getByRole('button', { name: /完整版/ }));
+    await user.click(screen.getByRole('button', { name: /扫地僧/ }));
     await user.click(screen.getByRole('button', { name: '进入挑战' }));
 
     expect(await screen.findByTestId('daily-game-route')).toBeInTheDocument();

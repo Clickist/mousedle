@@ -792,7 +792,7 @@ describe('MultiRoom replay', () => {
     renderAtRoute(<MultiRoom />, { route: '/multi/room', path: '/multi/room' });
 
     const attributes = await screen.findByRole('region', { name: '房间设置' });
-    expect(within(attributes).getByText('数据库：简单版')).toBeInTheDocument();
+    expect(within(attributes).getByText('数据库：潮男')).toBeInTheDocument();
     expect(within(attributes).getByText('赛制：BO5')).toBeInTheDocument();
     expect(within(attributes).getByText('每局最多 12 次 · 最大猜测时间 300 秒 · 猜测间隔 2.5 秒'))
       .toBeInTheDocument();
