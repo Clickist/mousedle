@@ -16,6 +16,7 @@
     --col-beginner: #16875b;
     --col-easy: #005fae;
     --col-normal: #625c54;
+    --col-disabled: #ba1a1a;
   }
   * { box-sizing: border-box; }
   body {
@@ -81,9 +82,9 @@
   main {
     flex: 1;
     display: grid;
-    grid-template-columns: 1fr 1fr 1.2fr;
+    grid-template-columns: 1fr 1.1fr 1.3fr 1fr;
     gap: 12px;
-    padding: 12px 20px 20px;
+    padding: 12px 16px 20px;
     min-height: 0;
   }
   .column {
@@ -148,7 +149,7 @@
 <body>
 <header>
   <h1>鼠一把 · 难度分级编辑器</h1>
-  <span class="hint">拖动品牌卡片到目标难度列；或点一下品牌选中、再点目标列放入。潮男包含小白；扫地僧包含全部。</span>
+  <span class="hint">拖动品牌卡片到目标难度列；或点一下品牌选中、再点目标列放入。潮男包含小白；扫地僧包含全部；禁用的品牌不出现在任何难度。</span>
   <input type="search" id="search" placeholder="搜索品牌…" />
   <button id="reset">还原当前名单</button>
   <button id="download" class="primary">导出 JSON</button>
@@ -162,6 +163,7 @@ const TIERS = [
   { key: 'beginner', label: '小白', colVar: '--col-beginner' },
   { key: 'easy', label: '潮男（含小白）', colVar: '--col-easy' },
   { key: 'normal', label: '扫地僧（含全部）', colVar: '--col-normal' },
+  { key: 'disabled', label: '禁用（不进游戏）', colVar: '--col-disabled' },
 ];
 const state = Object.fromEntries(BRANDS.map((b) => [b.brand, b.tier]));
 const initial = { ...state };
@@ -231,7 +233,7 @@ for (const tier of TIERS) {
 
 function render() {
   const filter = document.getElementById('search').value.trim().toLowerCase();
-  const totals = { beginner: 0, easy: 0, normal: 0 };
+  const totals = Object.fromEntries(TIERS.map((t) => [t.key, 0]));
   for (const tier of TIERS) {
     const cards = columns[tier.key].querySelector('.cards');
     cards.innerHTML = '';
@@ -269,6 +271,7 @@ document.getElementById('download').addEventListener('click', () => {
   const result = {
     beginner: BRANDS.filter((b) => state[b.brand] === 'beginner').map((b) => b.brand).sort(),
     easy: BRANDS.filter((b) => state[b.brand] === 'easy').map((b) => b.brand).sort(),
+    disabled: BRANDS.filter((b) => state[b.brand] === 'disabled').map((b) => b.brand).sort(),
   };
   const json = JSON.stringify(result, null, 2);
   const blob = new Blob([json], { type: 'application/json' });
