@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>mousedle 难度分级编辑器</title>
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --surface: #fffdf8;
+    --border: #cec6bc;
+    --text: #24211d;
+    --text-sec: #625c54;
+    --primary: #c83d00;
+    --primary-soft: rgba(200, 61, 0, 0.1);
+    --col-beginner: #16875b;
+    --col-easy: #005fae;
+    --col-normal: #625c54;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 20px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  header h1 { font-size: 16px; margin: 0; }
+  header .hint { font-size: 12px; color: var(--text-sec); }
+  header .spacer { flex: 1; }
+  input[type="search"] {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font: inherit;
+    font-size: 13px;
+    width: 220px;
+    background: var(--surface);
+  }
+  button {
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+  button:hover { filter: brightness(0.97); }
+  #toast {
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #312b25;
+    color: #f9eee8;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    z-index: 99;
+  }
+  #toast.show { opacity: 1; }
+  main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.2fr;
+    gap: 12px;
+    padding: 12px 20px 20px;
+    min-height: 0;
+  }
+  .column {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    min-height: 0;
+  }
+  .column-header {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .column-header h2 { margin: 0; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+  .column-header h2::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    background: var(--col);
+  }
+  .column-header .meta { font-size: 12px; color: var(--text-sec); margin-top: 2px; }
+  .cards {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 0;
+  }
+  .column.drag-over .cards { background: var(--primary-soft); outline: 2px dashed var(--primary); outline-offset: -6px; border-radius: 6px; }
+  .card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: grab;
+    user-select: none;
+  }
+  .card:active { cursor: grabbing; }
+  .card.dragging { opacity: 0.4; }
+  .card.selected { outline: 2px solid var(--primary); outline-offset: -1px; background: var(--primary-soft); font-weight: 600; }
+  .column.drop-target { background: var(--primary-soft); }
+  .column.drop-target .column-header::after { content: '点这里放入'; font-size: 12px; color: var(--primary); font-weight: 600; }
+  .card .count { color: var(--text-sec); font-size: 12px; white-space: nowrap; }
+  .card.hidden { display: none; }
+  .empty-tip {
+    text-align: center;
+    color: var(--text-sec);
+    font-size: 12px;
+    padding: 20px 0;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>鼠一把 · 难度分级编辑器</h1>
+  <span class="hint">拖动品牌卡片到目标难度列；或点一下品牌选中、再点目标列放入。简单版包含入门版；完整版包含以上全部。</span>
+  <input type="search" id="search" placeholder="搜索品牌…" />
+  <button id="reset">还原当前名单</button>
+  <button id="download" class="primary">导出 JSON</button>
+</header>
+<main id="board"></main>
+<div id="toast"></div>
+<script>
+const BRANDS = [{"brand":"8BitDo","count":1,"tier":"normal"},{"brand":"A4Tech","count":3,"tier":"normal"},{"brand":"ABKO","count":1,"tier":"normal"},{"brand":"Acer","count":1,"tier":"normal"},{"brand":"Aigo","count":3,"tier":"normal"},{"brand":"AIM1","count":1,"tier":"normal"},{"brand":"AJAZZ","count":29,"tier":"normal"},{"brand":"Akko","count":15,"tier":"normal"},{"brand":"Alienware","count":5,"tier":"normal"},{"brand":"Amazon","count":1,"tier":"normal"},{"brand":"Angry Miao","count":2,"tier":"normal"},{"brand":"ANTGAMER","count":1,"tier":"normal"},{"brand":"Apple","count":1,"tier":"normal"},{"brand":"Aqirys","count":1,"tier":"normal"},{"brand":"Arbiter Studio","count":1,"tier":"normal"},{"brand":"Ardor Gaming","count":14,"tier":"normal"},{"brand":"ARYE","count":2,"tier":"normal"},{"brand":"ASUS","count":38,"tier":"easy"},{"brand":"ATK","count":61,"tier":"beginner"},{"brand":"Atompalm","count":2,"tier":"normal"},{"brand":"Attack Shark","count":29,"tier":"easy"},{"brand":"AULA","count":18,"tier":"normal"},{"brand":"Ausdom","count":10,"tier":"normal"},{"brand":"be quiet!","count":2,"tier":"normal"},{"brand":"Bloody","count":20,"tier":"normal"},{"brand":"Chaos","count":1,"tier":"normal"},{"brand":"Cherry","count":1,"tier":"normal"},{"brand":"Cherry Xtrfy","count":7,"tier":"normal"},{"brand":"Chilkey","count":2,"tier":"normal"},{"brand":"COMMATECH","count":1,"tier":"normal"},{"brand":"Cooler Master","count":14,"tier":"normal"},{"brand":"cOoLm0Dz","count":3,"tier":"normal"},{"brand":"Corsair","count":38,"tier":"easy"},{"brand":"CRDRAKO","count":1,"tier":"normal"},{"brand":"CROCIRIS","count":2,"tier":"normal"},{"brand":"CryoMods","count":1,"tier":"normal"},{"brand":"Cybeart","count":3,"tier":"normal"},{"brand":"Dareu","count":17,"tier":"normal"},{"brand":"Dark Project","count":5,"tier":"normal"},{"brand":"Darmoshark","count":29,"tier":"easy"},{"brand":"Delux","count":20,"tier":"normal"},{"brand":"Dornfinger","count":1,"tier":"normal"},{"brand":"Dream Machines","count":12,"tier":"normal"},{"brand":"Drevo","count":1,"tier":"normal"},{"brand":"Ducky","count":2,"tier":"normal"},{"brand":"Edifier","count":4,"tier":"normal"},{"brand":"ELECOM","count":7,"tier":"normal"},{"brand":"Endgame Gear","count":17,"tier":"easy"},{"brand":"Epomaker","count":6,"tier":"normal"},{"brand":"EVGA","count":4,"tier":"normal"},{"brand":"EWEADN","count":37,"tier":"easy"},{"brand":"Fallen","count":1,"tier":"normal"},{"brand":"Fantech","count":16,"tier":"normal"},{"brand":"Fiberaim","count":1,"tier":"normal"},{"brand":"Finalmouse","count":27,"tier":"beginner"},{"brand":"FineMax","count":1,"tier":"normal"},{"brand":"Flick","count":2,"tier":"normal"},{"brand":"Fnatic","count":2,"tier":"normal"},{"brand":"Freewolf","count":2,"tier":"normal"},{"brand":"G-Wolves","count":38,"tier":"beginner"},{"brand":"Gamesense","count":3,"tier":"normal"},{"brand":"GANSS","count":2,"tier":"normal"},{"brand":"GITOPER","count":3,"tier":"normal"},{"brand":"Glorious","count":28,"tier":"easy"},{"brand":"GravaStar","count":5,"tier":"normal"},{"brand":"Hator","count":11,"tier":"normal"},{"brand":"HaunterWell","count":4,"tier":"normal"},{"brand":"Higround","count":1,"tier":"normal"},{"brand":"Hitscan","count":1,"tier":"normal"},{"brand":"HK Gaming","count":1,"tier":"normal"},{"brand":"HUO JI","count":1,"tier":"normal"},{"brand":"HyperX","count":16,"tier":"easy"},{"brand":"IFYOO","count":3,"tier":"normal"},{"brand":"Imecoo","count":1,"tier":"normal"},{"brand":"Incott","count":15,"tier":"normal"},{"brand":"INPHIC","count":3,"tier":"normal"},{"brand":"INZONE","count":1,"tier":"normal"},{"brand":"IPI","count":3,"tier":"normal"},{"brand":"Irocks","count":1,"tier":"normal"},{"brand":"IROK","count":4,"tier":"normal"},{"brand":"Ironcat","count":4,"tier":"normal"},{"brand":"IXILAB","count":3,"tier":"normal"},{"brand":"IYX","count":1,"tier":"normal"},{"brand":"JamesDonkey","count":5,"tier":"normal"},{"brand":"Keychron","count":36,"tier":"normal"},{"brand":"KlasseGear","count":1,"tier":"normal"},{"brand":"Kreo","count":6,"tier":"normal"},{"brand":"Kysona","count":20,"tier":"easy"},{"brand":"LAMZU","count":23,"tier":"beginner"},{"brand":"Lenovo","count":5,"tier":"normal"},{"brand":"Lethal Gaming Gear","count":1,"tier":"normal"},{"brand":"Lofree","count":2,"tier":"normal"},{"brand":"Logitech","count":80,"tier":"beginner"},{"brand":"LTC","count":1,"tier":"normal"},{"brand":"LunaFury","count":3,"tier":"normal"},{"brand":"MACHENIKE","count":6,"tier":"normal"},{"brand":"Madlions","count":4,"tier":"normal"},{"brand":"MAMBASNAKE","count":4,"tier":"normal"},{"brand":"MCHOSE","count":38,"tier":"easy"},{"brand":"MelGeek","count":1,"tier":"normal"},{"brand":"Metaphyuni","count":7,"tier":"normal"},{"brand":"Microsoft","count":7,"tier":"normal"},{"brand":"Midnight Thread","count":1,"tier":"normal"},{"brand":"Mionix","count":8,"tier":"normal"},{"brand":"MLOONG","count":1,"tier":"normal"},{"brand":"Monka","count":6,"tier":"normal"},{"brand":"Motospeed","count":3,"tier":"normal"},{"brand":"Mountain","count":2,"tier":"normal"},{"brand":"MSI","count":2,"tier":"normal"},{"brand":"Ninjutso","count":9,"tier":"easy"},{"brand":"Nintendo","count":1,"tier":"normal"},{"brand":"Nixeus","count":3,"tier":"normal"},{"brand":"Noir","count":8,"tier":"normal"},{"brand":"Nyfter","count":1,"tier":"normal"},{"brand":"NZXT","count":4,"tier":"normal"},{"brand":"Orbital","count":16,"tier":"normal"},{"brand":"PALMLAB","count":1,"tier":"normal"},{"brand":"PHYLINA","count":3,"tier":"normal"},{"brand":"Pichau","count":1,"tier":"normal"},{"brand":"PMM","count":31,"tier":"normal"},{"brand":"Press Play","count":10,"tier":"normal"},{"brand":"Pulsar","count":69,"tier":"beginner"},{"brand":"PureTrak","count":1,"tier":"normal"},{"brand":"Pwnage","count":14,"tier":"normal"},{"brand":"RAKK","count":9,"tier":"normal"},{"brand":"Rampage","count":3,"tier":"normal"},{"brand":"Rapoo","count":42,"tier":"easy"},{"brand":"RAWM","count":15,"tier":"easy"},{"brand":"Razer","count":63,"tier":"beginner"},{"brand":"Realforce","count":1,"tier":"normal"},{"brand":"REDMAGIC","count":1,"tier":"normal"},{"brand":"Redragon","count":23,"tier":"normal"},{"brand":"Rexus","count":1,"tier":"normal"},{"brand":"RK Royal Kludge","count":5,"tier":"normal"},{"brand":"ROCCAT","count":16,"tier":"normal"},{"brand":"Scyrox","count":4,"tier":"easy"},{"brand":"SOLAKAKA","count":6,"tier":"normal"},{"brand":"SPC Gear","count":1,"tier":"normal"},{"brand":"Sprime","count":1,"tier":"normal"},{"brand":"SteelSeries","count":30,"tier":"easy"},{"brand":"strayfe","count":1,"tier":"normal"},{"brand":"Swiftpoint","count":5,"tier":"normal"},{"brand":"SyLical","count":1,"tier":"normal"},{"brand":"Teamwolf","count":1,"tier":"normal"},{"brand":"Tecware","count":3,"tier":"normal"},{"brand":"Teevolution","count":3,"tier":"normal"},{"brand":"The G-Lab","count":2,"tier":"normal"},{"brand":"ThundeRobot","count":11,"tier":"normal"},{"brand":"TMKB","count":2,"tier":"normal"},{"brand":"Turtle Beach","count":10,"tier":"normal"},{"brand":"UluGames","count":3,"tier":"normal"},{"brand":"UNIUS","count":1,"tier":"normal"},{"brand":"Valkyrie","count":10,"tier":"normal"},{"brand":"Vancer","count":6,"tier":"normal"},{"brand":"VARO","count":1,"tier":"normal"},{"brand":"VAXEE","count":20,"tier":"beginner"},{"brand":"VGN","count":29,"tier":"easy"},{"brand":"VortexSeries","count":16,"tier":"normal"},{"brand":"VXE","count":11,"tier":"beginner"},{"brand":"Waizowl","count":8,"tier":"easy"},{"brand":"WLMOUSE","count":16,"tier":"easy"},{"brand":"Wraith","count":2,"tier":"normal"},{"brand":"XBAB","count":1,"tier":"normal"},{"brand":"Xenics","count":1,"tier":"normal"},{"brand":"Xiaomi","count":3,"tier":"normal"},{"brand":"XIBERIA","count":1,"tier":"normal"},{"brand":"Xinmeng","count":10,"tier":"normal"},{"brand":"Xinshuntian","count":1,"tier":"normal"},{"brand":"Xtrfy","count":8,"tier":"easy"},{"brand":"xtro","count":1,"tier":"normal"},{"brand":"Xyder","count":1,"tier":"normal"},{"brand":"YUNZII","count":1,"tier":"normal"},{"brand":"Zaopin","count":12,"tier":"normal"},{"brand":"Zaunkoenig","count":2,"tier":"normal"},{"brand":"zeromouse","count":1,"tier":"normal"},{"brand":"Zowie","count":43,"tier":"beginner"}];
+
+const TIERS = [
+  { key: 'beginner', label: '入门版', colVar: '--col-beginner' },
+  { key: 'easy', label: '简单版（含入门）', colVar: '--col-easy' },
+  { key: 'normal', label: '完整版（含全部）', colVar: '--col-normal' },
+];
+const state = Object.fromEntries(BRANDS.map((b) => [b.brand, b.tier]));
+const initial = { ...state };
+
+const board = document.getElementById('board');
+const columns = {};
+let selectedBrand = null;
+
+function setSelected(brand) {
+  selectedBrand = brand;
+  document.querySelectorAll('.card.selected').forEach((el) => el.classList.remove('selected'));
+  document.querySelectorAll('.column').forEach((col) => col.classList.remove('drop-target'));
+  if (!brand) return;
+  const card = document.querySelector(`.card[data-brand="${CSS.escape(brand)}"]`);
+  if (card) card.classList.add('selected');
+  for (const tier of TIERS) {
+    if (state[brand] !== tier.key) columns[tier.key].classList.add('drop-target');
+  }
+}
+
+function moveTo(brand, tierKey) {
+  if (state[brand] === tierKey) return;
+  state[brand] = tierKey;
+  render();
+  const card = document.querySelector(`.card[data-brand="${CSS.escape(brand)}"]`);
+  if (card) card.scrollIntoView({ block: 'nearest' });
+  setSelected(brand);
+}
+
+for (const tier of TIERS) {
+  const col = document.createElement('section');
+  col.className = 'column';
+  col.dataset.tier = tier.key;
+  col.innerHTML = `
+    <div class="column-header" style="--col: var(${tier.colVar})">
+      <h2>${tier.label}</h2>
+      <div class="meta"></div>
+    </div>
+    <div class="cards"></div>`;
+  col.addEventListener('dragover', (e) => { e.preventDefault(); col.classList.add('drag-over'); });
+  col.addEventListener('dragleave', () => col.classList.remove('drag-over'));
+  col.addEventListener('drop', (e) => {
+    e.preventDefault();
+    col.classList.remove('drag-over');
+    const brand = e.dataTransfer.getData('text/plain');
+    if (brand && state[brand] !== tier.key) {
+      moveTo(brand, tier.key);
+    }
+  });
+  // 点选交互:点卡片选中,再点目标列任意位置放入;点击已选中卡片则取消
+  col.addEventListener('click', (e) => {
+    const card = e.target.closest('.card');
+    if (card) {
+      const brand = card.dataset.brand;
+      if (selectedBrand && selectedBrand !== brand) {
+        moveTo(selectedBrand, tier.key);
+      } else {
+        setSelected(selectedBrand === brand ? null : brand);
+      }
+      return;
+    }
+    if (selectedBrand) moveTo(selectedBrand, tier.key);
+  });
+  board.appendChild(col);
+  columns[tier.key] = col;
+}
+
+function render() {
+  const filter = document.getElementById('search').value.trim().toLowerCase();
+  const totals = { beginner: 0, easy: 0, normal: 0 };
+  for (const tier of TIERS) {
+    const cards = columns[tier.key].querySelector('.cards');
+    cards.innerHTML = '';
+    const brands = BRANDS.filter((b) => state[b.brand] === tier.key)
+      .sort((a, b) => b.count - a.count);
+    for (const b of brands) {
+      totals[tier.key] += b.count;
+      const card = document.createElement('div');
+      card.className = 'card' + (filter && !b.brand.toLowerCase().includes(filter) ? ' hidden' : '');
+      card.draggable = true;
+      card.dataset.brand = b.brand;
+      card.innerHTML = `<span>${b.brand}</span><span class="count">${b.count} 型号</span>`;
+      card.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', b.brand);
+        e.dataTransfer.effectAllowed = 'move';
+        card.classList.add('dragging');
+      });
+      card.addEventListener('dragend', () => card.classList.remove('dragging'));
+      cards.appendChild(card);
+    }
+    if (!brands.length) cards.innerHTML = '<div class="empty-tip">拖品牌到这里</div>';
+    const visible = brands.filter((b) => !filter || b.brand.toLowerCase().includes(filter)).length;
+    columns[tier.key].querySelector('.meta').textContent =
+      `${brands.length} 个品牌 · ${totals[tier.key]} 只鼠标` + (filter ? `（匹配 ${visible}）` : '');
+  }
+}
+
+document.getElementById('search').addEventListener('input', render);
+document.getElementById('reset').addEventListener('click', () => {
+  Object.assign(state, initial);
+  render();
+  toast('已还原为当前线上名单');
+});
+document.getElementById('download').addEventListener('click', () => {
+  const result = {
+    beginner: BRANDS.filter((b) => state[b.brand] === 'beginner').map((b) => b.brand).sort(),
+    easy: BRANDS.filter((b) => state[b.brand] === 'easy').map((b) => b.brand).sort(),
+  };
+  const json = JSON.stringify(result, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'tier-assignment.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('已导出 tier-assignment.json，发给点点即可落库');
+});
+
+let toastTimer;
+function toast(text) {
+  const el = document.getElementById('toast');
+  el.textContent = text;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+render();
+</script>
+</body>
+</html>
