@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { db } from '../db/knex';
 import { isKnownDifficultyKey } from '../difficulties';
 import { HttpError } from '../middleware/common';
+import { mouseDisplayInputSchema } from './mouseDisplay';
 import { invalidatePlayerCache } from './playerCache';
 
 const mouseShapes = ['对称', '人体工学', '非对称', '垂直'] as const;
@@ -24,6 +25,7 @@ export const playerSchema = z.object({
   length_mm: z.number().int().min(40).max(200),
   side_buttons: z.number().int().min(0).max(20).default(2),
   wireless: z.boolean().default(true),
+  display: mouseDisplayInputSchema.optional(),
   is_enabled: z.boolean().default(true),
   difficulties: difficultyListSchema.optional(),
 });
@@ -131,10 +133,13 @@ export async function importPlayers(
     const nicknames = players.map((player) => player.name);
     const existing = await trx('mice')
       .whereIn('name', nicknames)
-      .select('id', 'name', 'is_enabled');
+      .select('id', 'name', 'is_enabled', 'display');
     const existingNames = new Set(existing.map((player) => String(player.name)));
     const existingEnabled = new Map(
       existing.map((player) => [String(player.name), Boolean(player.is_enabled)])
+    );
+    const existingDisplay = new Map(
+      existing.map((player) => [String(player.name), player.display ?? null])
     );
     updated = players.filter((player) => existingNames.has(player.name)).length;
     created = players.length - updated;
@@ -145,6 +150,9 @@ export async function importPlayers(
       desiredDifficulties.set(player.name, desired);
       return {
         ...values,
+        ...(player.display === undefined && existingNames.has(player.name)
+          ? { display: existingDisplay.get(player.name) ?? null }
+          : {}),
         is_enabled: player.is_enabled ?? existingEnabled.get(player.name) ?? true,
       };
     });

@@ -3,18 +3,7 @@ import { Globe, Crosshair, Factory, Weight, Ruler, Cpu, Zap, Layers3, MousePoint
 import ModalPortal from './ModalPortal';
 import { useTranslation } from 'react-i18next';
 import { difficultyLabel } from '../utils/difficulty';
-
-export interface MouseDisplay {
-  sensor?: string | null;
-  dpi?: number | null;
-  polling_rate?: number | null;
-  hump?: string | null;
-  hand?: string | null;
-  width?: number | null;
-  height?: number | null;
-  connection?: string | null;
-  image?: string | null;
-}
+import type { MouseDisplay } from '../types';
 
 export interface AnswerInfo {
   name: string;

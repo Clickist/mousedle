@@ -7,6 +7,7 @@ import {
   playerUpdateSchema,
   type PlayerUpdateInput,
 } from './playerMutations';
+import { canonicalMouseDisplay, serializeMouseDisplay } from './mouseDisplay';
 import { invalidatePlayerCache } from './playerCache';
 
 export const playerChangeSubmissionSchema = z.object({
@@ -33,6 +34,7 @@ const fields = [
   'length_mm',
   'side_buttons',
   'wireless',
+  'display',
   'is_enabled',
   'difficulties',
 ] as const;
@@ -54,6 +56,7 @@ function canonical(field: PlayerChangeField, value: unknown): unknown {
   if (field === 'difficulties') {
     return [...new Set(Array.isArray(value) ? value.map(String) : [])].sort();
   }
+  if (field === 'display') return canonicalMouseDisplay(value);
   if (['wireless', 'is_enabled'].includes(field)) return Boolean(value);
   if (['weight', 'length_mm', 'side_buttons'].includes(field)) return Number(value);
   return String(value ?? '');
@@ -84,7 +87,7 @@ export async function createPlayerChangeSubmission(
       }
     }).select(
       'id', 'name', 'brand', 'country', 'continent', 'shape', 'size', 'weight',
-      'length_mm', 'side_buttons', 'wireless', 'is_enabled'
+      'length_mm', 'side_buttons', 'wireless', 'display', 'is_enabled'
     );
     const byId = new Map(rows.map((row) => [Number(row.id), row]));
     const byName = new Map(rows.map((row) => [String(row.name), row]));
@@ -245,7 +248,8 @@ export async function reviewPlayerChangeItems(
           continue;
         }
       }
-      const update = { [field]: newValue } as PlayerUpdateInput;
+      const updateValue = field === 'display' ? serializeMouseDisplay(newValue) : newValue;
+      const update = { [field]: updateValue } as PlayerUpdateInput;
       if (field === 'difficulties') assertDifficultyKeys(newValue as string[]);
       await applyPlayerUpdate(trx, Number(player.id), update);
       await trx('mouse_change_items').where({ id: item.id, status: 'pending' }).update({

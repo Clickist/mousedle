@@ -12,10 +12,13 @@ import { AVAILABLE_DIFFICULTIES } from '../../config/difficulties';
 
 interface AdminPlayer extends MouseForm {
   id: number;
+  displayInvalid?: boolean;
 }
 
+type AdminPlayerResponse = Omit<AdminPlayer, 'display'> & { display?: string | null };
+
 interface PlayerPage {
-  players: AdminPlayer[];
+  players: AdminPlayerResponse[];
   total: number;
   page: number;
   pageSize: number;
@@ -46,12 +49,25 @@ export default function AdminPlayers() {
         params: { page, pageSize, search: search || undefined },
       });
       if (currentRequest !== requestId.current) return;
-      setPlayers(res.data.players.map((p) => ({
-        ...p,
-        difficulties: p.difficulties ?? [],
-        wireless: Boolean(p.wireless),
-        is_enabled: Boolean(p.is_enabled),
-      })));
+      setPlayers(res.data.players.map((p) => {
+        let display = null;
+        let displayInvalid = false;
+        if (p.display) {
+          try {
+            display = JSON.parse(p.display);
+          } catch {
+            displayInvalid = true;
+          }
+        }
+        return {
+          ...p,
+          display,
+          displayInvalid,
+          difficulties: p.difficulties ?? [],
+          wireless: Boolean(p.wireless),
+          is_enabled: Boolean(p.is_enabled),
+        };
+      }));
       setTotal(res.data.total);
       if (res.data.page !== page) setPage(res.data.page);
     } catch (err) {
@@ -185,7 +201,19 @@ export default function AdminPlayers() {
       title: t('admin.actions'),
       render: (p) => (
         <span className="admin-player-actions">
-          <button type="button" className="btn btn-ghost" onClick={() => setEditing(p)}>{t('admin.edit')}</button>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => {
+              if (p.displayInvalid) {
+                toast.error(t('admin.invalidDisplay'));
+                return;
+              }
+              setEditing(p);
+            }}
+          >
+            {t('admin.edit')}
+          </button>
           <button
             type="button"
             className="btn btn-ghost"

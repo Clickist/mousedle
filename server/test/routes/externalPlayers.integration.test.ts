@@ -102,6 +102,7 @@ describe('external player API tokens', () => {
           side_buttons: 2,
           difficulties: ['normal'],
           wireless: true,
+          display: { width: 63.5, height: 40, sensor: 'PAW3395', dpi: 26000 },
           is_enabled: true,
         }),
       });
@@ -112,7 +113,11 @@ describe('external player API tokens', () => {
       const updatedPlayer = await request(`/api/external/players/${mouseId}`, {
         method: 'PUT',
         headers: authorization,
-        body: JSON.stringify({ brand: 'Updated API Team', difficulties: ['normal', 'easy'] }),
+        body: JSON.stringify({
+          brand: 'Updated API Team',
+          display: '{"sensor":"PAW3395","width":64,"height":40,"dpi":26000}',
+          difficulties: ['normal', 'easy'],
+        }),
       });
       expect(updatedPlayer.response.status).toBe(200);
       expect(getPlayer(mouseId)?.brand).toBe('Updated API Team');
@@ -134,6 +139,7 @@ describe('external player API tokens', () => {
               length_mm: 120,
               side_buttons: 3,
               wireless: true,
+              display: { width: 64, height: 40, sensor: 'PAW3395', dpi: 26000 },
             },
             {
               name: nickB,
@@ -173,6 +179,7 @@ describe('external player API tokens', () => {
         side_buttons: 3,
         difficulties: ['easy', 'normal'],
         wireless: true,
+        display: { width: 64, height: 40, sensor: 'PAW3395', dpi: 26000 },
         is_enabled: true,
       });
 

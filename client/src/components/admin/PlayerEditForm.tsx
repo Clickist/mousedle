@@ -4,6 +4,7 @@ import { MOUSE_SHAPE_OPTIONS, MOUSE_SIZE_OPTIONS } from '../../utils/playerRoles
 import ModalPortal from '../ModalPortal';
 import { toast } from '../Toast';
 import { useTranslation } from 'react-i18next';
+import type { MouseDisplay } from '../../types';
 import DifficultyMultiSelect from './DifficultyMultiSelect';
 
 const CONTINENT_OPTIONS = ['欧洲', '亚洲', '美洲', '大洋洲', '其他'] as const;
@@ -20,6 +21,7 @@ export interface MouseForm {
   length_mm: number;
   side_buttons: number;
   wireless: boolean;
+  display: MouseDisplay | null;
   difficulties: string[];
   is_enabled: boolean;
 }
@@ -35,6 +37,7 @@ export const emptyMouse: MouseForm = {
   length_mm: 125,
   side_buttons: 2,
   wireless: true,
+  display: null,
   difficulties: ['normal'],
   is_enabled: true,
 };
@@ -53,6 +56,10 @@ export default function PlayerEditForm({ initial, difficultyKeys, onSubmit, onCa
   const titleId = useId();
   const firstInputRef = useRef<HTMLInputElement>(null);
   const set = (patch: Partial<MouseForm>) => setForm((current) => ({ ...current, ...patch }));
+  const setDisplay = (patch: Partial<MouseDisplay>) => setForm((current) => ({
+    ...current,
+    display: { ...(current.display ?? {}), ...patch },
+  }));
 
   useEffect(() => {
     const oldOverflow = document.body.style.overflow;
@@ -150,6 +157,26 @@ export default function PlayerEditForm({ initial, difficultyKeys, onSubmit, onCa
             <label className="admin-player-field">
               <span>{t('admin.sideButtons')}</span>
               <input className="input" type="number" min="0" max="20" value={form.side_buttons} onChange={(event) => set({ side_buttons: Number(event.target.value) })} required />
+            </label>
+            <label className="admin-player-field">
+              <span>{t('mouse.width')}</span>
+              <input className="input" type="number" min="0" step="0.1" value={form.display?.width ?? ''} onChange={(event) => setDisplay({ width: event.target.value ? Number(event.target.value) : null })} />
+            </label>
+            <label className="admin-player-field">
+              <span>{t('mouse.height')}</span>
+              <input className="input" type="number" min="0" step="0.1" value={form.display?.height ?? ''} onChange={(event) => setDisplay({ height: event.target.value ? Number(event.target.value) : null })} />
+            </label>
+            <label className="admin-player-field">
+              <span>{t('mouse.sensor')}</span>
+              <input className="input" value={form.display?.sensor ?? ''} onChange={(event) => setDisplay({ sensor: event.target.value || null })} />
+            </label>
+            <label className="admin-player-field">
+              <span>{t('mouse.hump')}</span>
+              <input className="input" value={form.display?.hump ?? ''} onChange={(event) => setDisplay({ hump: event.target.value || null })} />
+            </label>
+            <label className="admin-player-field">
+              <span>{t('mouse.hand')}</span>
+              <input className="input" value={form.display?.hand ?? ''} onChange={(event) => setDisplay({ hand: event.target.value || null })} />
             </label>
           </div>
 

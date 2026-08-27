@@ -53,6 +53,18 @@ export interface UserInfo {
   emailVerified?: boolean;
 }
 
+export interface MouseDisplay {
+  sensor?: string | null;
+  dpi?: number | null;
+  polling_rate?: number | null;
+  hump?: string | null;
+  hand?: string | null;
+  width?: number | null;
+  height?: number | null;
+  connection?: string | null;
+  image?: string | null;
+}
+
 export interface MouseInfo {
   id: number;
   name: string;

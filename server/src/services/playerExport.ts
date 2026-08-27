@@ -1,4 +1,5 @@
 import { db } from '../db/knex';
+import { parseMouseDisplay, type MouseDisplay } from './mouseDisplay';
 
 export interface ExportedPlayer {
   mouseId: number;
@@ -13,6 +14,7 @@ export interface ExportedPlayer {
   side_buttons: number;
   difficulties: string[];
   wireless: boolean;
+  display: MouseDisplay | null;
   is_enabled: boolean;
 }
 
@@ -31,6 +33,7 @@ export async function exportPlayers(): Promise<ExportedPlayer[]> {
         'length_mm',
         'side_buttons',
         'wireless',
+        'display',
         'is_enabled'
       )
       .orderBy('name'),
@@ -58,6 +61,7 @@ export async function exportPlayers(): Promise<ExportedPlayer[]> {
     side_buttons: Number(player.side_buttons),
     difficulties: difficultiesByPlayer.get(Number(player.id)) ?? [],
     wireless: Boolean(player.wireless),
+    display: parseMouseDisplay(player.display),
     is_enabled: Boolean(player.is_enabled),
   }));
 }

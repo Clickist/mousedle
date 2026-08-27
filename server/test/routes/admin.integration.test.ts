@@ -659,6 +659,7 @@ describe('admin user management', () => {
         length_mm: 120,
         side_buttons: 2,
         wireless: false,
+        display: JSON.stringify({ sensor: 'PAW3950', width: 63.5, height: 39.6 }),
         is_enabled: true,
       })
       .returning('id');
@@ -686,6 +687,7 @@ describe('admin user management', () => {
         side_buttons: 2,
         difficulties: ['easy', 'normal'],
         wireless: false,
+        display: { sensor: 'PAW3950', width: 63.5, height: 39.6 },
         is_enabled: true,
       });
 
