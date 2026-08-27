@@ -157,7 +157,7 @@ export const resources = {
         majorChampionships: 'Major 冠军数', majorAppearances: 'Major 次数', difficulties: '所属难度', status: '状态', nickname: '昵称',
       },
       guess: {
-        placeholder: '输入鼠标名称...', submit: '提交猜测', submitting: '提交中...',
+        placeholder: '输入鼠标名称...', submit: '提交猜测', submitting: '提交中...', siblingAnswer: '同规格判定 · 你提交的「{{name}}」与答案规格完全一致',
         columns: { name: '鼠标', brand: '品牌', country: '产地', shape: '形状', size: '大小', weight: '重量', length: '长度', width: '宽度', height: '高度', wireless: '连接', sensor: '传感器' },
       },
       notFound: { title: '页面不存在', message: '你访问的页面不存在或已被移除。' },
@@ -366,7 +366,7 @@ export const resources = {
         connection: 'Connectivity', hump: 'Hump placement', hand: 'Hand compatibility',
       },
       guess: {
-        placeholder: 'Enter a mouse name...', submit: 'Submit guess', submitting: 'Submitting...',
+        placeholder: 'Enter a mouse name...', submit: 'Submit guess', submitting: 'Submitting...', siblingAnswer: 'Same specs: {{name}} matches the answer exactly',
         columns: { name: 'Mouse', brand: 'Brand', country: 'Origin', shape: 'Shape', size: 'Size', weight: 'Weight', length: 'Length', width: 'Width', height: 'Height', wireless: 'Connectivity', sensor: 'Sensor' },
       },
       notFound: { title: 'Page not found', message: 'The page you are looking for does not exist or has been removed.' },
@@ -570,7 +570,7 @@ export const resources = {
         roles: { rifler: 'ライフラー', awper: 'AWPer', coach: 'コーチ' },
       },
       guess: {
-        placeholder: 'マウス名を入力...', submit: '予想を送信', submitting: '送信中...',
+        placeholder: 'マウス名を入力...', submit: '予想を送信', submitting: '送信中...', siblingAnswer: '同スペック判定 · 「{{name}}」は答えと完全に同じスペックです',
         columns: { name: 'マウス', brand: 'ブランド', country: '産地', shape: '形状', size: 'サイズ', weight: '重量', length: '長さ', width: '幅', height: '高さ', wireless: '接続', sensor: 'センサー' },
       },
       notFound: { title: 'ページが見つかりません', message: 'お探しのページは存在しないか、削除されました。' },

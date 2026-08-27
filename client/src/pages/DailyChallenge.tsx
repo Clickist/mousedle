@@ -447,6 +447,13 @@ export default function DailyChallenge() {
           title={overlayStatus === 'won' ? t('daily.won') : t('daily.lostTitle')}
           answer={overlayAnswer}
           tone={overlayStatus === 'won' ? 'win' : 'lose'}
+          siblingNote={(() => {
+            if (overlayStatus !== 'won' || !overlayAnswer) return undefined;
+            const winner = challenge?.guesses.find((g) => g.correct);
+            return winner && winner.name !== overlayAnswer.name
+              ? t('guess.siblingAnswer', { name: winner.name })
+              : undefined;
+          })()}
           onClose={() => setShowOverlay(false)}
           extra={
             <div className="daily-overlay-summary">

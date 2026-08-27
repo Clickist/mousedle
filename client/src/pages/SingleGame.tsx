@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CircleAlert, RotateCcw, Lightbulb, Target, X, Home } from 'lucide-react';
 import Page from '../components/Page';
@@ -31,6 +31,13 @@ export default function SingleGame() {
   const [status, setStatus] = useState<'playing' | 'won' | 'lost'>('playing');
   const [answer, setAnswer] = useState<AnswerInfo | null>(null);
   const [settlementRecorded, setSettlementRecorded] = useState<boolean | null>(null);
+  const siblingNote = useMemo(() => {
+    if (!answer) return undefined;
+    const winner = guesses.find((g) => g.correct);
+    return winner && winner.name !== answer.name
+      ? t('guess.siblingAnswer', { name: winner.name })
+      : undefined;
+  }, [answer, guesses, t]);
   const [showOverlay, setShowOverlay] = useState(false);
   const [inputFocused, setInputFocused] = useState(false);
   const [starting, setStarting] = useState(false);
@@ -321,6 +328,7 @@ export default function SingleGame() {
           title={status === 'won' ? t('game.congratulations') : t('game.correctAnswer')}
           answer={answer}
           tone={status === 'won' ? 'win' : 'lose'}
+          siblingNote={siblingNote}
           onClose={busy ? undefined : () => setShowOverlay(false)}
           extra={
             <>

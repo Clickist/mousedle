@@ -1700,6 +1700,16 @@ export default function MultiRoom() {
                       : t('multi.roundLost')
           }
           answer={roundOver.answer}
+          siblingNote={(() => {
+            const winner = room.players.find((p) => p.key === roundOver.winnerKey);
+            // 观战时对手猜测被隐藏(无 name 字段),此时不展示同规格说明
+            const winning = winner?.guesses.find(
+              (g): g is Extract<(typeof g), { name: string }> => g.correct && 'name' in g
+            );
+            return winning && roundOver.answer && winning.name !== roundOver.answer.name
+              ? t('guess.siblingAnswer', { name: winning.name })
+              : undefined;
+          })()}
           onClose={() => setRoundOver(null)}
           extra={
             <p className="muted">

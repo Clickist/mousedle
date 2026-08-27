@@ -8,6 +8,11 @@ type DisplayData = {
   width?: number | null;
   height?: number | null;
   sensor?: string | null;
+  dpi?: number | null;
+  polling_rate?: number | null;
+  hump?: string | null;
+  hand?: string | null;
+  connection?: string | null;
 };
 
 function asFiniteNumber(value: unknown): number | null {
@@ -29,6 +34,11 @@ function parseDisplay(raw: string | null | undefined): DisplayData {
       width: asFiniteNumber(parsed?.width),
       height: asFiniteNumber(parsed?.height),
       sensor: asNonEmptyString(parsed?.sensor),
+      dpi: asFiniteNumber(parsed?.dpi),
+      polling_rate: asFiniteNumber(parsed?.polling_rate),
+      hump: asNonEmptyString(parsed?.hump),
+      hand: asNonEmptyString(parsed?.hand),
+      connection: asNonEmptyString(parsed?.connection),
     };
   } catch {
     return {};
@@ -102,15 +112,41 @@ export function mouseAnswerView(target: Mouse) {
   };
 }
 
+/** 除名字/id 外的全规格指纹(皮肤图 URL 不参与):指纹一致即视为同款,猜任意一只都判对 */
+function specFingerprint(mouse: Mouse): string {
+  const d = parseDisplay(mouse.display);
+  return JSON.stringify([
+    mouse.brand,
+    mouse.country,
+    mouse.continent,
+    mouse.shape,
+    mouse.size,
+    mouse.weight,
+    mouse.length_mm,
+    mouse.side_buttons,
+    Boolean(mouse.wireless),
+    d.width ?? null,
+    d.height ?? null,
+    d.sensor ?? null,
+    d.dpi ?? null,
+    d.polling_rate ?? null,
+    d.hump ?? null,
+    d.hand ?? null,
+    d.connection ?? null,
+  ]);
+}
+
 /** 逐属性对比猜测鼠标与目标鼠标,产出反馈 */
 export function compareGuess(guess: Mouse, target: Mouse): GuessFeedback {
-  const correct = guess.id === target.id;
+  const sibling = guess.id !== target.id && specFingerprint(guess) === specFingerprint(target);
+  const correct = guess.id === target.id || sibling;
   const guessDisplay = parseDisplay(guess.display);
   const targetDisplay = parseDisplay(target.display);
   return {
     mouseId: guess.id,
     name: guess.name,
     correct,
+    sibling,
     attributes: {
       brand: textAttr(guess.brand, target.brand),
       country: countryAttr(guess, target),

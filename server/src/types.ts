@@ -44,6 +44,8 @@ export interface GuessFeedback {
   mouseId: number;
   name: string;
   correct: boolean;
+  /** 猜的不是答案本尊,但全规格一致(同款别名/皮肤/配置),判对 */
+  sibling: boolean;
   attributes: {
     brand: AttributeFeedback;
     country: AttributeFeedback;

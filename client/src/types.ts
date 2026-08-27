@@ -10,6 +10,8 @@ export interface GuessFeedback {
   mouseId: number;
   name: string;
   correct: boolean;
+  /** 猜的同规格兄弟款(名字不同但规格一致),判对 */
+  sibling?: boolean;
   attributes: {
     brand: AttributeFeedback;
     country: AttributeFeedback;

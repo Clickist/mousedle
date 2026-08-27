@@ -98,10 +98,12 @@ interface Props {
   onClose?: () => void;
   /** 胜负配色:win 绿色调头部,lose 中性 */
   tone?: 'win' | 'lose';
+  /** 玩家提交的是同规格兄弟款时,展示"与答案同规格"的说明 */
+  siblingNote?: string;
 }
 
 /** 结算/答案遮罩卡片 */
-export default function AnswerOverlay({ title, answer, extra, actions, onClose, tone }: Props) {
+export default function AnswerOverlay({ title, answer, extra, actions, onClose, tone, siblingNote }: Props) {
   useEffect(() => {
     const oldOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -133,6 +135,7 @@ export default function AnswerOverlay({ title, answer, extra, actions, onClose, 
           {answer && (
             <>
               <p className="answer-name">{answer.name}</p>
+              {siblingNote && <p className="muted">{siblingNote}</p>}
               <MouseInfoTable answer={answer} />
             </>
           )}

@@ -45,6 +45,40 @@ describe('compareGuess', () => {
     expect(fb.attributes.country.level).toBe('wrong');
   });
 
+  it('除名字外全规格一致的判对并标记 sibling', () => {
+    const guess = makeMouse({ id: 2, name: '同款皮肤版' });
+    const fb = compareGuess(guess, target);
+    expect(fb.correct).toBe(true);
+    expect(fb.sibling).toBe(true);
+  });
+
+  it('规格不同(哪怕只差 DPI)不判对', () => {
+    const guess = makeMouse({
+      id: 2,
+      name: '高配版',
+      display: JSON.stringify({ width: 64, height: 40, sensor: 'PixArt PAW3395', dpi: 42000 }),
+    });
+    const fb = compareGuess(guess, target);
+    expect(fb.correct).toBe(false);
+    expect(fb.sibling).toBe(false);
+  });
+
+  it('display 图片不同不影响同款判定(皮肤款)', () => {
+    const guess = makeMouse({
+      id: 2,
+      name: '限定涂装',
+      display: JSON.stringify({
+        width: 64,
+        height: 40,
+        sensor: 'PixArt PAW3395',
+        image: 'https://example.com/skin.png',
+      }),
+    });
+    const fb = compareGuess(guess, target);
+    expect(fb.correct).toBe(true);
+    expect(fb.sibling).toBe(true);
+  });
+
   it('品牌不同给 wrong,相同给 correct', () => {
     const guess = makeMouse({ id: 2, brand: 'Razer' });
     expect(compareGuess(guess, target).attributes.brand.level).toBe('wrong');
