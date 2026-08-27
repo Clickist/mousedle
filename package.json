@@ -6,7 +6,7 @@
     "node": ">=26"
   },
   "private": true,
-  "description": "弗一把 - CS:GO/CS2 Major 选手猜测游戏",
+  "description": "鼠一把 - 类 Wordle 猜鼠标游戏与实时多人对战",
   "scripts": {
     "dev": "concurrently -n server,client -c blue,green \"pnpm --filter server dev\" \"pnpm --filter client dev\"",
     "build": "pnpm build:pow && pnpm --filter client build && pnpm --filter server build",

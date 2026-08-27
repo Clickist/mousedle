@@ -49,7 +49,7 @@ x-app-environment: &app-environment
   UMAMI_SCRIPT_URL: ${UMAMI_SCRIPT_URL:-https://cloud.umami.is/script.js}
 
 x-app-service: &app-service
-  image: ${IMAGE:-ghcr.io/xinhai-ai/csgofriberg:latest}
+  image: ${IMAGE:-ghcr.io/clickist/mousedle:latest}
   restart: unless-stopped
   init: true
   stop_grace_period: 30s
@@ -78,7 +78,7 @@ x-app-service: &app-service
 
 services:
   migrate:
-    image: ${IMAGE:-ghcr.io/xinhai-ai/csgofriberg:latest}
+    image: ${IMAGE:-ghcr.io/clickist/mousedle:latest}
     restart: "no"
     init: true
     depends_on:

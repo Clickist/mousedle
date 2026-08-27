@@ -249,7 +249,7 @@ async function main() {
   const stopSocket = setupSocket(io);
 
   server.listen(config.port, () => {
-    console.log(`[server] 弗一把服务已启动: http://localhost:${config.port}`);
+    console.log(`[server] 鼠一把服务已启动: http://localhost:${config.port}`);
     console.log(`[server] allowed origins: ${config.corsOrigins.join(', ')}`);
   });
 

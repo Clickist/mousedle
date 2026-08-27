@@ -3,11 +3,11 @@
 生产镜像仅支持 PostgreSQL，由 GitHub Actions 发布到：
 
 ```text
-ghcr.io/shnlfriberg/csgofriberg
+ghcr.io/clickist/mousedle
 ```
 
 运行镜像基于 distroless Node.js，仅包含生产 Node 依赖、编译后的服务端
-JavaScript、编译后的前端资源以及输出到 `server/dist` 的选手种子文件。镜像中
+JavaScript、编译后的前端资源以及输出到 `server/dist` 的鼠标种子文件。镜像中
 不包含 pnpm、Rust、TypeScript、Vite、源码、测试、构建工具和 SQLite 驱动。
 
 自带的 Compose 编排会运行两个应用实例、PostgreSQL 和 Redis。反向代理与 TLS
@@ -61,6 +61,9 @@ openssl rand -hex 24
 `POSTGRES_PASSWORD`。Compose 会根据 PostgreSQL 相关变量拼出 `DB_URL`，
 因此密码只需配置一次。
 
+生产环境必须配置成对的 `GEETEST_CAPTCHA_ID` 和 `GEETEST_PRIVATE_KEY`。前者是
+浏览器使用的公开 ID，后者只保存在服务端；缺少任意一项时 Compose 或应用启动会失败。
+
 `CORS_ORIGINS` 必须设置为精确的公网 origin（如 `https://game.example.com`），
 末尾不带斜杠。
 
@@ -93,7 +96,8 @@ echo "$GHCR_TOKEN" | docker login ghcr.io -u GITHUB_USERNAME --password-stdin
 ```
 
 Compose 会先运行一次性的 `migrate` 服务：它负责创建或更新表和索引，并且
-仅在选手表为空时导入内置的选手种子数据。迁移未成功退出前，两个应用实例都
+仅在鼠标表为空时导入内置的鼠标种子数据。检测到旧版选手数据库时，迁移会保留
+账号与运营配置，并清理无法映射到鼠标的旧玩法记录。迁移未成功退出前，两个应用实例都
 不会启动。应用启动时只做只读的表结构就绪检查；表结构变更完全由迁移服务
 负责，因此两个实例不会并发执行 DDL。
 
@@ -267,7 +271,7 @@ docker compose stop app-1 app-2
 例如：
 
 ```text
-IMAGE=ghcr.io/shnlfriberg/csgofriberg:sha-0123456
+IMAGE=ghcr.io/clickist/mousedle:sha-0123456
 ```
 
 回滚时把 `IMAGE` 改回上一个标签并执行：

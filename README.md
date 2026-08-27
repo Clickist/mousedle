@@ -5,11 +5,11 @@
 **猜鼠标游戏 —— 类 Wordle 玩法 + 实时多人对战(基于 csgofriberg 框架重构建)**
 
 
-[![CI and Docker](https://github.com/shnlfriberg/csgofriberg/actions/workflows/docker.yml/badge.svg)](https://github.com/shnlfriberg/csgofriberg/actions/workflows/docker.yml)
+[![CI and Docker](https://github.com/Clickist/mousedle/actions/workflows/docker.yml/badge.svg)](https://github.com/Clickist/mousedle/actions/workflows/docker.yml)
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
 [![Node.js ≥ 26](https://img.shields.io/badge/node-%E2%89%A526-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![pnpm workspaces](https://img.shields.io/badge/pnpm-workspaces-F69220?logo=pnpm&logoColor=white)](https://pnpm.io/)
-[![ghcr.io](https://img.shields.io/badge/ghcr.io-csgofriberg-2496ED?logo=docker&logoColor=white)](https://github.com/shnlfriberg/csgofriberg/pkgs/container/csgofriberg)
+[![ghcr.io](https://img.shields.io/badge/ghcr.io-csgofriberg-2496ED?logo=docker&logoColor=white)](https://github.com/Clickist/mousedle/pkgs/container/csgofriberg)
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![React 18](https://img.shields.io/badge/React_18-61DAFB?logo=react&logoColor=black)
@@ -27,6 +27,8 @@
 
 ## 本地开发
 
+环境要求：Node.js 26、pnpm 11.13.1。若 pnpm 尚未安装，可执行 `npm install --global pnpm@11.13.1`。
+
 ```bash
 pnpm install
 
@@ -34,8 +36,9 @@ pnpm install
 # Windows 推荐 redis-windows 7.4 便携版,跑起来即可:
 #   redis-server.exe --port 6379 --save "" --appendonly no
 
-pnpm --filter server migrate   # SQLite 建表
-pnpm --filter server seed      # 导入/刷新 1617 只鼠标种子(server/src/db/seeds/mice.json)
+pnpm migrate                    # SQLite 建表；空库会自动导入鼠标种子
+# 后续需要刷新种子数据时再执行：
+# pnpm seed
 pnpm --filter server dev       # 后端 http://localhost:3000
 pnpm --filter client dev       # 前端 http://localhost:5173 (代理 /api -> 3000)
 
@@ -44,7 +47,7 @@ pnpm test                      # 全量测试,需要 Redis 在跑
 
 - 无 Redis 时后端可以 degraded 启动,但开局/PoW/多人不可用。
 - `scripts/build-mouse-dataset.mjs` 可从 eloshapes 快照重新生成种子数据集。
-- Node 24 可运行(会有 engines>=26 警告);`data/*.sqlite3` 已被 gitignore。
+- `data/*.sqlite3` 已被 gitignore。
 
 ## 玩法
 
@@ -88,6 +91,7 @@ pnpm test                      # 全量测试,需要 Redis 在跑
 ```bash
 pnpm install
 cp .env.example .env                 # 可选,有默认值
+pnpm migrate                          # 首次启动必须先初始化数据库
 pnpm dev                             # server: 3000, client: 5173
 ```
 
@@ -144,7 +148,7 @@ DB_URL=postgres://user:pass@localhost:5432/csgofriberg
 
 ## Docker 生产部署
 
-生产环境使用 PostgreSQL 专用的精简 Docker 镜像(distroless 运行时,不含 Rust、pnpm、TypeScript、Vite、源码、测试与 SQLite 驱动)。GitHub Actions 自动执行测试、前后端编译、`linux/amd64` 镜像构建并发布到 [`ghcr.io/shnlfriberg/csgofriberg`](https://github.com/shnlfriberg/csgofriberg/pkgs/container/csgofriberg)。
+生产环境使用 PostgreSQL 专用的精简 Docker 镜像(distroless 运行时,不含 Rust、pnpm、TypeScript、Vite、源码、测试与 SQLite 驱动)。GitHub Actions 自动执行测试、前后端编译、`linux/amd64` 镜像构建并发布到 [`ghcr.io/clickist/mousedle`](https://github.com/Clickist/mousedle/pkgs/container/csgofriberg)。
 
 Docker Compose 部署、自动数据库迁移、管理员创建、更新和回滚方法见 [`deploy/README.md`](deploy/README.md)。
 
@@ -152,7 +156,7 @@ Docker Compose 部署、自动数据库迁移、管理员创建、更新和回�
 
 ## 鼠标数据
 
-鼠标数据集来自 [eloshapes](https://github.com/eloshapes) 鼠标签名的快照，经 [`scripts/build-mouse-dataset.mjs`](scripts/build-mouse-dataset.mjs) 转换生成，当前种子数据为 `server/src/db/seeds/mice.json`（1609 只鼠标）。种子包含品牌、产地、形状、尺寸、重量、长度、侧键、连接方式等猜测属性，以及传感器/DPI/轮询率等仅用于揭晓展示的字段。可用 `pnpm seed` 导入数据库。数据纠错与新增鼠标可重新生成该 JSON，或通过管理后台批量导入。
+鼠标数据集来自 [eloshapes](https://github.com/eloshapes) 鼠标签名的快照，经 [`scripts/build-mouse-dataset.mjs`](scripts/build-mouse-dataset.mjs) 转换生成，当前种子数据为 `server/src/db/seeds/mice.json`（1617 只鼠标）。种子包含品牌、产地、形状、尺寸、重量、长度、侧键、连接方式等猜测属性，以及传感器/DPI/轮询率等仅用于揭晓展示的字段。可用 `pnpm seed` 导入数据库。数据纠错与新增鼠标可重新生成该 JSON，或通过管理后台批量导入。
 
 ### 外部鼠标更新 API
 
@@ -225,7 +229,7 @@ client/src
 
 ## 贡献
 
-- 🐛 [问题反馈 / 功能建议](https://github.com/shnlfriberg/csgofriberg/issues/new/choose) —— 请使用对应的 issue 模板
+- 🐛 [问题反馈 / 功能建议](https://github.com/Clickist/mousedle/issues/new/choose) —— 请使用对应的 issue 模板
 - 📊 鼠标数据问题：通过管理后台批量导入纠错，或用 `scripts/build-mouse-dataset.mjs` 重新生成种子数据
 - 提交 PR 前请运行 `pnpm test` 与 `pnpm build`;所有用户可见文案需同步维护中/英/日三语(`client/src/i18n/resources.ts`)
 
