@@ -6,7 +6,6 @@ import Page from '../components/Page';
 import { api, errMsg } from '../api/client';
 import { AVAILABLE_DIFFICULTIES } from '../config/difficulties';
 import {
-  difficultyColor,
   difficultyDescription,
   difficultyIcon,
   difficultyLabel,
@@ -75,8 +74,7 @@ export default function DailyLobby() {
   };
 
   return (
-    <Page title={t('dailyLobby.title')} icon={<CalendarDays size={17} />}>
-      <p className="muted single-lobby-subtitle">{t('dailyLobby.subtitle')}</p>
+    <Page title={t('dailyLobby.title')} icon={<CalendarDays size={17} />} className="lobby-page">
       {loadError && (
         <div className="daily-lobby-error" role="status">
           <span>{loadError}</span>
@@ -97,7 +95,6 @@ export default function DailyLobby() {
                   type="button"
                   key={difficulty.key}
                   className={`single-difficulty-option${active ? ' active' : ''}`}
-                  style={{ ['--diff-color' as string]: difficultyColor(difficulty.key) }}
                   onClick={() => choose(difficulty.key)}
                 >
                   <span className="single-difficulty-icon"><Icon size={20} /></span>
@@ -120,7 +117,7 @@ export default function DailyLobby() {
             })}
           </div>
           <div className="single-lobby-action">
-            <button type="button" className="btn btn-lg btn-green" onClick={enter}>
+            <button type="button" className="btn btn-lg" onClick={enter}>
               <Play size={17} /> {t('dailyLobby.enter')}
             </button>
           </div>

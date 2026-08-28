@@ -52,7 +52,6 @@ export default function GameRules() {
         onClick={() => setOpen(true)}
         data-umami-event="home-rules-open"
       >
-        <BookOpen size={14} aria-hidden="true" />
         {t('rules.trigger')}
       </button>
 

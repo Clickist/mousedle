@@ -1,0 +1,120 @@
+# 反向代理配置示例:Cloudflare(橙云代理)→ 本机 nginx → app-1 / app-2。
+#
+# 使用方法:
+#   1. 把 server_name 与 ssl_certificate 路径改成实际值(证书申请见 deploy/cloudflare.md);
+#   2. 复制到 /etc/nginx/conf.d/mousedle.conf(Ubuntu 也可放 sites-available 并软链到 sites-enabled);
+#   3. nginx -t 校验通过后 systemctl reload nginx。
+#
+# 说明:
+#   - 套 CF 时本机只暴露 80/443,应用端口仍按 compose 默认绑定在 127.0.0.1;
+#   - real_ip 段仅对 Cloudflare 网段生效:走 CF 时还原真实访客 IP 供服务端限流使用;
+#     若日后改灰云直连,客户端不在 CF 网段内,该段自动失效,配置无需改动;
+#   - X-Forwarded-For 用还原后的 $remote_addr 重建,不透传客户端可伪造的原始头,
+#     避免「伪造 XFF 绕过限流」;
+#   - Cloudflare 网段以 https://www.cloudflare.com/ips/ 为准,偶有新增,上线前核对一次。
+
+upstream mousedle_backend {
+    least_conn;
+    server 127.0.0.1:3000 max_fails=1 fail_timeout=5s;
+    server 127.0.0.1:3001 max_fails=1 fail_timeout=5s;
+    keepalive 64;
+}
+
+server {
+    listen 80;
+    server_name game.example.com;
+
+    # 保留 ACME 路径,日后若改用 Let's Encrypt 签发证书无需改配置
+    location /.well-known/acme-challenge/ {
+        root /var/www/html;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    # 旧版 nginx(<1.25)只认这种写法;1.25+ 会提示弃用警告但可正常启动
+    listen 443 ssl http2;
+    server_name game.example.com;
+
+    # Cloudflare Origin CA 证书(15 年有效期),申请步骤见 deploy/cloudflare.md
+    ssl_certificate     /etc/nginx/certs/origin.pem;
+    ssl_certificate_key /etc/nginx/certs/origin.key;
+    ssl_protocols       TLSv1.2 TLSv1.3;
+    ssl_session_cache   shared:mousedle_ssl:10m;
+
+    # 管理后台的选手 JSON 导入上限为 2 MiB(ADMIN_IMPORT_BODY_LIMIT_BYTES),
+    # nginx 默认 1m 会把它拦成 413,这里放宽
+    client_max_body_size 8m;
+
+    # 还原经 Cloudflare 代理访客的真实 IP(限流、封禁、日志都依赖它)
+    real_ip_header CF-Connecting-IP;
+
+    set_real_ip_from 173.245.48.0/20;
+    set_real_ip_from 103.21.244.0/22;
+    set_real_ip_from 103.22.200.0/22;
+    set_real_ip_from 103.31.4.0/22;
+    set_real_ip_from 141.101.64.0/18;
+    set_real_ip_from 108.162.192.0/18;
+    set_real_ip_from 190.93.240.0/20;
+    set_real_ip_from 188.114.96.0/20;
+    set_real_ip_from 197.234.240.0/22;
+    set_real_ip_from 198.41.128.0/17;
+    set_real_ip_from 162.158.0.0/15;
+    set_real_ip_from 104.16.0.0/13;
+    set_real_ip_from 104.24.0.0/14;
+    set_real_ip_from 172.64.0.0/13;
+    set_real_ip_from 131.0.72.0/22;
+
+    set_real_ip_from 2400:cb00::/32;
+    set_real_ip_from 2606:4700::/32;
+    set_real_ip_from 2803:f800::/32;
+    set_real_ip_from 2405:b500::/32;
+    set_real_ip_from 2405:8100::/32;
+    set_real_ip_from 2a06:98c0::/29;
+    set_real_ip_from 2c0f:f248::/32;
+
+    # 独立的 /assets/ location 是滚动更新的必要条件:Vite 资源使用内容哈希
+    # 文件名,滚动更新期间新旧实例互缺对方的 chunk,对 http_404 重试可以让
+    # nginx 从另一个实例取到该资源
+    location /assets/ {
+        proxy_pass http://mousedle_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 1s;
+        proxy_next_upstream error timeout http_404 http_502 http_503 http_504;
+        proxy_next_upstream_tries 2;
+    }
+
+    location /socket.io/ {
+        proxy_pass http://mousedle_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 1s;
+        proxy_next_upstream error timeout http_502 http_503 http_504;
+        proxy_next_upstream_tries 2;
+        proxy_read_timeout 90s;
+        proxy_send_timeout 90s;
+        proxy_buffering off;
+    }
+
+    location / {
+        proxy_pass http://mousedle_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_next_upstream error timeout http_502 http_503 http_504;
+    }
+}

@@ -1,31 +1,26 @@
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface Props {
   to: string;
   icon: ReactNode;
   label: string;
   description: string;
-  color: string;
+  /** 底部状态行(仅每日挑战卡展示今日完成度) */
+  meta?: string;
   eventName?: string;
 }
 
-/** 首页田字格入口卡片 */
-export default function MenuCard({ to, icon, label, description, color, eventName }: Props) {
+/** 首页田字格入口卡片:图标盒 + 标题 + 描述 + 右上箭头,无彩色身份装饰 */
+export default function MenuCard({ to, icon, label, description, meta, eventName }: Props) {
   return (
-    <Link
-      to={to}
-      className="menu-card"
-      style={{ ['--menu-color' as string]: color }}
-      data-umami-event={eventName}
-    >
+    <Link to={to} className="menu-card" data-umami-event={eventName}>
       <span className="menu-icon">{icon}</span>
-      <span className="menu-copy">
-        <span className="menu-label">{label}</span>
-        <span className="menu-description">{description}</span>
-      </span>
-      <ArrowUpRight className="menu-arrow" size={18} aria-hidden="true" />
+      <b className="menu-label">{label}</b>
+      <p className="menu-description">{description}</p>
+      {meta && <span className="menu-meta">{meta}</span>}
+      <ArrowRight className="menu-arrow" size={15} aria-hidden="true" />
     </Link>
   );
 }

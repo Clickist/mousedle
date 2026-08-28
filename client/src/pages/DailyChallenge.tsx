@@ -20,7 +20,7 @@ import { toast } from '../components/Toast';
 import { useConfirm } from '../components/ConfirmDialog';
 import type { GuessFeedback } from '../types';
 import { AVAILABLE_DIFFICULTIES } from '../config/difficulties';
-import { difficultyColor, difficultyIcon, difficultyLabel } from '../utils/difficulty';
+import { difficultyIcon, difficultyLabel } from '../utils/difficulty';
 import { setStoredDailyDifficulty } from '../store/dailyDifficulty';
 
 type DailyStatus = 'not_started' | 'playing' | 'won' | 'lost';
@@ -300,7 +300,7 @@ export default function DailyChallenge() {
       actions={challenge?.status === 'playing' ? (
         <button
           type="button"
-          className="btn btn-warning btn-sm"
+          className="btn btn-ghost btn-sm"
           onClick={() => void reveal()}
           disabled={busy}
           aria-label={t('daily.giveup')}
@@ -344,7 +344,7 @@ export default function DailyChallenge() {
             <section className="daily-game-section" aria-labelledby="daily-game-heading">
             <div className="daily-section-heading">
               <div>
-                <span className="daily-section-icon" style={{ ['--diff-color' as string]: difficultyColor(mode) }}>
+                <span className="daily-section-icon">
                   <SelectedIcon size={19} />
                 </span>
                 <div>
@@ -360,7 +360,7 @@ export default function DailyChallenge() {
               </span>
             </div>
 
-            {challenge.guesses.length > 0 && <GuessBoard guesses={challenge.guesses} />}
+            {challenge.guesses.length > 0 && <GuessBoard guesses={challenge.guesses} responsive />}
 
             {challenge.status === 'not_started' && (
               <div className="daily-game-empty">
