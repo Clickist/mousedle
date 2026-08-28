@@ -13,8 +13,9 @@ export default defineConfig({
   plugins: [
     react(),
     {
-      // 把 Vite 注入 head 的 CSS(如 *.module.css 的产物)搬进 body 的样式表组,
-      // 保证首绘只依赖 head 内联启动屏样式,不被任何外链 CSS 阻塞
+      // 把 Vite 注入 head 的 CSS(如 *.module.css 的产物)搬到 </body> 前:
+      // 首绘只依赖 head 内联启动屏样式,不被任何外链 CSS 阻塞;
+      // SPA 由 JS 渲染正文,外链 CSS 在 body 尾部来得及在正文出现前就绪。
       name: 'move-injected-css-to-body',
       apply: 'build',
       transformIndexHtml: {
@@ -29,10 +30,7 @@ export default defineConfig({
             }
           );
           if (!moved.length) return html;
-          return stripped.replace(
-            /<link rel="stylesheet"(?![^>]*crossorigin)[^>]*data-blast-theme[^>]*>/,
-            (firstBlastLink) => `${moved.join('\n    ')}\n    ${firstBlastLink}`
-          );
+          return stripped.replace(/<\/body>/, `  ${moved.join('\n    ')}\n  </body>`);
         },
       },
     },
