@@ -44,26 +44,8 @@
 .email-verification-reminder:hover { border-color: var(--outline); background: var(--surface-container-high); }
 .email-verification-reminder:focus-visible { outline: 3px solid var(--primary-soft); outline-offset: 2px; }
 .home-page .page-scroll { gap: 0; }
-.home-brand { display: flex; align-items: center; flex: 1 1 auto; min-width: 0; gap: 8px; overflow: hidden; }
-.home-brand-slashes {
-  flex: 0 0 auto;
-  color: var(--primary);
-  font-family: Bahnschrift, 'Arial Narrow', 'Microsoft YaHei', sans-serif;
-  font-size: 1.28rem;
-  font-weight: 800;
-  letter-spacing: -0.18em;
-  line-height: 1;
-}
-.home-brand-logo {
-  width: 38px;
-  height: 38px;
-  flex: 0 0 38px;
-  object-fit: cover;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg);
-  background: var(--card);
-  box-shadow: var(--shadow-sm);
-}
+/* 品牌位布局:占满剩余宽度把按钮组推到最右(视觉样式在 ac.css) */
+.home-brand { flex: 1 1 auto; overflow: hidden; }
 .home-page .header-bar .title { flex: 0 0 auto; max-width: none; overflow: visible; text-overflow: clip; }
 .home-sponsor-link {
   display: block;
@@ -83,17 +65,8 @@
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  padding: 24px 0;
-}
-.bottom-bar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 0 0 var(--space-5);
-}
-.bottom-bar .btn {
-  flex: 0 1 auto;
-  padding: 8px 16px;
+  gap: var(--space-3);
+  padding: var(--space-4) 0 20px;
 }
 .btn-bilibili { background: #00aeec; }
 .btn-bilibili:hover { background: color-mix(in srgb, #00aeec 88%, #000); }
@@ -165,7 +138,7 @@
   background: var(--card-soft);
   color: var(--text);
   text-decoration: none;
-  transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+  transition: border-color 0.16s var(--ease-out), background 0.16s var(--ease-out), box-shadow 0.16s var(--ease-out), transform 0.16s var(--ease-out);
 }
 .thanks-dialog-list li > a:hover,
 .thanks-dialog-list li > a:focus-visible {
@@ -211,7 +184,7 @@
   background: var(--card-soft);
   color: var(--text);
   text-decoration: none;
-  transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+  transition: border-color 0.16s var(--ease-out), background 0.16s var(--ease-out), box-shadow 0.16s var(--ease-out), transform 0.16s var(--ease-out);
 }
 .friend-links-dialog-list a:hover,
 .friend-links-dialog-list a:focus-visible {
@@ -237,13 +210,18 @@
 .friend-links-dialog-list small { color: var(--text-sec); font-size: var(--text-ui); line-height: 1.45; }
 .friend-links-dialog-empty { margin: 0; padding: 42px 20px; text-align: center; }
 
-.single-lobby-subtitle { margin: 0 0 4px; }
+/* 大厅页:卡组+按钮整体在剩余空间垂直居中(内容超高自动退回顶端),纵向节奏与卡间距一致 */
+.lobby-page .page-scroll { gap: 12px; }
+.lobby-page .page-scroll > :first-child { margin-top: auto; }
+.lobby-page .page-scroll > :last-child { margin-bottom: auto; }
+
 .single-difficulty-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 360px));
+  /* 居中单列:三张难度卡上中下堆叠 */
+  grid-template-columns: minmax(0, 420px);
   justify-content: center;
   gap: 12px;
-  padding: 18px 0;
+  padding: 0;
 }
 .single-difficulty-option {
   position: relative;
@@ -251,55 +229,99 @@
   grid-template-columns: 44px minmax(0, 1fr) 22px;
   align-items: center;
   gap: 12px;
-  min-height: 92px;
+  min-height: 96px;
   padding: 16px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--outline-variant);
   border-radius: var(--radius-lg);
-  background: var(--card);
-  color: var(--text);
+  background: var(--surface);
+  color: var(--on-surface);
   text-align: left;
   cursor: pointer;
-  transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+  box-shadow: var(--shadow-sm);
+  transition: border-color .15s var(--ease-out), box-shadow .15s var(--ease-out), background .15s var(--ease-out), transform .15s var(--ease-out);
 }
-.single-difficulty-option:hover { border-color: var(--primary); transform: translateY(-1px); box-shadow: var(--shadow); }
-.single-difficulty-option.active { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+.single-difficulty-option:hover { border-color: var(--outline); background: var(--surface-container-low); }
+.single-difficulty-option:active { transform: scale(0.98); }
+.single-difficulty-option:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.single-difficulty-option.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 16%, transparent);
+}
+/* 图标盒中性表面:难度差异靠图标字形与文案区分,不借事件色 */
 .single-difficulty-icon {
   display: grid;
   place-items: center;
   width: 44px;
   height: 44px;
+  border: 1px solid var(--outline-variant);
   border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--diff-color, var(--primary)) 18%, transparent);
-  color: var(--diff-color, var(--primary));
+  background: var(--surface-container);
+  color: var(--on-surface-variant);
+  transition: border-color .15s var(--ease-out), background .15s var(--ease-out), color .15s var(--ease-out);
+}
+.single-difficulty-option.active .single-difficulty-icon {
+  border-color: color-mix(in srgb, var(--primary) 45%, var(--outline-variant));
+  background: color-mix(in srgb, var(--primary) 10%, var(--surface));
+  color: var(--primary);
 }
 .single-difficulty-copy { display: grid; gap: 4px; min-width: 0; }
 .single-difficulty-copy strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.single-difficulty-copy small { color: var(--text-light); }
-.single-difficulty-check { display: grid; place-items: center; width: 22px; height: 22px; border: 1px solid var(--border); border-radius: 50%; color: var(--on-surface); }
-.single-difficulty-option.active .single-difficulty-check { border-color: var(--primary); background: var(--primary); }
-.single-difficulty-badge { position: absolute; top: 9px; right: 12px; color: var(--success); font-size: var(--text-caption); font-weight: 800; }
-.single-lobby-action { display: flex; justify-content: center; padding: 14px 0 4px; border-top: 1px solid var(--border); }
+.single-difficulty-copy small { color: var(--on-surface-variant); font-size: var(--text-caption); line-height: 1.4; }
+.single-difficulty-check {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  justify-self: center;
+  border: 1px solid var(--outline-variant);
+  border-radius: 50%;
+  color: transparent;
+}
+.single-difficulty-option.active .single-difficulty-check { border-color: var(--primary); background: var(--primary); color: var(--on-primary); }
+.single-difficulty-badge {
+  position: absolute;
+  top: -8px;
+  right: 12px;
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+  font-size: var(--text-micro);
+  font-weight: 700;
+  white-space: nowrap;
+}
+/* 与 .single-difficulty-grid 同模板:按钮宽度自动等于卡片宽度 */
+.single-lobby-action {
+  display: grid;
+  grid-template-columns: minmax(0, 420px);
+  gap: 12px; /* 与卡片网格一致 */
+  justify-content: center;
+  padding: 0;
+}
+.single-lobby-action .btn { grid-column: 1 / -1; }
 
 /* ===== 首页游戏规则 ===== */
+/* 提示行内的文本链接形态:下划线发丝色,hover 主色 */
 .game-rules-trigger {
-  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  margin-top: 14px;
-  padding: 8px 16px;
-  border: 1px solid color-mix(in srgb, var(--primary) 45%, var(--border));
-  border-radius: var(--radius-pill);
-  background: var(--primary-soft);
-  color: var(--primary-strong);
-  font-size: var(--text-body);
-  font-weight: 700;
-  line-height: 1.5;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  color: var(--on-surface);
+  font: inherit;
+  font-size: inherit;
+  font-weight: 600;
+  line-height: inherit;
   cursor: pointer;
-  transition: color 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--outline-variant);
+  transition: color 0.15s var(--ease-out), text-decoration-color 0.15s var(--ease-out);
 }
-.game-rules-trigger:hover { background: color-mix(in srgb, var(--primary) 30%, transparent); color: var(--tertiary); }
-.game-rules-trigger:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+.game-rules-trigger:hover { color: var(--primary); text-decoration-color: var(--primary); }
+.game-rules-trigger:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 .game-rules-backdrop {
   position: fixed;
   inset: 0;
@@ -464,10 +486,10 @@
   gap: 5px;
   min-width: 0;
   padding: 12px;
-  border-left: 3px solid var(--outline);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   background: var(--card);
 }
-.rule-field-grid > div:nth-child(n + 2) { border-left-color: var(--event-peak); }
 .rule-field-grid strong { font-size: var(--text-ui); }
 .rule-field-grid span { color: var(--text-light); font-size: var(--text-caption); line-height: 1.5; }
 .rule-result-notes {
@@ -707,7 +729,7 @@
 .room-more-settings summary::-webkit-details-marker { display: none; }
 .room-more-settings summary:hover { color: var(--primary); }
 .room-more-settings summary:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
-.room-more-settings-chevron { transition: transform 0.16s ease; }
+.room-more-settings-chevron { transition: transform 0.16s var(--ease-out); }
 .room-more-settings[open] .room-more-settings-chevron { transform: rotate(180deg); }
 .room-more-settings-fields {
   display: grid;
@@ -925,7 +947,7 @@
   background: transparent;
   color: var(--primary);
   cursor: pointer;
-  transition: background 0.16s ease, color 0.16s ease;
+  transition: background 0.16s var(--ease-out), color 0.16s var(--ease-out);
 }
 .player-stats-trigger:hover:not(:disabled) { background: var(--primary-soft); color: var(--primary-strong); }
 .player-stats-trigger:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
@@ -1065,7 +1087,7 @@
 .compact-player-score { text-align: center; font-size: 1rem; }
 .compact-player-state { min-width: 0; white-space: nowrap; }
 .compact-player-eliminated { opacity: 0.62; }
-.compact-player-row > svg { transition: transform 150ms ease; }
+.compact-player-row > svg { transition: transform 150ms var(--ease-out); }
 .compact-player-row > svg.expanded { transform: rotate(90deg); }
 .compact-feedback {
   display: grid;
@@ -1081,7 +1103,7 @@
 .compact-feedback i.unknown { background: transparent; border: 1px dashed var(--border); }
 .compact-feedback i.empty { opacity: 0.55; }
 .compact-player-detail { padding: 0.25rem 0.35rem 0.4rem; border-top: 1px solid var(--border); container-type: inline-size; }
-.compact-player-detail .game-table { font-size: clamp(0.58rem, 2.7cqw, 0.78rem); border-spacing: 0.16em; }
+.compact-player-detail .game-table { font-size: clamp(0.58rem, 2.7cqw, 0.78rem); border-spacing: 0 0.16em; }
 .multiplayer-scoreboard {
   display: flex;
   flex-wrap: wrap;
@@ -1120,7 +1142,7 @@
      注意别让容器宽度系数在常规宽度下就生效:容器宽度会随放大页面而变窄,它主导时
      会反过来抵消缩放。 */
   font-size: clamp(0.58rem, 2.2cqw, 0.82rem);
-  border-spacing: 0.3em;
+  border-spacing: 0 0.3em;
 }
 .player-board .game-table th {
   padding: 0.5em 0.3em;

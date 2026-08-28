@@ -46,7 +46,7 @@ a:not([class]) { color: var(--on-surface); text-decoration: underline; text-unde
   transform: none;
 }
 
-.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn:active:not(:disabled) { transform: scale(0.97); }
 .btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .btn-sm { min-height: var(--control-height-compact); padding: 0 var(--space-3); font-size: var(--text-ui); }
@@ -134,9 +134,41 @@ html[data-theme='dark'] .btn-accent:hover:not(:disabled) { background: color-mix
 }
 
 .header-bar .title::before { content: none; }
+.header-bar .header-back { flex: none; margin-right: var(--space-2); }
 .header-bar .btns { display: inline-flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; justify-content: flex-end; }
 
-.home-brand { display: inline-flex; align-items: center; gap: var(--space-2); }
+/* 首页品牌位:34px logo 盒 + 双语字标,第一屏识别度的最低成本来源 */
+.home-brand { display: inline-flex; align-items: center; gap: var(--space-2); min-width: 0; }
+.home-brand-logo {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-md);
+  background: var(--surface-container-lowest);
+  box-shadow: var(--shadow-sm);
+  color: var(--primary);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  user-select: none;
+}
+.home-brand-copy { display: grid; min-width: 0; line-height: 1.15; }
+.home-brand-copy b {
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.home-brand-copy small {
+  color: var(--on-surface-variant);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+}
 
 .status-bar {
   background: var(--surface-container);
@@ -201,7 +233,7 @@ html[data-theme='dark'] .btn-accent:hover:not(:disabled) { background: color-mix
   letter-spacing: 0;
 }
 
-.overlay-card-win { border-top: 3px solid var(--event-kill); }
+/* 胜/负由标题与结果文案表达,卡片不再加顶部色条 */
 .overlay-card-win h2 { color: var(--on-surface); }
 
 .replay-answer, .admin-player-flags {
@@ -211,72 +243,133 @@ html[data-theme='dark'] .btn-accent:hover:not(:disabled) { background: color-mix
 }
 
 /* =====================================================================
-   首页:编辑部式 hero + 安静菜单卡
+   首页:居中单栏 hero(标题/提示行/品牌色带/唯一主按钮/次级文本链接)
    ===================================================================== */
 .home-page .page-scroll { padding-top: clamp(22px, 4vw, 44px); }
 
-/* 空间富余时首页内容整体垂直居中(剩余空间均分上下),内容超出时自动退回顶端,无裁切风险 */
+/* 空间富余时首页内容(hero+菜单卡)整体垂直居中,作者信息行钉在页面最底;
+   内容超出时 auto margin 归零自动退回常规流,无裁切风险 */
 .home-page .page-scroll > :first-child { margin-top: auto; }
-.home-page .page-scroll > :last-child { margin-bottom: auto; }
+.home-page .page-scroll > .menu-grid { margin-bottom: auto; }
 
 .home-hero {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   text-align: center;
-  min-height: clamp(280px, 40vh, 400px);
-  padding: var(--space-6);
-  border: 1px solid var(--outline-variant);
-  border-radius: var(--radius-lg);
+  padding: clamp(36px, 6vw, 64px) clamp(20px, 4vw, 48px) clamp(30px, 4vw, 44px);
+  border-bottom: 1px solid var(--outline-variant);
+  border-radius: 0;
   background: var(--surface);
   box-shadow: none;
-  gap: var(--space-1);
 }
 
 .home-hero::before, .home-hero::after { content: none; }
 
-.hero-kicker {
-  margin-bottom: var(--space-3);
-  padding: 0;
-  border-left: 3px solid var(--primary);
-  padding-left: var(--space-3);
-  color: var(--on-surface-variant);
-  font-family: var(--font-ui);
-  font-size: var(--text-caption);
-  font-weight: 650;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  text-align: left;
-  animation: none;
-}
-
 .home-hero h1 {
-  margin: 0 0 var(--space-3);
+  margin: 0 0 10px;
   background: none;
   color: var(--on-surface);
   font-family: var(--font-display);
-  font-size: clamp(2.6rem, 6vw, 4.4rem);
+  font-size: clamp(2.2rem, 4vw, 3.1rem);
   font-style: normal;
   font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: 0;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
   text-shadow: none;
   transform: none;
   animation: none;
 }
 
-.home-hero .hero-subtitle {
+/* 标题下的提示行:访客说明 + 游戏规则文本链接 */
+.hero-hint {
+  margin: 0 0 26px;
   color: var(--on-surface-variant);
-  font-size: var(--text-body);
+  font-size: var(--text-ui);
+}
+.hero-hint-sep { padding: 0 6px; }
+
+/* 品牌色带:猜测反馈的连色形态作为首屏视觉符号,纯装饰 */
+.brand-band {
+  display: flex;
+  max-width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.brand-band span {
+  padding: 9px 12px;
+  font-size: var(--text-ui);
+  font-weight: 600;
+  white-space: nowrap;
+  border-right: 1px solid color-mix(in srgb, var(--background) 60%, transparent);
+}
+.brand-band span:last-child { border-right: 0; }
+.brand-band .bb-name {
+  background: var(--surface-container-lowest);
+  color: var(--on-surface);
+  font-weight: 700;
+}
+.brand-band .bb-hit {
+  background: color-mix(in srgb, var(--event-kill) 14%, var(--surface));
+  color: var(--cell-correct-text, #0d6a45);
+}
+.brand-band .bb-close {
+  background: color-mix(in srgb, var(--event-peak) 14%, var(--surface));
+  color: var(--cell-close-text, #a33200);
+}
+.brand-band .bb-miss {
+  background: var(--surface-container);
+  color: var(--on-surface-variant);
   font-weight: 500;
-  letter-spacing: 0;
-  margin: 0 0 var(--space-2);
 }
 
+.hero-cta { margin-top: 26px; }
 
-/* 菜单卡:表面阶梯 + 发丝线,无彩色身份装饰;版心宽度随 .page-scroll 子元素规则 */
-.menu-grid { gap: var(--space-4); }
+/* 次级入口:文本链接,收在主按钮之下 */
+.home-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 22px;
+  margin-top: 20px;
+}
+.home-foot a {
+  color: var(--on-surface-variant);
+  font-size: var(--text-ui);
+  text-decoration: none;
+}
+.home-foot a:hover {
+  color: var(--on-surface);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.home-foot a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+/* 作者信息:页面底部常驻的安静外链行 */
+.home-author-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 8px;
+  margin-top: auto;
+  padding-top: 18px;
+  color: var(--on-surface-variant);
+  font-size: var(--text-micro);
+}
+.home-author-links a { color: inherit; text-decoration: none; }
+.home-author-links a:hover {
+  color: var(--on-surface);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.home-author-links a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.home-author-links .home-author-sep { opacity: 0.6; }
+
+
+/* 菜单卡:图标盒 + 标题 + 描述 + 右上箭头,无彩色身份装饰;版心宽度随 .page-scroll 子元素规则 */
+.menu-grid { gap: var(--space-3); }
 
 .menu-card {
   position: relative;
@@ -284,14 +377,14 @@ html[data-theme='dark'] .btn-accent:hover:not(:disabled) { background: color-mix
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  min-height: 168px;
+  min-height: 136px;
   padding: var(--space-4);
-  gap: var(--space-3);
+  gap: 10px;
   border: 1px solid var(--outline-variant);
   border-radius: var(--radius-lg);
   background: var(--surface);
   color: var(--on-surface);
-  box-shadow: none;
+  box-shadow: var(--shadow-sm);
   text-decoration: none;
   transition: background var(--duration-fast) var(--ease-out),
     border-color var(--duration-fast) var(--ease-out),
@@ -301,33 +394,26 @@ html[data-theme='dark'] .btn-accent:hover:not(:disabled) { background: color-mix
 .menu-card::before, .menu-card::after { content: none; }
 
 .menu-card:hover {
-  border-color: var(--outline-variant);
+  border-color: var(--outline);
   background: var(--surface-container-low);
-  transform: translateY(-1px);
   box-shadow: none;
 }
 
 .menu-card .menu-icon {
-  width: 44px;
-  height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
   border: 1px solid var(--outline-variant);
   border-radius: var(--radius-md);
   background: var(--surface-container);
   color: var(--on-surface-variant);
   box-shadow: none;
   transform: none;
-  transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+  transition: color var(--duration-fast) var(--ease-out);
 }
 
-.menu-card:hover .menu-icon {
-  background: var(--surface-container-high);
-  color: var(--on-surface);
-}
-
-.menu-copy { display: grid; gap: var(--space-1); }
+.menu-card:hover .menu-icon { color: var(--on-surface); }
 
 .menu-card .menu-label {
   color: var(--on-surface);
@@ -339,23 +425,29 @@ html[data-theme='dark'] .btn-accent:hover:not(:disabled) { background: color-mix
 }
 
 .menu-description {
+  margin: 0;
   color: var(--on-surface-variant);
   font-size: var(--text-ui);
   line-height: 1.45;
 }
 
+/* 状态行:仅每日挑战卡保留(今日完成度),mono 小字沉底 */
+.menu-meta {
+  margin-top: auto;
+  padding-top: 10px;
+  color: var(--on-surface-variant);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+}
+
 .menu-arrow {
   position: absolute;
-  right: var(--space-4);
-  bottom: var(--space-4);
+  right: 14px;
+  top: 16px;
   color: var(--on-surface-variant);
-  transition: transform var(--duration-fast) var(--ease-out);
+  opacity: 0.55;
+  transition: transform var(--duration-fast) var(--ease-out), opacity var(--duration-fast) var(--ease-out);
 }
-.menu-card:hover .menu-arrow { transform: translateX(2px); color: var(--on-surface); }
-
-/* 底部链接条:全部中性 ghost */
-.bottom-bar { display: flex; flex-wrap: wrap; gap: var(--space-2); justify-content: center; }
-.bottom-bar .btn { min-height: var(--control-height-compact); font-size: var(--text-ui); }
 
 /* =====================================================================
    猜测棋盘:纸面表格 + 事件色染色反馈格
@@ -387,19 +479,16 @@ html[data-theme='dark'] .btn-accent:hover:not(:disabled) { background: color-mix
 /* 反馈格 = 数据事件:事件色淡染底 + 深事件色文字,双色主题同规则 */
 .game-table td.correct {
   background: color-mix(in srgb, var(--event-kill) 13%, var(--surface));
-  border-color: color-mix(in srgb, var(--event-kill) 32%, var(--surface));
   color: var(--cell-correct-text, #0d6a45);
 }
 
 .game-table td.close {
   background: color-mix(in srgb, var(--event-peak) 13%, var(--surface));
-  border-color: color-mix(in srgb, var(--event-peak) 32%, var(--surface));
   color: var(--cell-close-text, #a33200);
 }
 
 .game-table td.wrong {
   background: var(--surface-container);
-  border-color: var(--surface-container-high);
   color: var(--on-surface-variant);
 }
 
@@ -548,11 +637,14 @@ html[data-theme='dark'] {
   font-size: var(--text-caption);
 }
 
-/* 桌面悬停:只在染色格上做极轻提亮 */
+/* 桌面悬停:只在染色格上做极轻提亮;悬停位移一律门控在精确指针设备 */
 @media (hover: hover) and (pointer: fine) {
   .card:hover { border-color: var(--outline); }
   .game-table td.correct:hover, .game-table td.close:hover { filter: brightness(1.04); }
+  .menu-card:hover .menu-arrow { opacity: 1; transform: translateX(2px); }
 }
+/* 按压反馈放门控块后:桌面同时 hover+active 时以按压为准,触屏也有反馈 */
+.menu-card:active { transform: scale(0.98); }
 
 /* 邮箱验证提醒等内联警示:事件色文字 + 发丝线,不整块填色 */
 .email-verification-reminder {

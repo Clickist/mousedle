@@ -110,11 +110,9 @@
   min-height: 70px;
   padding: 12px 14px;
   border: 1px solid var(--border);
-  border-left: 4px solid var(--border-strong);
   border-radius: var(--radius-lg);
   background: var(--card-soft);
 }
-.daily-result-won { border-left-color: var(--success); }
 .daily-result-won > svg { color: var(--success); }
 .daily-result-lost > svg { color: var(--text-light); }
 .daily-result > div { display: grid; gap: 3px; min-width: 0; }

@@ -23,6 +23,16 @@
   box-shadow: var(--shadow-lg);
   pointer-events: auto;
   animation: toast-enter 180ms ease-out both;
+  /* 退场走 transition(可中断),时长与 Toast.tsx 的 CLOSING_MS 保持一致 */
+  transition: opacity 130ms var(--ease-out), transform 130ms var(--ease-out);
+}
+
+.toast[data-closing] {
+  /* 撤掉入场动画避免 fill 锁住属性,让 transition 接管 */
+  animation: none;
+  opacity: 0;
+  transform: translate3d(10px, -3px, 0);
+  pointer-events: none;
 }
 
 .toast p {
@@ -38,9 +48,6 @@
 .success .icon { color: var(--success); }
 .info .icon { color: var(--primary); }
 
-.error { border-left: 3px solid var(--danger); }
-.success { border-left: 3px solid var(--success); }
-.info { border-left: 3px solid var(--primary); }
 
 .close {
   display: grid;
@@ -80,5 +87,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .toast { animation: none; }
+  /* 只保留淡入淡出,去掉位移;退场仍由 transition 承担 */
+  .toast { animation: toast-fade 120ms ease-out both; }
+  .toast[data-closing] { transform: none; }
+}
+
+@keyframes toast-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

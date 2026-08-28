@@ -741,7 +741,7 @@ html[data-theme='dark'] .leaderboard-self-marker { color: #052e1e; }
 .admin-external-analysis-empty { display: grid; place-items: center; gap: 12px; min-height: 190px; padding: 28px; border: 1px dashed var(--border); border-radius: var(--radius-sm); color: var(--text-light); text-align: center; }
 .admin-external-analysis-empty p { margin: 0; }
 .admin-external-analysis { display: grid; gap: 14px; min-width: 0; }
-.admin-external-analysis-decision { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; padding: 16px; border: 1px solid var(--border); border-left-width: 4px; border-radius: var(--radius-sm); background: var(--card-soft); }
+.admin-external-analysis-decision { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; padding: 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--card-soft); }
 .admin-external-analysis-decision > div { display: grid; gap: 5px; min-width: 0; }
 .admin-external-analysis-decision span { color: var(--text-light); font-size: var(--text-caption); }
 .admin-external-analysis-decision strong { font-size: var(--text-display); }
@@ -753,11 +753,6 @@ html[data-theme='dark'] .leaderboard-self-marker { color: #052e1e; }
 .admin-external-analysis-decision.level-medium .admin-external-analysis-score b { color: var(--warning); }
 .admin-external-analysis-decision.level-high .admin-external-analysis-score b,
 .admin-external-analysis-decision.level-critical .admin-external-analysis-score b { color: var(--danger); }
-.admin-external-analysis-decision.level-unknown { border-left-color: var(--text-light); }
-.admin-external-analysis-decision.level-low { border-left-color: var(--success); }
-.admin-external-analysis-decision.level-medium { border-left-color: var(--warning); }
-.admin-external-analysis-decision.level-high,
-.admin-external-analysis-decision.level-critical { border-left-color: var(--danger); }
 .admin-external-analysis-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; color: var(--text-light); font-size: var(--text-caption); }
 .admin-external-analysis-sections { display: grid; gap: 18px; }
 .admin-external-analysis-sections > section { display: grid; gap: 10px; padding-top: 16px; border-top: 1px solid var(--border); }

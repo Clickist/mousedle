@@ -1,6 +1,6 @@
 import { ReactNode, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Home } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Home } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { useTranslation } from 'react-i18next';
 
@@ -33,6 +33,7 @@ export default function Page({
   showHome = true,
 }: Props) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   useEffect(() => {
     document.title = `${title} · ${t('common.brand')}`;
   }, [title, t]);
@@ -42,6 +43,19 @@ export default function Page({
         {t('common.skipToContent')}
       </a>
       <div className="header-bar">
+        <button
+          type="button"
+          className="btn btn-ghost btn-sm header-back"
+          aria-label={t('common.back')}
+          title={t('common.back')}
+          onClick={() => {
+            const idx = (window.history.state as { idx?: number } | null)?.idx ?? 0;
+            if (idx > 0) navigate(-1);
+            else navigate('/');
+          }}
+        >
+          <ArrowLeft size={15} aria-hidden="true" />
+        </button>
         <span className="title">
           {icon}
           {title}

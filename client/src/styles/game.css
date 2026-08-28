@@ -11,7 +11,8 @@
   min-width: 0;
   table-layout: fixed;
   border-collapse: separate;
-  border-spacing: 5px;
+  /* 水平间隙归零:同色格连成整条色带,只留行距 */
+  border-spacing: 0 5px;
   font-size: 0.9rem;
 }
 .game-table th {
@@ -25,10 +26,9 @@
   z-index: 1;
 }
 .game-table td {
-  padding: 13px 9px;
+  padding: 11px 6px;
   text-align: center;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
+  border-radius: 0;
   min-width: 0;
   white-space: normal;
   overflow-wrap: anywhere;
@@ -46,7 +46,9 @@
 .game-table th:nth-child(9), .game-table td:nth-child(9) { width: 7%; }
 .game-table th:nth-child(10), .game-table td:nth-child(10) { width: 7%; }
 .game-table th:nth-child(11), .game-table td:nth-child(11) { width: 12%; }
-.game-table td.unknown { border-style: dashed; }
+.game-table td:first-child { border-radius: var(--radius-md) 0 0 var(--radius-md); }
+.game-table td:last-child { border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+.game-table td.unknown { border: 1px dashed var(--outline-variant); }
 .game-table td .dir { display: inline-flex; vertical-align: -2px; margin-left: 3px; }
 .game-table td.masked-cell:empty::after {
   content: '';
@@ -58,20 +60,20 @@
   opacity: 0.55;
 }
 @media (prefers-reduced-motion: no-preference) {
-  .game-table tbody tr { animation: row-enter 0.32s ease both; }
+  .game-table tbody tr { animation: row-enter 0.24s var(--ease-out) both; }
 
-  .game-table tr.row-latest td { animation: cell-reveal 0.3s ease backwards; }
-  .game-table tr.row-latest td:nth-child(2) { animation-delay: 0.06s; }
-  .game-table tr.row-latest td:nth-child(3) { animation-delay: 0.12s; }
-  .game-table tr.row-latest td:nth-child(4) { animation-delay: 0.18s; }
-  .game-table tr.row-latest td:nth-child(5) { animation-delay: 0.24s; }
-  .game-table tr.row-latest td:nth-child(6) { animation-delay: 0.3s; }
-  .game-table tr.row-latest td:nth-child(7) { animation-delay: 0.36s; }
-  .game-table tr.row-latest td:nth-child(8) { animation-delay: 0.42s; }
-  .game-table tr.row-latest td:nth-child(9) { animation-delay: 0.48s; }
-  .game-table tr.row-latest td:nth-child(10) { animation-delay: 0.54s; }
-  .game-table tr.row-latest td:nth-child(11) { animation-delay: 0.6s; }
-  .game-table tr.row-correct td.name { animation: cell-reveal 0.3s ease backwards, win-pulse 0.5s ease 0.55s; }
+  .game-table tr.row-latest td { animation: cell-reveal 0.2s var(--ease-out) backwards; }
+  .game-table tr.row-latest td:nth-child(2) { animation-delay: 0.03s; }
+  .game-table tr.row-latest td:nth-child(3) { animation-delay: 0.06s; }
+  .game-table tr.row-latest td:nth-child(4) { animation-delay: 0.09s; }
+  .game-table tr.row-latest td:nth-child(5) { animation-delay: 0.12s; }
+  .game-table tr.row-latest td:nth-child(6) { animation-delay: 0.15s; }
+  .game-table tr.row-latest td:nth-child(7) { animation-delay: 0.18s; }
+  .game-table tr.row-latest td:nth-child(8) { animation-delay: 0.21s; }
+  .game-table tr.row-latest td:nth-child(9) { animation-delay: 0.24s; }
+  .game-table tr.row-latest td:nth-child(10) { animation-delay: 0.27s; }
+  .game-table tr.row-latest td:nth-child(11) { animation-delay: 0.3s; }
+  .game-table tr.row-correct td.name { animation: cell-reveal 0.2s var(--ease-out) backwards, win-pulse 0.5s var(--ease-out) 0.45s; }
 }
 @keyframes row-enter {
   from { opacity: 0; }
@@ -81,6 +83,67 @@
 }
 @keyframes win-pulse {
   50% { transform: scale(1.05); }
+}
+
+/* ===== 移动端双层色带卡(玩法页 responsive 变体,<640px 切换) =====
+   第 1 层主判定带:名称 + 品牌/属地/形状,水平连色;
+   第 2 层参数带:大小/重量/长/宽/高/连接/传感器,mono 小字着色值。 */
+.guess-board-responsive .guess-mrows { display: none; }
+
+.mrow {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.mrow-t1 { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; }
+.mrow-t1 > span {
+  padding: 10px 8px;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+.mrow-t1 > span.nm {
+  text-align: left;
+  padding-left: 10px;
+  font-weight: 700;
+  background: var(--surface-container-lowest);
+  color: var(--on-surface);
+}
+/* 主判定带染色与桌面表格同语义;未知按未中灰带处理保证色带连续 */
+.mrow-t1 > span.correct {
+  background: color-mix(in srgb, var(--event-kill) 14%, var(--surface));
+  color: var(--cell-correct-text, #0d6a45);
+}
+.mrow-t1 > span.close {
+  background: color-mix(in srgb, var(--event-peak) 14%, var(--surface));
+  color: var(--cell-close-text, #a33200);
+}
+.mrow-t1 > span.wrong {
+  background: var(--surface-container);
+  color: var(--on-surface-variant);
+}
+.mrow-t2 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  padding: 7px 10px;
+  border-top: 1px solid var(--outline-variant);
+  background: var(--surface-container-low);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  color: var(--on-surface-variant);
+  line-height: 1.4;
+}
+.mrow-t2 b { font-weight: 700; }
+.mrow-t2 b.correct { color: var(--cell-correct-text, #0d6a45); }
+.mrow-t2 b.close { color: var(--cell-close-text, #a33200); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .guess-mrows .mrow { animation: row-enter 0.24s var(--ease-out) both; }
 }
 
 /* ===== 游戏页空态 / 首猜引导 ===== */
@@ -317,7 +380,7 @@
   flex-wrap: wrap;
   margin-top: 20px;
 }
-.overlay-card-lose { border-top: 3px solid var(--border-strong); }
+/* 胜/负由标题与结果文案表达,揭晓卡不加顶部色条 */
 
 /* ===== 通用确认模态框 ===== */
 .confirm-backdrop {
@@ -406,7 +469,7 @@
   appearance: none;
   background: var(--bg);
   cursor: pointer;
-  transition: border-color 0.16s ease, background 0.16s ease;
+  transition: border-color 0.16s var(--ease-out), background 0.16s var(--ease-out);
 }
 .settings-switch::after {
   content: '';
@@ -417,7 +480,7 @@
   height: 16px;
   border-radius: 50%;
   background: var(--text-light);
-  transition: transform 0.16s ease, background 0.16s ease;
+  transition: transform 0.16s var(--ease-out), background 0.16s var(--ease-out);
 }
 .settings-switch:checked { border-color: var(--primary); background: var(--primary); }
 .settings-switch:checked::after { transform: translateX(20px); background: var(--on-primary); }

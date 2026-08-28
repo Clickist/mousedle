@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import Page from '../components/Page';
 import { AVAILABLE_DIFFICULTIES } from '../config/difficulties';
 import {
-  difficultyColor,
   difficultyDescription,
   difficultyIcon,
   difficultyLabel,
@@ -48,8 +47,7 @@ export default function SingleLobby() {
   };
 
   return (
-    <Page title={t('singleLobby.title')} icon={<Gamepad2 size={17} />}>
-      <p className="muted single-lobby-subtitle">{t('singleLobby.subtitle')}</p>
+    <Page title={t('singleLobby.title')} icon={<Gamepad2 size={17} />} className="lobby-page">
       {difficulties.length ? (
         <>
           <div className="single-difficulty-grid">
@@ -61,7 +59,6 @@ export default function SingleLobby() {
                   type="button"
                   key={difficulty.key}
                   className={`single-difficulty-option${active ? ' active' : ''}`}
-                  style={{ ['--diff-color' as string]: difficultyColor(difficulty.key) }}
                   onClick={() => choose(difficulty.key)}
                 >
                   <span className="single-difficulty-icon"><Icon size={20} /></span>
@@ -80,7 +77,7 @@ export default function SingleLobby() {
             })}
           </div>
           <div className="single-lobby-action">
-            <button type="button" className="btn btn-lg btn-green" onClick={start}>
+            <button type="button" className="btn btn-lg" onClick={start}>
               <Play size={17} /> {t('singleLobby.start')}
             </button>
           </div>

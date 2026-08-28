@@ -15,21 +15,36 @@ interface ToastItem {
 
 const listeners = new Set<() => void>();
 const timers = new Map<number, number>();
+const closingTimers = new Map<number, number>();
 let items: ToastItem[] = [];
+let closing = new Set<number>();
 let nextId = 1;
+
+// 退场过渡时长,需与 Toast.module.css 的 [data-closing] 过渡保持一致
+const CLOSING_MS = 130;
 
 function emit(): void {
   for (const listener of listeners) listener();
+}
+
+function remove(id: number): void {
+  closingTimers.delete(id);
+  closing = new Set([...closing].filter((item) => item !== id));
+  items = items.filter((item) => item.id !== id);
+  emit();
 }
 
 function dismiss(id: number): void {
   const timer = timers.get(id);
   if (timer) window.clearTimeout(timer);
   timers.delete(id);
-  const next = items.filter((item) => item.id !== id);
-  if (next.length === items.length) return;
-  items = next;
+  // 已在退场中(或已不存在)则忽略
+  if (closing.has(id) || !items.some((item) => item.id === id)) return;
+  // 先进入 closing 相位播退场过渡,过渡结束再真正移除
+  closing = new Set(closing).add(id);
+  items = [...items];
   emit();
+  closingTimers.set(id, window.setTimeout(() => remove(id), CLOSING_MS));
 }
 
 function scheduleDismiss(id: number, duration: number): void {
@@ -46,6 +61,15 @@ function show(message: string, tone: ToastTone, duration = tone === 'error' ? 5_
     (item) => item.tone === tone && item.message === normalized && now - item.createdAt < 1_500
   );
   if (duplicate) {
+    // 退场中的重复消息要"复活":取消移除并撤掉退场态
+    const closingTimer = closingTimers.get(duplicate.id);
+    if (closingTimer) {
+      window.clearTimeout(closingTimer);
+      closingTimers.delete(duplicate.id);
+      closing = new Set([...closing].filter((item) => item !== duplicate.id));
+      items = [...items];
+      emit();
+    }
     scheduleDismiss(duplicate.id, duration);
     return duplicate.id;
   }
@@ -55,6 +79,10 @@ function show(message: string, tone: ToastTone, duration = tone === 'error' ? 5_
     const timer = timers.get(removed.id);
     if (timer) window.clearTimeout(timer);
     timers.delete(removed.id);
+    const closingTimer = closingTimers.get(removed.id);
+    if (closingTimer) window.clearTimeout(closingTimer);
+    closingTimers.delete(removed.id);
+    closing = new Set([...closing].filter((item) => item !== removed.id));
   }
   items = [...retained, item];
   emit();
@@ -98,6 +126,7 @@ export default function ToastViewport() {
               className={`${styles.toast} ${styles[item.tone]}`}
               key={item.id}
               role={item.tone === 'error' ? 'alert' : 'status'}
+              data-closing={closing.has(item.id) || undefined}
             >
               <Icon className={styles.icon} size={19} aria-hidden="true" />
               <p>{item.message}</p>

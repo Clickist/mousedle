@@ -68,7 +68,7 @@
   color: var(--text);
   font-weight: 600;
   text-decoration: none;
-  transition: top 0.16s ease;
+  transition: top 0.16s var(--ease-out);
 }
 .skip-link:focus { top: 12px; }
 

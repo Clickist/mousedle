@@ -55,7 +55,6 @@
   position: relative;
   flex: 0 0 58px;
   width: 58px;
-  height: 34px;
 }
 .language-select-button {
   display: inline-flex;
@@ -63,7 +62,8 @@
   justify-content: center;
   gap: 5px;
   width: 100%;
-  height: 100%;
+  /* 与头部 .btn-sm 同高,移动端随 responsive 一起升到触控高度 */
+  min-height: var(--control-height-compact);
   padding: 0 7px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -72,7 +72,7 @@
   font-size: var(--fs-2xs);
   font-weight: 700;
   cursor: pointer;
-  transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease;
+  transition: border-color 0.16s var(--ease-out), background 0.16s var(--ease-out), color 0.16s var(--ease-out);
 }
 .language-select-button:hover,
 .language-select.open .language-select-button {
@@ -84,12 +84,13 @@
   outline: 3px solid var(--primary-soft);
   outline-offset: 2px;
 }
-.language-chevron { transition: transform 0.16s ease; }
+.language-chevron { transition: transform 0.16s var(--ease-out); }
 .language-select.open .language-chevron { transform: rotate(180deg); }
 .language-select-menu {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
+  transform-origin: top right;
   z-index: 260;
   display: grid;
   gap: 3px;
@@ -124,6 +125,7 @@
   background: var(--card-soft);
   color: var(--text);
 }
+.language-select-option:active { background: var(--surface-container-high); }
 .language-select-option.active {
   background: var(--primary-soft);
   color: var(--language-accent);

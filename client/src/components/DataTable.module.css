@@ -31,6 +31,7 @@
 
 .table tbody tr { transition: background 0.15s ease; }
 .table tbody tr:hover { background: var(--card-soft); }
+.table tbody tr:active { background: var(--surface-container-high); }
 
 :global(html[data-theme='blast']) .scroll {
   border-color: rgba(255, 255, 255, 0.1);
