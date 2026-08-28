@@ -2379,9 +2379,7 @@
       "image": "asus-rog-chakram.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-chakram"
@@ -2409,9 +2407,7 @@
       "image": "asus-rog-chakram.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-chakram-core"
@@ -2439,9 +2435,7 @@
       "image": "asus-rog-chakram.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-chakram-x"
@@ -2469,9 +2463,7 @@
       "image": "asus-rog-gladius-ii.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-gladius-ii"
@@ -2499,9 +2491,7 @@
       "image": "asus-rog-gladius-ii-core.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-gladius-ii-core"
@@ -2529,9 +2519,7 @@
       "image": "asus-rog-gladius-ii-origin.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-gladius-ii-origin"
@@ -2559,9 +2547,7 @@
       "image": "asus-rog-gladius-ii-wireless.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-gladius-ii-wireless"
@@ -2589,9 +2575,7 @@
       "image": "asus-rog-gladius-iii.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-gladius-iii"
@@ -2619,9 +2603,7 @@
       "image": "asus-rog-gladius-iii-wireless.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-gladius-iii-wireless"
@@ -2649,9 +2631,7 @@
       "image": "asus-rog-gladius-iii-core.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-gladius-iii-core"
@@ -3009,9 +2989,7 @@
       "image": "asus-rog-pugio.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-pugio"
@@ -3039,9 +3017,7 @@
       "image": "asus-rog-sica.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-sica"
@@ -3069,9 +3045,7 @@
       "image": "asus-rog-spatha.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-spatha"
@@ -3099,9 +3073,7 @@
       "image": "asus-rog-spatha-x.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-spatha-x"
@@ -3129,9 +3101,7 @@
       "image": "asus-rog-strix-carry.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-strix-carry"
@@ -3159,9 +3129,7 @@
       "image": "asus-rog-strix-evolve.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-strix-evolve"
@@ -3189,9 +3157,7 @@
       "image": "asus-rog-strix-impact.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-strix-impact"
@@ -3219,9 +3185,7 @@
       "image": "asus-rog-strix-impact-ii.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-strix-impact-ii"
@@ -3249,9 +3213,7 @@
       "image": "asus-rog-strix-impact-ii-wireless.png"
     },
     "difficulties": [
-      "hard",
-      "normal",
-      "easy"
+      "hard"
     ],
     "is_enabled": true,
     "handle": "asus-rog-strix-impact-ii-wireless"
@@ -34724,7 +34686,7 @@
   {
     "name": "Razer Abyssus 2014",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "小型",
@@ -34752,7 +34714,7 @@
   {
     "name": "Razer Abyssus Essential",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "小型",
@@ -34780,7 +34742,7 @@
   {
     "name": "Razer Atheris",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "指尖",
@@ -34808,7 +34770,7 @@
   {
     "name": "Razer Basilisk",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -34838,7 +34800,7 @@
   {
     "name": "Razer Basilisk  V3 35K",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -34868,7 +34830,7 @@
   {
     "name": "Razer Basilisk  V3 Pro 35K",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -34898,7 +34860,7 @@
   {
     "name": "Razer Basilisk Essential",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -34926,7 +34888,7 @@
   {
     "name": "Razer Basilisk Mobile",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "小型",
@@ -34954,7 +34916,7 @@
   {
     "name": "Razer Basilisk Ultimate",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -34982,7 +34944,7 @@
   {
     "name": "Razer Basilisk V2",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -35010,7 +34972,7 @@
   {
     "name": "Razer Basilisk V3",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -35040,7 +35002,7 @@
   {
     "name": "Razer Basilisk V3 Pro",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -35070,7 +35032,7 @@
   {
     "name": "Razer Basilisk V3 X HyperSpeed",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -35098,7 +35060,7 @@
   {
     "name": "Razer Basilisk X HyperSpeed",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -35126,7 +35088,7 @@
   {
     "name": "Razer Cobra",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "中型",
@@ -35155,7 +35117,7 @@
   {
     "name": "Razer Cobra HyperSpeed",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "中型",
@@ -35183,7 +35145,7 @@
   {
     "name": "Razer Cobra Pro",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "中型",
@@ -35212,7 +35174,7 @@
   {
     "name": "Razer Copperhead",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "大型",
@@ -35240,7 +35202,7 @@
   {
     "name": "Razer DeathAdder Chroma",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -35268,7 +35230,7 @@
   {
     "name": "Razer DeathAdder Elite",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -35296,7 +35258,7 @@
   {
     "name": "Razer DeathAdder Essential",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -35324,7 +35286,7 @@
   {
     "name": "Razer DeathAdder Expert",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -35352,7 +35314,7 @@
   {
     "name": "Razer DeathAdder V2",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -35380,7 +35342,7 @@
   {
     "name": "Razer DeathAdder V2 Mini",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "小型",
@@ -35408,7 +35370,7 @@
   {
     "name": "Razer DeathAdder V2 Pro",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -35436,7 +35398,7 @@
   {
     "name": "Razer DeathAdder V2 X HyperSpeed",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -35465,7 +35427,7 @@
   {
     "name": "Razer DeathAdder V3",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -35495,7 +35457,7 @@
   {
     "name": "Razer DeathAdder V3 HyperSpeed",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "中型",
@@ -35525,7 +35487,7 @@
   {
     "name": "Razer DeathAdder V3 Pro",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -35555,7 +35517,7 @@
   {
     "name": "Razer DeathAdder V4 Pro",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -35585,7 +35547,7 @@
   {
     "name": "Razer Diamondback 2015",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "中型",
@@ -35613,7 +35575,7 @@
   {
     "name": "Razer Imperator",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -35641,7 +35603,7 @@
   {
     "name": "Razer Krait 2013",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "小型",
@@ -35669,7 +35631,7 @@
   {
     "name": "Razer Lancehead",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "中型",
@@ -35697,7 +35659,7 @@
   {
     "name": "Razer Lancehead Wireless",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "中型",
@@ -35725,7 +35687,7 @@
   {
     "name": "Razer Mamba Elite",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -35753,7 +35715,7 @@
   {
     "name": "Razer Mamba Wireless",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -35781,7 +35743,7 @@
   {
     "name": "Razer Naga Left-Handed",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "中型",
@@ -35809,7 +35771,7 @@
   {
     "name": "Razer Naga Pro",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "中型",
@@ -35837,7 +35799,7 @@
   {
     "name": "Razer Naga Trinity",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "中型",
@@ -35865,7 +35827,7 @@
   {
     "name": "Razer Naga V2 HyperSpeed",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "中型",
@@ -35893,7 +35855,7 @@
   {
     "name": "Razer Naga V2 Pro",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "中型",
@@ -35921,7 +35883,7 @@
   {
     "name": "Razer Naga V3 Pro",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "中型",
@@ -35949,7 +35911,7 @@
   {
     "name": "Razer Naga X",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "中型",
@@ -35977,7 +35939,7 @@
   {
     "name": "Razer Orochi  2009",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "指尖",
@@ -36005,7 +35967,7 @@
   {
     "name": "Razer Orochi  2013",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "指尖",
@@ -36033,7 +35995,7 @@
   {
     "name": "Razer Orochi  2015",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "指尖",
@@ -36061,7 +36023,7 @@
   {
     "name": "Razer Orochi V2",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "小型",
@@ -36091,7 +36053,7 @@
   {
     "name": "Razer Ouroboros",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "中型",
@@ -36119,7 +36081,7 @@
   {
     "name": "Razer Pro Click",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -36147,7 +36109,7 @@
   {
     "name": "Razer Pro Click Mini",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "指尖",
@@ -36175,7 +36137,7 @@
   {
     "name": "Razer Pro Click V2",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "人体工学",
     "size": "大型",
@@ -36203,7 +36165,7 @@
   {
     "name": "Razer Pro Click V2  Vertical",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "垂直",
     "size": "大型",
@@ -36231,7 +36193,7 @@
   {
     "name": "Razer Viper",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "大型",
@@ -36260,7 +36222,7 @@
   {
     "name": "Razer Viper 8KHz",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "大型",
@@ -36289,7 +36251,7 @@
   {
     "name": "Razer Viper Mini",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "中型",
@@ -36319,7 +36281,7 @@
   {
     "name": "Razer Viper Mini  Signature Edition",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "中型",
@@ -36349,7 +36311,7 @@
   {
     "name": "Razer Viper Ultimate",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "大型",
@@ -36378,7 +36340,7 @@
   {
     "name": "Razer Viper V2 Pro",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "大型",
@@ -36408,7 +36370,7 @@
   {
     "name": "Razer Viper V3 HyperSpeed",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "大型",
@@ -36438,7 +36400,7 @@
   {
     "name": "Razer Viper V3 Pro",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "大型",
@@ -36468,7 +36430,7 @@
   {
     "name": "Razer Viper V3 Pro  SE",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "大型",
@@ -36498,7 +36460,7 @@
   {
     "name": "Razer Viper V4 Pro",
     "brand": "Razer",
-    "country": "美国",
+    "country": "新加坡",
     "continent": "亚洲",
     "shape": "对称",
     "size": "大型",

@@ -13,7 +13,7 @@ const outputPath =
 
 // 品牌 -> 品牌所属公司/总部所在国。没把握的标记 UNKNOWN,不做猜测。
 const BRAND_COUNTRY = {
-  Logitech: '瑞士', Pulsar: '韩国', Razer: '美国', ATK: '中国', Zowie: '中国台湾',
+  Logitech: '瑞士', Pulsar: '韩国', Razer: '新加坡', ATK: '中国', Zowie: '中国台湾',
   MCHOSE: '中国', Rapoo: '中国', Corsair: '美国', ASUS: '中国台湾', ROG: '中国台湾', Keychron: '中国',
   'G-Wolves': '中国', EWEADN: '中国', PMM: '泰国', SteelSeries: '丹麦', Glorious: '美国',
   'Attack Shark': '中国', AJAZZ: '中国', Finalmouse: '美国', VGN: '中国', LAMZU: '中国',
