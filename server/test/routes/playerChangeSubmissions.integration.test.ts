@@ -65,7 +65,7 @@ describe('player change submissions', () => {
       is_enabled: true,
     }).returning('id');
     const id = typeof mouseId === 'object' ? mouseId.id : mouseId;
-    await db('mouse_difficulties').insert({ mouse_id: id, difficulty_key: 'normal' });
+    await db('mouse_difficulties').insert({ mouse_id: id, difficulty_key: 'hard' });
     let tokenId: number | null = null;
     let submissionId: number | null = null;
     try {

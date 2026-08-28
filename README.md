@@ -156,7 +156,15 @@ Docker Compose 部署、自动数据库迁移、管理员创建、更新和回�
 
 ## 鼠标数据
 
-鼠标数据集来自 [eloshapes](https://github.com/eloshapes) 鼠标签名的快照，经 [`scripts/build-mouse-dataset.mjs`](scripts/build-mouse-dataset.mjs) 转换生成，当前种子数据为 `server/src/db/seeds/mice.json`（1617 只鼠标）。种子包含品牌、产地、形状、尺寸、重量、长度、侧键、连接方式等猜测属性，以及传感器/DPI/轮询率等仅用于揭晓展示的字段。可用 `pnpm seed` 导入数据库。数据纠错与新增鼠标可重新生成该 JSON，或通过管理后台批量导入。
+鼠标数据集来自 [eloshapes](https://github.com/eloshapes) 鼠标签名的快照，经 [`scripts/build-mouse-dataset.mjs`](scripts/build-mouse-dataset.mjs) 转换生成，当前种子数据为 `server/src/db/seeds/mice.json`（1617 只鼠标）。种子包含品牌、品牌属地、形状、尺寸、重量、长度、侧键、连接方式等猜测属性，以及传感器/DPI/轮询率等仅用于揭晓展示的字段。可用 `pnpm seed` 导入数据库。数据纠错与新增鼠标可重新生成该 JSON，或通过管理后台批量导入。
+
+### 难度分级
+
+难度分档（小白/潮男/扫地僧/禁用）由 [`tier-assignment.json`](tier-assignment.json) 描述：品牌级名单之外，`modelOverrides` 支持按鼠标全名对个别型号调档（值为 `easy`/`normal`/`hard`/`disabled`，对应小白/潮男/扫地僧/禁用）。调整流程：
+
+1. 浏览器打开 `scripts/tier-editor.html` 拖拽分档（支持型号级微调，导出 JSON）；数据块与种子脱节时先跑 `node scripts/build-tier-editor.mjs` 重新生成。
+2. `node scripts/apply-tier-assignment.mjs` 将导出名单写入 `seeds/mice.json`。
+3. `pnpm seed` 落库。
 
 ### 外部鼠标更新 API
 
@@ -203,7 +211,7 @@ curl -X POST 'https://example.com/api/external/player-change-submissions' \
 
 有实际差异时返回 `201 { "submissionId": number, "submitted": number, "unchanged": number }`；所有值均未变化时返回 `200`，其中 `submissionId` 为 `null`。`submitted` 与 `unchanged` 统计的是字段数，不是鼠标数。管理员在 **鼠标变更审核** 页逐项批准或拒绝；批准前若该字段已被其他操作改动，该项会标记为 `conflict`，不会覆盖新值。
 
-可写字段为 `name`、`brand`、`country`、`continent`、`shape`、`size`、`weight`、`length_mm`、`side_buttons`、`wireless`、`is_enabled`、`difficulties`。其中 `shape` 仅接受 `对称`、`人体工学`、`非对称`、`垂直`，`size` 仅接受 `小型`、`指尖`、`中型`、`大型`，`difficulties` 当前仅接受 `beginner`、`easy`、`normal`。
+可写字段为 `name`、`brand`、`country`、`continent`、`shape`、`size`、`weight`、`length_mm`、`side_buttons`、`wireless`、`is_enabled`、`difficulties`。其中 `shape` 仅接受 `对称`、`人体工学`、`非对称`、`垂直`，`size` 仅接受 `小型`、`指尖`、`中型`、`大型`，`difficulties` 当前仅接受 `easy`、`normal`、`hard`（难度池为累进式：easy ⊂ normal ⊂ hard）。
 
 直接写入端点用于受信任的完整同步任务。新增鼠标至少需要 `name`、`brand` 和 `weight`；批量导入应按完整记录提交。更新已有鼠标时，导入项省略 `difficulties` 或 `is_enabled` 会保留原值，其他带默认值的字段若省略则可能写入默认值。部分更新接口只修改显式传入的字段。
 

@@ -106,7 +106,7 @@ describe('cookie authentication', () => {
       session_id: sessionId,
       guest_key: guest.key,
       target_mouse_id: player.id,
-      mode: 'easy',
+      mode: 'normal',
       guesses: '[]',
       status: 'lost',
       guess_count: 0,

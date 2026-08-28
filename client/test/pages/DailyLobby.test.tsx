@@ -22,9 +22,9 @@ function overview() {
       startsAt: 40_000,
       nextRefreshAt: 160_000,
       challenges: [
-        { difficulty: 'beginner', status: 'not_started' },
-        { difficulty: 'easy', status: 'playing' },
-        { difficulty: 'normal', status: 'won' },
+        { difficulty: 'easy', status: 'not_started' },
+        { difficulty: 'normal', status: 'playing' },
+        { difficulty: 'hard', status: 'won' },
       ],
     },
   };
@@ -63,6 +63,6 @@ describe('DailyLobby', () => {
     await user.click(screen.getByRole('button', { name: '进入挑战' }));
 
     expect(await screen.findByTestId('daily-game-route')).toBeInTheDocument();
-    expect(localStorage.getItem('csgofriberg.daily-difficulty')).toBe('normal');
+    expect(localStorage.getItem('csgofriberg.daily-difficulty')).toBe('hard');
   });
 });

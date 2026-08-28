@@ -100,7 +100,7 @@ describe('external player API tokens', () => {
           weight: 25,
           length_mm: 120,
           side_buttons: 2,
-          difficulties: ['normal'],
+          difficulties: ['hard'],
           wireless: true,
           display: { width: 63.5, height: 40, sensor: 'PAW3395', dpi: 26000 },
           is_enabled: true,
@@ -116,7 +116,7 @@ describe('external player API tokens', () => {
         body: JSON.stringify({
           brand: 'Updated API Team',
           display: '{"sensor":"PAW3395","width":64,"height":40,"dpi":26000}',
-          difficulties: ['normal', 'easy'],
+          difficulties: ['hard', 'normal'],
         }),
       });
       expect(updatedPlayer.response.status).toBe(200);
@@ -124,7 +124,7 @@ describe('external player API tokens', () => {
       expect(await db('mouse_difficulties')
         .where({ mouse_id: mouseId })
         .orderBy('difficulty_key')
-        .pluck('difficulty_key')).toEqual(['easy', 'normal']);
+        .pluck('difficulty_key')).toEqual(['hard', 'normal']);
 
       const imported = await request('/api/external/players/import', {
         method: 'POST',
@@ -147,7 +147,7 @@ describe('external player API tokens', () => {
               country: 'Sweden',
               weight: 23,
               length_mm: 124,
-              difficulties: ['normal', 'easy'],
+              difficulties: ['hard', 'normal'],
             },
           ],
         }),
@@ -159,7 +159,7 @@ describe('external player API tokens', () => {
       expect(await db('mouse_difficulties')
         .where({ mouse_id: importedPlayerId.id })
         .orderBy('difficulty_key')
-        .pluck('difficulty_key')).toEqual(['easy', 'normal']);
+        .pluck('difficulty_key')).toEqual(['hard', 'normal']);
 
       const exported = await request('/api/external/players/export', {
         headers: authorization,
@@ -177,7 +177,7 @@ describe('external player API tokens', () => {
         weight: 26,
         length_mm: 120,
         side_buttons: 3,
-        difficulties: ['easy', 'normal'],
+        difficulties: ['hard', 'normal'],
         wireless: true,
         display: { width: 64, height: 40, sensor: 'PAW3395', dpi: 26000 },
         is_enabled: true,

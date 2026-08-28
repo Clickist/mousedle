@@ -37,7 +37,7 @@ function deferred<T>() {
   return { promise, resolve, reject };
 }
 
-function renderGame(mode = 'easy') {
+function renderGame(mode = 'normal') {
   return renderAtRoute(
     <SingleGame />,
     {
@@ -67,7 +67,7 @@ describe('SingleGame UX', () => {
   });
 
   it('redirects invalid difficulty URLs without writing localStorage', async () => {
-    renderGame('hard');
+    renderGame('expert');
     expect(await screen.findByTestId('lobby')).toBeInTheDocument();
     expect(localStorage.getItem('csgofriberg.single-difficulty')).toBeNull();
     expect(post).not.toHaveBeenCalled();
@@ -77,7 +77,7 @@ describe('SingleGame UX', () => {
     const start = deferred<{ data: { gameId: string; guesses: []; maxGuesses: number } }>();
     post.mockReturnValueOnce(start.promise as never);
 
-    renderGame('easy');
+    renderGame('normal');
 
     expect(await screen.findByText('正在开始新对局…', { selector: 'p' })).toBeInTheDocument();
     expect(document.querySelector('.spinner')).toBeTruthy();
@@ -87,13 +87,13 @@ describe('SingleGame UX', () => {
     start.resolve({ data: { gameId: 'g1', guesses: [], maxGuesses: 8 } });
     await waitForReadyInput();
     expect(screen.getByText('在下方输入鼠标名称开始猜测')).toBeInTheDocument();
-    expect(localStorage.getItem('csgofriberg.single-difficulty')).toBe('easy');
+    expect(localStorage.getItem('csgofriberg.single-difficulty')).toBe('normal');
   });
 
   it('shows start failure recovery actions when network fails', async () => {
     post.mockRejectedValueOnce(new Error('offline'));
 
-    renderGame('easy');
+    renderGame('normal');
 
     expect(await screen.findByText('开局失败')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '重试' })).toBeInTheDocument();
@@ -102,7 +102,7 @@ describe('SingleGame UX', () => {
 
   it('disables dock and shows starting copy while restart is in flight', async () => {
     post.mockResolvedValueOnce({ data: { gameId: 'g1', guesses: [], maxGuesses: 8 } } as never);
-    renderGame('easy');
+    renderGame('normal');
     await waitForReadyInput();
 
     const restart = deferred<unknown>();
@@ -123,7 +123,7 @@ describe('SingleGame UX', () => {
   it('marks page keyboard-active on focus for mobile chrome collapse CSS', async () => {
     installViewportMocks(true);
     post.mockResolvedValueOnce({ data: { gameId: 'g1', guesses: [], maxGuesses: 8 } } as never);
-    renderGame('easy');
+    renderGame('normal');
 
     const input = await waitForReadyInput();
     await userEvent.click(input);
@@ -133,7 +133,7 @@ describe('SingleGame UX', () => {
 
   it('shows reveal busy state on the action button and top status bar', async () => {
     post.mockResolvedValueOnce({ data: { gameId: 'g1', guesses: [], maxGuesses: 8 } } as never);
-    renderGame('easy');
+    renderGame('normal');
     await waitForReadyInput();
 
     const giveup = deferred<{ data: { answer: { name: string; brand: string; country: string } } }>();
@@ -170,7 +170,7 @@ describe('SingleGame UX', () => {
           answer: { name: 'friberg', brand: 'NIP', country: '瑞典' },
         },
       } as never);
-    renderGame('easy');
+    renderGame('normal');
     await waitForReadyInput();
 
     const user = userEvent.setup();
@@ -184,7 +184,7 @@ describe('SingleGame UX', () => {
 
   it('shows leaving busy state before navigating home', async () => {
     post.mockResolvedValueOnce({ data: { gameId: 'g1', guesses: [], maxGuesses: 8 } } as never);
-    renderGame('easy');
+    renderGame('normal');
     await waitForReadyInput();
 
     const exit = deferred<unknown>();

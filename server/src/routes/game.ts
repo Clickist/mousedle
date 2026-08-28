@@ -101,7 +101,7 @@ router.post(
     failClosed: true,
   }),
   validateBody(z.object({
-    mode: z.string().trim().regex(/^[a-z0-9][a-z0-9_-]{0,31}$/).default('beginner'),
+    mode: z.string().trim().regex(/^[a-z0-9][a-z0-9_-]{0,31}$/).default('easy'),
   })),
   asyncHandler(async (req, res) => {
     const owner = identity(req);

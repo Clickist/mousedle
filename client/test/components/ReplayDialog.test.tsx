@@ -25,7 +25,7 @@ const guess = {
 const replay: MultiReplay = {
   type: 'multi',
   id: 42,
-  mode: 'easy',
+  mode: 'normal',
   boType: 3,
   finishedAt: '2026-07-26T00:00:00.000Z',
   result: 'won',

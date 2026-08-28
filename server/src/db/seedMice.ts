@@ -22,7 +22,7 @@ const seedMice = miceData as SeedMouse[];
 const normalizeName = (value: string) => value.toLocaleLowerCase('en-US').replace(/[_-]/g, '');
 
 function difficulties(mouse: SeedMouse): string[] {
-  return mouse.difficulties?.length ? [...new Set(mouse.difficulties)] : ['normal'];
+  return mouse.difficulties?.length ? [...new Set(mouse.difficulties)] : ['hard'];
 }
 
 function seedRow(mouse: SeedMouse) {

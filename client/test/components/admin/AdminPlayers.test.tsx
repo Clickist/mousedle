@@ -41,7 +41,7 @@ describe('AdminPlayers', () => {
       shape: 'Rifler',
       major_championships: 0,
       major_appearances: 1,
-      difficulties: ['easy', 'normal'],
+      difficulties: ['normal', 'hard'],
       is_active: true,
       is_enabled: true,
     }];

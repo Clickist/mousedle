@@ -11,21 +11,11 @@ export function difficultyDescription(t: TFunction, key: string): string {
 }
 
 const DIFFICULTY_ICONS: Record<string, LucideIcon> = {
-  beginner: GraduationCap,
-  easy: Gamepad2,
-  normal: Flame,
+  easy: Flame,
+  normal: Gamepad2,
+  hard: GraduationCap,
 };
 
 export function difficultyIcon(key: string): LucideIcon {
   return DIFFICULTY_ICONS[key] ?? Gamepad2;
-}
-
-const DIFFICULTY_COLORS: Record<string, string> = {
-  beginner: 'var(--primary)',
-  easy: 'var(--success)',
-  normal: 'var(--accent)',
-};
-
-export function difficultyColor(key: string): string {
-  return DIFFICULTY_COLORS[key] ?? 'var(--primary)';
 }

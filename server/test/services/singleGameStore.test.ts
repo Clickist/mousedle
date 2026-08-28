@@ -19,7 +19,7 @@ describe('singleGameStore', () => {
       identityKey: 'g:test',
       userId: null,
       guestKey: 'test-guest',
-      mode: 'easy',
+      mode: 'normal',
       targetMouseId: 1,
     })).rejects.toThrow('REDIS_UNAVAILABLE');
     await expect(loadSingleGame('missing', 'g:test')).rejects.toThrow('REDIS_UNAVAILABLE');
@@ -28,7 +28,7 @@ describe('singleGameStore', () => {
       identityKey: 'g:test',
       userId: null,
       guestKey: 'test-guest',
-      mode: 'easy',
+      mode: 'normal',
       targetMouseId: 1,
       guesses: [],
       guessTimes: [],
@@ -44,7 +44,7 @@ describe('singleGameStore', () => {
       identityKey,
       userId: null,
       guestKey: identityKey.slice(2),
-      mode: 'easy',
+      mode: 'normal',
       targetMouseId: 1,
     });
     created.guesses.push({ mouseId: 2, name: 'test' } as any);
@@ -55,7 +55,7 @@ describe('singleGameStore', () => {
       identityKey,
       userId: null,
       guestKey: identityKey.slice(2),
-      mode: 'easy',
+      mode: 'normal',
       targetMouseId: 3,
     });
     expect(restored.id).toBe(created.id);
@@ -75,7 +75,7 @@ describe('singleGameStore', () => {
       identityKey,
       userId: null,
       guestKey: identityKey.slice(2),
-      mode: 'normal',
+      mode: 'hard',
       targetMouseId: 1,
     });
     created.lastActiveAt = Date.now() - 1_801_000;
@@ -86,7 +86,7 @@ describe('singleGameStore', () => {
     );
 
     expect(await loadSingleGame(created.id, identityKey)).toBeNull();
-    expect(await redis()!.get(redisKey(`single:active:${identityKey}:normal`))).toBeNull();
+    expect(await redis()!.get(redisKey(`single:active:${identityKey}:hard`))).toBeNull();
     expect(await redis()!.zScore(redisKey('presence:single'), created.id)).toBeNull();
   });
 
@@ -98,7 +98,7 @@ describe('singleGameStore', () => {
       identityKey,
       userId: null,
       guestKey: identityKey.slice(2),
-      mode: 'daily:2099-01-01:easy',
+      mode: 'daily:2099-01-01:normal',
       targetMouseId: 1,
       kind: 'daily',
       expiresAt,

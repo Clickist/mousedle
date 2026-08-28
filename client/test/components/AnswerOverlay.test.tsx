@@ -85,7 +85,7 @@ describe('AnswerOverlay', () => {
 
   it('shows a player\'s difficulty memberships when provided', () => {
     renderWithProviders(
-      <MouseInfoTable answer={{ ...answer, difficulties: ['beginner', 'normal'] }} />
+      <MouseInfoTable answer={{ ...answer, difficulties: ['easy', 'hard'] }} />
     );
 
     expect(screen.getByText('所属难度')).toBeInTheDocument();

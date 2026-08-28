@@ -21,7 +21,7 @@ function makeRoom(id: string): StoredRoom {
     status: 'waiting',
     matchmaking: false,
     readyCheckEndsAt: null,
-    dbType: 'normal',
+    dbType: 'hard',
     boType: 3,
     gameMode: 'classic',
     totalRounds: 3,

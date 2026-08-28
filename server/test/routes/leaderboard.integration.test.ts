@@ -49,7 +49,7 @@ describe('leaderboard', () => {
       session_id: `leaderboard-${stamp}-${index}`,
       user_id: Number(row.id),
       target_mouse_id: Number(target.id),
-      mode: 'easy',
+      mode: 'normal',
       guesses: '[]',
       status: 'won',
       guess_count: 1,
@@ -57,17 +57,7 @@ describe('leaderboard', () => {
     })));
     await db('games').insert([
       {
-        session_id: `leaderboard-${stamp}-beginner-win`,
-        user_id: userIds[0],
-        target_mouse_id: Number(target.id),
-        mode: 'beginner',
-        guesses: '[]',
-        status: 'won',
-        guess_count: 1,
-        finished_at: db.fn.now(),
-      },
-      {
-        session_id: `leaderboard-${stamp}-easy-extra`,
+        session_id: `leaderboard-${stamp}-easy-win`,
         user_id: userIds[0],
         target_mouse_id: Number(target.id),
         mode: 'easy',
@@ -77,40 +67,50 @@ describe('leaderboard', () => {
         finished_at: db.fn.now(),
       },
       {
-        session_id: `leaderboard-${stamp}-normal-a-win`,
+        session_id: `leaderboard-${stamp}-normal-extra`,
         user_id: userIds[0],
         target_mouse_id: Number(target.id),
         mode: 'normal',
+        guesses: '[]',
+        status: 'won',
+        guess_count: 1,
+        finished_at: db.fn.now(),
+      },
+      {
+        session_id: `leaderboard-${stamp}-hard-a-win`,
+        user_id: userIds[0],
+        target_mouse_id: Number(target.id),
+        mode: 'hard',
         guesses: '[]',
         status: 'won',
         guess_count: 2,
         finished_at: db.fn.now(),
       },
       {
-        session_id: `leaderboard-${stamp}-normal-a-loss`,
+        session_id: `leaderboard-${stamp}-hard-a-loss`,
         user_id: userIds[0],
         target_mouse_id: Number(target.id),
-        mode: 'normal',
+        mode: 'hard',
         guesses: '[]',
         status: 'lost',
         guess_count: 8,
         finished_at: db.fn.now(),
       },
       {
-        session_id: `leaderboard-${stamp}-normal-b-win`,
+        session_id: `leaderboard-${stamp}-hard-b-win`,
         user_id: userIds[1],
         target_mouse_id: Number(target.id),
-        mode: 'normal',
+        mode: 'hard',
         guesses: '[]',
         status: 'won',
         guess_count: 3,
         finished_at: db.fn.now(),
       },
       {
-        session_id: `leaderboard-${stamp}-normal-a-second-win`,
+        session_id: `leaderboard-${stamp}-hard-a-second-win`,
         user_id: userIds[0],
         target_mouse_id: Number(target.id),
-        mode: 'normal',
+        mode: 'hard',
         guesses: '[]',
         status: 'won',
         guess_count: 4,
@@ -120,7 +120,7 @@ describe('leaderboard', () => {
     const matchRows = await db('match_records')
       .insert([0, 1, 2, 3].map((index) => ({
         room_id: `leaderboard-${stamp}-${index}`,
-        db_type: index === 3 ? 'normal' : 'easy',
+        db_type: index === 3 ? 'hard' : 'normal',
         bo_type: 1,
         replay: '[]',
       })))
@@ -139,26 +139,26 @@ describe('leaderboard', () => {
     await invalidateCached(...allLeaderboardCacheKeys());
 
     try {
-      const beginnerResponse = await fetch(`${baseUrl}/api/leaderboard?mode=single&difficulty=beginner`);
+      const beginnerResponse = await fetch(`${baseUrl}/api/leaderboard?mode=single&difficulty=easy`);
       const beginnerData = await beginnerResponse.json();
       expect(beginnerResponse.status).toBe(200);
-      expect(beginnerData).toMatchObject({ mode: 'single', difficulty: 'beginner' });
+      expect(beginnerData).toMatchObject({ mode: 'single', difficulty: 'easy' });
       expect(beginnerData.items[0]).toMatchObject({ id: userIds[0], wins: 1, total: 1 });
 
-      const response = await fetch(`${baseUrl}/api/leaderboard?mode=single&difficulty=easy`);
+      const response = await fetch(`${baseUrl}/api/leaderboard?mode=single&difficulty=normal`);
       const data = await response.json();
       expect(response.status).toBe(200);
-      expect(data).toMatchObject({ mode: 'single', difficulty: 'easy' });
+      expect(data).toMatchObject({ mode: 'single', difficulty: 'normal' });
       expect(data.items).toHaveLength(50);
       expect(data.items[0]).toMatchObject({ id: userIds[0], wins: 2, total: 2, winRate: 1 });
       expect(data.items.every((row: any) => /^用户#[0-9A-Z]{5}$/.test(row.displayId))).toBe(true);
       expect(data.items.every((row: any) => !Object.hasOwn(row, 'username'))).toBe(true);
       expect(data.currentUser).toBeNull();
 
-      const normalResponse = await fetch(`${baseUrl}/api/leaderboard?mode=single&difficulty=normal`);
+      const normalResponse = await fetch(`${baseUrl}/api/leaderboard?mode=single&difficulty=hard`);
       const normalData = await normalResponse.json();
       expect(normalResponse.status).toBe(200);
-      expect(normalData).toMatchObject({ mode: 'single', difficulty: 'normal' });
+      expect(normalData).toMatchObject({ mode: 'single', difficulty: 'hard' });
       expect(normalData.items[0]).toMatchObject({ id: userIds[0], wins: 2, total: 3, winRate: 2 / 3 });
       expect(normalData.items.find((row: any) => row.id === userIds[0])).toMatchObject({
         wins: 2,
@@ -166,10 +166,10 @@ describe('leaderboard', () => {
         winRate: 2 / 3,
       });
 
-      const multiResponse = await fetch(`${baseUrl}/api/leaderboard?mode=multi&difficulty=easy`);
+      const multiResponse = await fetch(`${baseUrl}/api/leaderboard?mode=multi&difficulty=normal`);
       const multiData = await multiResponse.json();
       expect(multiResponse.status).toBe(200);
-      expect(multiData).toMatchObject({ mode: 'multi', difficulty: 'easy' });
+      expect(multiData).toMatchObject({ mode: 'multi', difficulty: 'normal' });
       const multiUserRows = multiData.items.filter((row: any) => userIds.includes(row.id));
       expect(multiUserRows).toHaveLength(2);
       expect(multiData.items.findIndex((row: any) => row.id === userIds[1]))
@@ -186,16 +186,16 @@ describe('leaderboard', () => {
         avgGuesses: null,
       });
 
-      const multiNormalResponse = await fetch(`${baseUrl}/api/leaderboard?mode=multi&difficulty=normal`);
+      const multiNormalResponse = await fetch(`${baseUrl}/api/leaderboard?mode=multi&difficulty=hard`);
       const multiNormalData = await multiNormalResponse.json();
       expect(multiNormalResponse.status).toBe(200);
-      expect(multiNormalData).toMatchObject({ mode: 'multi', difficulty: 'normal' });
+      expect(multiNormalData).toMatchObject({ mode: 'multi', difficulty: 'hard' });
       expect(multiNormalData.items.filter((row: any) => userIds.includes(row.id))).toEqual([
         expect.objectContaining({ id: userIds[0], wins: 1, total: 1, winRate: 1 }),
       ]);
 
       const token = signToken({ id: userIds[0], token_version: 0 });
-      const ownResponse = await fetch(`${baseUrl}/api/leaderboard?mode=single&difficulty=normal`, {
+      const ownResponse = await fetch(`${baseUrl}/api/leaderboard?mode=single&difficulty=hard`, {
         headers: { Cookie: `csgofriberg_session=${token}` },
       });
       const ownData = await ownResponse.json();
@@ -208,11 +208,11 @@ describe('leaderboard', () => {
       await db('users').where({ id: userIds[0] }).update({ leaderboard_hidden: true });
       await invalidateCached(...allLeaderboardCacheKeys());
       for (const [hiddenMode, hiddenDifficulty] of [
-        ['single', 'beginner'],
         ['single', 'easy'],
         ['single', 'normal'],
-        ['multi', 'easy'],
+        ['single', 'hard'],
         ['multi', 'normal'],
+        ['multi', 'hard'],
       ]) {
         const hiddenResponse = await fetch(
           `${baseUrl}/api/leaderboard?mode=${hiddenMode}&difficulty=${hiddenDifficulty}`,
@@ -229,7 +229,7 @@ describe('leaderboard', () => {
         });
       }
 
-      const invalidResponse = await fetch(`${baseUrl}/api/leaderboard?mode=invalid&difficulty=easy`);
+      const invalidResponse = await fetch(`${baseUrl}/api/leaderboard?mode=invalid&difficulty=normal`);
       expect(invalidResponse.status).toBe(400);
       const unavailableResponse = await fetch(`${baseUrl}/api/leaderboard?mode=multi&difficulty=unknown`);
       expect(unavailableResponse.status).toBe(400);

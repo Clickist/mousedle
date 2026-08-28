@@ -18,7 +18,7 @@ describe('match result persistence', () => {
     try {
       await persistMatchResult({
         recordId,
-        dbType: 'easy',
+        dbType: 'normal',
         boType: 1,
         winnerKey: playerA,
         reason: 'score',
@@ -52,7 +52,7 @@ describe('match result persistence', () => {
     const playerB = `g:report-persist-b-${stamp}`;
     const payload: MatchResultPayload = {
       recordId,
-      dbType: 'easy',
+      dbType: 'normal',
       boType: 1,
       winnerKey: playerA,
       reason: 'score',
@@ -109,7 +109,7 @@ describe('match result persistence', () => {
       });
       await persistMatchResult({
         recordId,
-        dbType: 'easy',
+        dbType: 'normal',
         boType: 1,
         winnerKey: playerA,
         reason: 'score',
@@ -141,7 +141,7 @@ describe('match result persistence', () => {
     try {
       await persistMatchResult({
         recordId,
-        dbType: 'easy',
+        dbType: 'normal',
         boType: 1,
         gameMode: 'relay2v2',
         winnerKey: null,

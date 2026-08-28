@@ -70,7 +70,7 @@ describe('database schema initialization', () => {
     expect(await instance.schema.hasColumn('daily_challenge_attempts', 'solve_order')).toBe(true);
 
     const difficulties = await instance('difficulty_levels').orderBy('sort_order').pluck('key');
-    expect(difficulties).toEqual(['beginner', 'easy', 'normal']);
+    expect(difficulties).toEqual(['easy', 'normal', 'hard']);
   });
 
   it('backfills solve order when upgrading existing daily challenge tables', async () => {
@@ -99,7 +99,7 @@ describe('database schema initialization', () => {
     await instance('daily_challenges').insert({
       id: 1,
       challenge_date: '2026-08-11',
-      difficulty_key: 'beginner',
+      difficulty_key: 'easy',
       target_mouse_id: 1,
     });
     await instance('daily_challenge_attempts').insert([
@@ -153,7 +153,7 @@ describe('database schema initialization', () => {
     await instance.schema.createTable('match_records', (table) => {
       table.increments('id').primary();
       table.string('room_id', 64).notNullable().unique();
-      table.string('db_type', 16).notNullable().defaultTo('easy');
+      table.string('db_type', 16).notNullable().defaultTo('normal');
       table.integer('bo_type').notNullable().defaultTo(3);
       table.integer('winner_id').nullable();
       table.text('mice').notNullable().defaultTo('[]');

@@ -44,9 +44,9 @@ describe('daily challenge service', () => {
   });
 
   it('encodes and parses daily game modes without ambiguity', () => {
-    const mode = dailyChallengeMode('2026-08-11', 'beginner');
-    expect(mode).toBe('daily:2026-08-11:beginner');
-    expect(parseDailyChallengeMode(mode)).toEqual({ date: '2026-08-11', difficulty: 'beginner' });
-    expect(parseDailyChallengeMode('easy')).toBeNull();
+    const mode = dailyChallengeMode('2026-08-11', 'easy');
+    expect(mode).toBe('daily:2026-08-11:easy');
+    expect(parseDailyChallengeMode(mode)).toEqual({ date: '2026-08-11', difficulty: 'easy' });
+    expect(parseDailyChallengeMode('normal')).toBeNull();
   });
 });

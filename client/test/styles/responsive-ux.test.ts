@@ -35,17 +35,20 @@ describe('desktop/mobile layout contracts', () => {
   it('caps single difficulty cards on wide screens and stacks actions on mobile', () => {
     const home = readCss('../../src/styles/home-multiplayer.css');
     expect(home).toMatch(
-      /\.single-difficulty-grid\s*\{[^}]*grid-template-columns:\s*repeat\(auto-fit,\s*minmax\(230px,\s*360px\)\)/s
+      /\.single-difficulty-grid\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*420px\)/s
     );
     expect(home).toMatch(/\.single-difficulty-grid\s*\{[^}]*justify-content:\s*center/s);
     expect(home).toMatch(
-      /\.single-difficulty-icon\s*\{[^}]*var\(--diff-color,\s*var\(--primary\)\)/s
+      /\.single-difficulty-icon\s*\{[^}]*background:\s*var\(--surface-container\)/s
     );
     expect(home).toMatch(
       /\.single-difficulty-option\.active\s+\.single-difficulty-check\s*\{[^}]*background:\s*var\(--primary\)/s
     );
     expect(home).toMatch(
-      /\.single-difficulty-check\s*\{[^}]*color:\s*var\(--on-surface\)/s
+      /\.single-difficulty-check\s*\{[^}]*color:\s*transparent/s
+    );
+    expect(home).toMatch(
+      /\.single-difficulty-option\.active\s*\{[^}]*box-shadow:\s*0\s+0\s+0\s+3px\s+color-mix\(in\s+srgb,\s*var\(--primary\)\s*16%,\s*transparent\)/s
     );
 
     const responsive = readCss('../../src/styles/responsive.css');

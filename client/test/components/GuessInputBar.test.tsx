@@ -164,10 +164,10 @@ describe('GuessInputBar', () => {
   });
 
   it('only suggests mice from the active difficulty pool when difficulty is set', () => {
-    renderWithProviders(<GuessInputBar onPick={vi.fn()} difficulty="beginner" />);
+    renderWithProviders(<GuessInputBar onPick={vi.fn()} difficulty="easy" />);
     act(() => playerListListener?.([
-      { id: 1, name: 'Logitech G Pro', d: ['normal', 'easy', 'beginner'] },
-      { id: 2, name: 'GameSense Hed', d: ['normal'] },
+      { id: 1, name: 'Logitech G Pro', d: ['hard', 'normal', 'easy'] },
+      { id: 2, name: 'GameSense Hed', d: ['hard'] },
       { id: 3, name: 'No Pool Mouse', d: [] },
     ] as never));
 
@@ -182,7 +182,7 @@ describe('GuessInputBar', () => {
   });
 
   it('still suggests everything when the list carries no difficulty tags (legacy cache)', () => {
-    renderWithProviders(<GuessInputBar onPick={vi.fn()} difficulty="beginner" />);
+    renderWithProviders(<GuessInputBar onPick={vi.fn()} difficulty="easy" />);
     act(() => playerListListener?.([{ id: 9, name: 'glover' }] as never));
 
     const input = screen.getByPlaceholderText('输入鼠标名称...');

@@ -74,7 +74,7 @@ describe('MultiLobby matchmaking', () => {
         .toEqual({
         gameMode: 'classic',
         totalRounds: 3,
-        createDifficulty: 'easy',
+        createDifficulty: 'normal',
         boType: 5,
         maxPlayers: 4,
         allowSpectators: true,
@@ -82,7 +82,7 @@ describe('MultiLobby matchmaking', () => {
         maxGuesses: 12,
         guessIntervalSeconds: 2.5,
         roundDurationSeconds: 300,
-        matchmakingDifficulty: 'easy',
+        matchmakingDifficulty: 'normal',
         });
     });
 

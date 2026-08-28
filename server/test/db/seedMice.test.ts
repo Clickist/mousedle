@@ -31,7 +31,7 @@ describe('baseline mice seeds', () => {
       .where({ mouse_id: gpx.id })
       .orderBy('difficulty_key')
       .pluck('difficulty_key'))
-      .toEqual(['beginner', 'easy', 'normal']);
+      .toEqual(['easy', 'hard', 'normal']);
   });
 
   it('upserts existing seed mice so display/country stay in sync', async () => {

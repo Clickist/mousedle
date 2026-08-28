@@ -69,8 +69,8 @@ describe('player cache invalidation', () => {
     expect((await getPublicPlayerList()).players).not.toContainEqual({ id, name, d: [] });
   });
 
-  it('serves targets from the beginner difficulty pool', async () => {
-    const name = `cache-test-beginner-${Date.now()}`;
+  it('serves targets from the easy difficulty pool', async () => {
+    const name = `cache-test-easy-${Date.now()}`;
     const [row] = await db('mice').insert({
       name,
       country: '测试',
@@ -82,11 +82,11 @@ describe('player cache invalidation', () => {
       is_enabled: true,
     }).returning('id');
     const id = typeof row === 'object' ? row.id : row;
-    await db('mouse_difficulties').insert({ mouse_id: id, difficulty_key: 'beginner' });
+    await db('mouse_difficulties').insert({ mouse_id: id, difficulty_key: 'easy' });
 
     await refreshPlayerCache();
 
-    expect(isDifficultyAvailable('beginner')).toBe(true);
-    expect(pickCachedTarget('beginner')?.difficulties).toContain('beginner');
+    expect(isDifficultyAvailable('easy')).toBe(true);
+    expect(pickCachedTarget('easy')?.difficulties).toContain('easy');
   });
 });

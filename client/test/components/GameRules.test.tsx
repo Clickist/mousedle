@@ -16,7 +16,7 @@ describe('GameRules', () => {
 
     await user.click(screen.getByRole('button', { name: '游戏规则' }));
 
-    expect(screen.getByText('产地同大洲或数值接近')).toBeInTheDocument();
-    expect(screen.getByText(/产地不同但同大洲显示黄色/)).toHaveTextContent('产地相同显示绿色');
+    expect(screen.getByText('属地同大洲或数值接近')).toBeInTheDocument();
+    expect(screen.getByText(/属地不同但同大洲显示黄色/)).toHaveTextContent('属地相同显示绿色');
   });
 });

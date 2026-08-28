@@ -25,7 +25,7 @@ describe('AdminReports', () => {
           id: 4,
           matchId: 9,
           roomId: 'ROOM1',
-          mode: 'easy',
+          mode: 'normal',
           boType: 3,
           reporterKey: 'u:1',
           reportedKey: 'g:BBBBB',

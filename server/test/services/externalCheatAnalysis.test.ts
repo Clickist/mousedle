@@ -35,7 +35,7 @@ beforeAll(async () => {
   const [game] = await db('games').insert({
     user_id: userId,
     target_mouse_id: targetMouseId,
-    mode: 'normal',
+    mode: 'hard',
     guesses: JSON.stringify([guessPlayerId, targetMouseId]),
     guess_times: JSON.stringify([900, 1750]),
     first_guess_mouse_id: guessPlayerId,
@@ -48,7 +48,7 @@ beforeAll(async () => {
   const subjectKey = `u:${userId}`;
   const [match] = await db('match_records').insert({
     room_id: `external-analysis-${stamp}`,
-    db_type: 'normal',
+    db_type: 'hard',
     bo_type: 3,
     winner_id: userId,
     winner_key: subjectKey,
@@ -167,7 +167,7 @@ describe('external cheat analysis', () => {
       expect.objectContaining({
         recordId: gameId,
         targetMouseId,
-        mode: 'normal',
+        mode: 'hard',
         status: 'won',
         guessCount: 2,
         firstGuessMouseId: guessPlayerId,
@@ -205,7 +205,7 @@ describe('external cheat analysis', () => {
 
     const match = request.matches.find((item: { recordId: number }) => item.recordId === matchId);
     expect(match).toMatchObject({
-      mode: 'normal',
+      mode: 'hard',
       boType: 3,
       result: 'won',
       finishReason: 'score',
@@ -266,7 +266,7 @@ describe('external cheat analysis', () => {
       session_id: `${prefix}-single-${index}`,
       user_id: userId,
       target_mouse_id: targetMouseId,
-      mode: 'normal',
+      mode: 'hard',
       guesses: JSON.stringify([targetMouseId]),
       guess_times: JSON.stringify([1000 + index]),
       first_guess_mouse_id: targetMouseId,
@@ -277,7 +277,7 @@ describe('external cheat analysis', () => {
     }));
     const matchRows = Array.from({ length: 51 }, (_, index) => ({
       room_id: `${prefix}-match-${index}`,
-      db_type: 'normal',
+      db_type: 'hard',
       bo_type: 1,
       winner_id: userId,
       winner_key: subjectKey,

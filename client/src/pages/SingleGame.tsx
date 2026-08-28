@@ -20,7 +20,7 @@ function exitGame(gameId: string): Promise<unknown> {
 
 export default function SingleGame() {
   const { t } = useTranslation();
-  const { mode = 'beginner' } = useParams();
+  const { mode = 'easy' } = useParams();
   const navigate = useNavigate();
   const confirm = useConfirm();
   const isValidMode = AVAILABLE_DIFFICULTIES.some((d) => d.key === mode);
@@ -220,7 +220,7 @@ export default function SingleGame() {
             <span className="btn-text">{leaving ? t('multi.leaving') : t('common.home')}</span>
           </button>
           <button
-            className="btn btn-warning btn-sm"
+            className="btn btn-ghost btn-sm"
             aria-label={t('game.reveal')}
             onClick={() => void reveal()}
             disabled={finished || busy}
@@ -286,7 +286,7 @@ export default function SingleGame() {
     >
       {guesses.length ? (
         <div className="single-game-board">
-          <GuessBoard guesses={guesses} />
+          <GuessBoard guesses={guesses} responsive />
           <div ref={boardEndRef} className="guess-board-end" aria-hidden="true" />
         </div>
       ) : startError ? (
@@ -313,7 +313,7 @@ export default function SingleGame() {
           <Target size={32} strokeWidth={1.5} />
           <p>{t('game.startHint')}</p>
           <p className="game-empty-sub">
-            {difficultyDescription(t, mode) || t('game.normalHint')}
+            {difficultyDescription(t, mode) || t('game.hardHint')}
           </p>
           <div className="guess-legend" aria-label={t('rules.feedbackLabel')}>
             <span><i className="legend-correct" />{t('rules.greenTitle')}</span>

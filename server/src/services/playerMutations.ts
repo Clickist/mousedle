@@ -72,7 +72,7 @@ export async function replacePlayerDifficulties(
 export async function createPlayer(input: PlayerInput): Promise<number> {
   const exists = await db('mice').where({ name: input.name }).first('id');
   if (exists) throw new HttpError(409, 'NICKNAME_TAKEN');
-  const difficulties = input.difficulties ?? ['normal'];
+  const difficulties = input.difficulties ?? ['hard'];
   assertDifficultyKeys(difficulties);
   const { difficulties: _difficulties, ...values } = input;
   const id = await db.transaction(async (trx) => {
@@ -146,7 +146,7 @@ export async function importPlayers(
     const desiredDifficulties = new Map<string, string[] | null>();
     const importedPlayers = players.map((player) => {
       const { difficulties, ...values } = player;
-      const desired = difficulties ?? (existingNames.has(player.name) ? null : ['normal']);
+      const desired = difficulties ?? (existingNames.has(player.name) ? null : ['hard']);
       desiredDifficulties.set(player.name, desired);
       return {
         ...values,
