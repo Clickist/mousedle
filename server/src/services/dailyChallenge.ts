@@ -109,7 +109,16 @@ export async function ensureDailyChallenges(
 ): Promise<{ window: DailyChallengeWindow; challenges: DailyChallengeRecord[] }> {
   const window = dailyChallengeWindow(now);
   const current = await challengesForDate(window.date);
-  if (hasCompleteAssignment(current)) return { window, challenges: current };
+  // 数据修正后,已生成的目标可能掉出对应难度池:失效记录删除并重新指派
+  const staleIds: number[] = [];
+  const usable = current.filter((record) => {
+    const inPool = getDifficultyPlayers(record.difficulty)
+      .some((player) => player.id === record.targetMouseId);
+    if (!inPool) staleIds.push(record.id);
+    return inPool;
+  });
+  if (staleIds.length) await db('daily_challenges').whereIn('id', staleIds).del();
+  if (hasCompleteAssignment(usable)) return { window, challenges: usable };
 
   const challenges = await withKeyLock(`daily-challenge-assignment:${window.date}`, async () => {
     const existing = await challengesForDate(window.date);
