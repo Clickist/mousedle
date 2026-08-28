@@ -13,15 +13,15 @@ const outputPath =
 
 // 品牌 -> 品牌所属公司/总部所在国。没把握的标记 UNKNOWN,不做猜测。
 const BRAND_COUNTRY = {
-  Logitech: '瑞士', Pulsar: '韩国', Razer: '新加坡', ATK: '中国', Zowie: '中国台湾',
+  Logitech: '瑞士', Pulsar: '韩国', Razer: '美国', ATK: '中国', Zowie: '中国台湾',
   MCHOSE: '中国', Rapoo: '中国', Corsair: '美国', ASUS: '中国台湾', ROG: '中国台湾', Keychron: '中国',
   'G-Wolves': '中国', EWEADN: '中国', PMM: '泰国', SteelSeries: '丹麦', Glorious: '美国',
   'Attack Shark': '中国', AJAZZ: '中国', Finalmouse: '美国', VGN: '中国', LAMZU: '中国',
   Darmoshark: '中国', Redragon: '中国', VAXEE: '中国台湾', Kysona: '中国', Bloody: '中国台湾',
-  Delux: '中国', AULA: '中国', Dareu: '中国台湾', 'Endgame Gear': '德国', HyperX: '美国',
+  Delux: '中国', AULA: '中国', Dareu: '中国', 'Endgame Gear': '德国', HyperX: '美国',
   ROCCAT: '德国', Akko: '中国', WLMOUSE: '中国', Incott: '中国', Pwnage: '美国',
   RAWM: '中国', 'Cooler Master': '中国台湾', 'Ardor Gaming': '俄罗斯', Zaopin: '中国',
-  ThundeRobot: '中国', Hator: '乌克兰', VXE: '中国', Ninjutso: '新加坡', Xinmeng: '中国',
+  ThundeRobot: '中国', Hator: '乌克兰', VXE: '中国', Ninjutso: '中国', Xinmeng: '中国',
   Ausdom: '中国', 'Turtle Beach': '美国', RAKK: '菲律宾', Mionix: '瑞典', Waizowl: '中国',
   Xtrfy: '瑞典', Microsoft: '美国', ELECOM: '日本', Metaphyuni: '中国',
   Epomaker: '中国', MACHENIKE: '中国', Kreo: '印度', SOLAKAKA: '中国', Vancer: '中国',
@@ -36,7 +36,7 @@ const BRAND_COUNTRY = {
   ABKO: '韩国', AIM1: '日本', ANTGAMER: '中国', ARYE: '中国香港', Aigo: '中国', Amazon: '美国',
   'Angry Miao': '中国', Aqirys: '罗马尼亚', 'Arbiter Studio': '美国', Atompalm: '美国',
   CC: 'UNKNOWN', COMMATECH: '中国', CRDRAKO: '中国', CROCIRIS: '中国', Chaos: '中国',
-  Chilkey: '中国', CryoMods: '美国', Cybeart: '加拿大', 'Dark Project': '塞浦路斯', Dornfinger: '德国',
+  Chilkey: '中国', CryoMods: '美国', Cybeart: '加拿大', 'Dark Project': '俄罗斯', Dornfinger: '德国',
   'Dream Machines': '波兰', EVGA: '美国', Fantech: '印度尼西亚', Fiberaim: '英国', FineMax: '中国',
   Flick: '美国', Flickshot: 'UNKNOWN', Freewolf: '中国', GANSS: '中国', GITOPER: '中国', Gamesense: '美国',
   'HK Gaming': '中国香港', 'HUO JI': '中国', HaunterWell: '巴西', Higround: '美国', Hitscan: '美国',
@@ -74,13 +74,15 @@ function resolveBrand(rawBrand, model) {
 }
 
 // 难度分档名单由 tier-editor.html 拖拽产出(scripts/apply-tier-assignment.mjs 落库),
-// 此处与 2026-08-28 点点排定的名单保持一致。
-const BEGINNER_BRANDS = new Set([
+// 此处与排定的品牌名单保持一致;型号级微调见 tier-assignment.json 的 modelOverrides。
+// 小白(easy)品牌:人尽皆知的大牌。
+const EASY_BRANDS = new Set([
   'ATK', 'Finalmouse', 'G-Wolves', 'LAMZU', 'Logitech', 'Pulsar', 'ROG', 'Razer',
   'VAXEE', 'VXE', 'Zowie',
 ]);
-const EASY_BRANDS = new Set([
-  ...BEGINNER_BRANDS,
+// 潮男(normal)品牌:含小白品牌。
+const NORMAL_BRANDS = new Set([
+  ...EASY_BRANDS,
   'ARYE', 'Angry Miao', 'Arbiter Studio', 'CRDRAKO', 'Cooler Master', 'Darmoshark',
   'Endgame Gear', 'FineMax', 'Fnatic', 'Glorious', 'Hitscan', 'HyperX', 'MCHOSE',
   'MelGeek', 'Ninjutso', 'Pwnage', 'RAWM', 'Rapoo', 'Scyrox', 'Sprime', 'SteelSeries',
@@ -163,9 +165,9 @@ for (const e of entries) {
   if (e.mouse__is_bluetooth) conn.push('蓝牙');
   if (e.mouse__is_wired) conn.push('有线');
 
-  const difficulties = ['normal'];
+  const difficulties = ['hard'];
+  if (NORMAL_BRANDS.has(brand)) difficulties.push('normal');
   if (EASY_BRANDS.has(brand)) difficulties.push('easy');
-  if (BEGINNER_BRANDS.has(brand)) difficulties.push('beginner');
 
   mice.push({
     name: [brand, model, variant].filter(Boolean).join(' '),
@@ -214,9 +216,9 @@ mice.sort((a, b) => a.name.localeCompare(b.name, 'en'));
 
 await writeFile(outputPath, JSON.stringify(mice, null, 2) + '\n', 'utf-8');
 
-const beginnerCount = mice.filter((m) => m.difficulties.includes('beginner')).length;
 const easyCount = mice.filter((m) => m.difficulties.includes('easy')).length;
+const normalCount = mice.filter((m) => m.difficulties.includes('normal')).length;
 console.log(`total: ${entries.length} -> ${mice.length} (skipped ${skipped.length}, duplicates ${duplicates})`);
-console.log(`beginner: ${beginnerCount}, easy: ${easyCount}, normal: ${mice.length}, disabled: ${mice.length - mice.filter((m) => m.is_enabled !== false).length}`);
+console.log(`easy: ${easyCount}, normal: ${normalCount}, hard: ${mice.length}, disabled: ${mice.length - mice.filter((m) => m.is_enabled !== false).length}`);
 console.log(`country known: ${mice.filter((m) => m.country && m.country !== 'UNKNOWN').length}/${mice.length}`);
 if (skipped.length) console.log(`skipped:`, skipped.slice(0, 6).join(' | '), skipped.length > 6 ? '...' : '');
