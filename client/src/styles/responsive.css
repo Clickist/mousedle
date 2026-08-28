@@ -48,7 +48,7 @@
   .header-bar { gap: 8px; padding-block: 12px; padding-top: calc(12px + env(safe-area-inset-top)); }
   .header-bar .title { max-width: 50vw; gap: 7px; }
   .home-brand { max-width: none; gap: 6px; }
-  .home-brand-logo { width: 30px; height: 30px; font-size: 14px; }
+  .home-brand-logo svg { width: 20px; }
   .home-brand-copy small { display: none; }
   .home-page .header-bar .title { max-width: none; flex-shrink: 0; overflow: visible; text-overflow: clip; }
   .header-bar .btns { gap: 6px; }

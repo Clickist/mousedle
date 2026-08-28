@@ -145,16 +145,11 @@ html[data-theme='dark'] .btn-accent:hover:not(:disabled) { background: color-mix
   flex: none;
   width: 34px;
   height: 34px;
-  border: 1px solid var(--outline-variant);
-  border-radius: var(--radius-md);
-  background: var(--surface-container-lowest);
-  box-shadow: var(--shadow-sm);
-  color: var(--primary);
-  font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 800;
+  /* 图形标志随主题反白:浅色近黑,深色近白 */
+  color: var(--on-surface);
   user-select: none;
 }
+.home-brand-logo svg { display: block; width: 23px; height: auto; }
 .home-brand-copy { display: grid; min-width: 0; line-height: 1.15; }
 .home-brand-copy b {
   font-family: var(--font-display);
