@@ -66,16 +66,22 @@ describe('desktop/mobile layout contracts', () => {
     expect(game).not.toMatch(/\.input-dock\s*\{[^}]*backdrop-filter/s);
   });
 
-  it('hides chrome for mobile keyboards and stacks multiplayer boards only when space is genuinely narrow', () => {
+  it('keeps game chrome visible and layout stable while the mobile keyboard is open, and stacks multiplayer boards only when space is genuinely narrow', () => {
     const responsive = readCss('../../src/styles/responsive.css');
-    expect(responsive).toMatch(
-      /\.game-page\.keyboard-active\s+\.header-bar,\s*\n?\s*\.game-page\.keyboard-active\s+\.status-bar\s*\{\s*display:\s*none/
+    // 输入态(键盘激活)不得隐藏顶栏/状态栏/联机比分条,也不得挤压输入坞留白:
+    // 上下文常驻、聚焦零位移是产品决策,回归为隐藏即测试失败
+    expect(responsive).not.toMatch(
+      /\.keyboard-active[^{}]*\.header-bar[^{}]*\{[^}]*display:\s*none/
     );
-    expect(responsive).toMatch(
-      /\.multi-game-page\.keyboard-active\s+\.score-bar\s*\{\s*display:\s*none/
+    expect(responsive).not.toMatch(
+      /\.keyboard-active[^{}]*\.status-bar[^{}]*\{[^}]*display:\s*none/
     );
+    expect(responsive).not.toMatch(
+      /\.keyboard-active[^{}]*\.score-bar[^{}]*\{[^}]*display:\s*none/
+    );
+    expect(responsive).not.toMatch(/\.game-page\.keyboard-active\s+\.input-dock\s*\{/);
     expect(responsive).toMatch(
-      /\.game-page\.keyboard-active\s+\.input-dock\s*\{[^}]*padding-top:\s*6px/s
+      /\.game-page\.keyboard-active\s+\.autocomplete-list\s*\{[^}]*max-height:\s*38dvh/
     );
     expect(responsive).toMatch(
       /@media\s*\(max-width:\s*960px\)\s*and\s*\(pointer:\s*coarse\),\s*\(max-width:\s*700px\)\s*\{[\s\S]*\.boards\s*\{[^}]*grid-template-columns:\s*1fr/
