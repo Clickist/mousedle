@@ -146,7 +146,8 @@ export default function AdminPlayers() {
     try {
       const parsed = JSON.parse(importText);
       const list = Array.isArray(parsed) ? parsed : parsed.players;
-      const res = await api.post('/admin/players/import', { players: list });
+      // 全量导入要做数据校验与写库,放宽全局 20s 超时
+      const res = await api.post('/admin/players/import', { players: list }, { timeout: 120_000 });
       clearPlayerListCache();
       toast.success(t('admin.importDone', { created: res.data.created, updated: res.data.updated }));
       setImportText('');
@@ -160,7 +161,7 @@ export default function AdminPlayers() {
   const doExport = async () => {
     setExporting(true);
     try {
-      const res = await api.get<MouseForm[]>('/admin/players/export');
+      const res = await api.get<MouseForm[]>('/admin/players/export', { timeout: 120_000 });
       const blob = new Blob([`${JSON.stringify(res.data, null, 2)}\n`], {
         type: 'application/json;charset=utf-8',
       });

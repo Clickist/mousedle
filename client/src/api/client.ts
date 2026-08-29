@@ -3,7 +3,21 @@ import { translate } from '../i18n/messages';
 import { createRegisterPow, ensurePow, notePowExpiry } from './pow';
 import { hasAuthHint, refreshAuthenticatedSession } from './authSession';
 
-export const api = axios.create({ baseURL: '/api', withCredentials: true });
+// 跨境链路(大陆→CF 美西)晚高峰丢包,无超时会让请求挂到 TCP 放弃;
+// 20s 覆盖常规接口,admin 导入导出单独放宽
+export const api = axios.create({ baseURL: '/api', withCredentials: true, timeout: 20_000 });
+
+// start 服务端有 resume 路径,重放安全;guess 会推进对局,超时重试会造成
+// 客户端与服务端状态错位,绝不能自动重试
+const RETRYABLE_START_PATHS = ['/game/start', '/daily-challenge/start'];
+
+function isRetryableStart(url: string | undefined): boolean {
+  return RETRYABLE_START_PATHS.includes(String(url ?? '').replace(/^.*\/api/, ''));
+}
+
+function isIdempotentGet(config: { method?: string; url?: string }): boolean {
+  return (config.method ?? '').toLowerCase() === 'get';
+}
 
 api.interceptors.request.use(async (request) => {
   const isRegisterRequest = request.method?.toLowerCase() === 'post' &&
@@ -30,8 +44,21 @@ api.interceptors.response.use(
     const config = error.config as (typeof error.config & {
       _powRetried?: boolean;
       _authRetried?: boolean;
+      _netRetried?: boolean;
     }) | undefined;
     const code = String(error.response?.data?.code ?? '');
+    // 断网/超时对幂等请求(start 与全部 GET)只补一次:跨境链路瞬时拥塞占比高,
+    // start 由服务端 resume 收敛,GET 本身无副作用
+    if (
+      (!error.response || error.code === 'ECONNABORTED') &&
+      config &&
+      !config._netRetried &&
+      (isRetryableStart(config.url) || isIdempotentGet(config))
+    ) {
+      config._netRetried = true;
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      return api.request(config);
+    }
     if (code === 'POW_REQUIRED' && config && !config._powRetried) {
       config._powRetried = true;
       const isRegisterRequest = String(config?.url ?? '').replace(/^.*\/api/, '') === '/auth/register';

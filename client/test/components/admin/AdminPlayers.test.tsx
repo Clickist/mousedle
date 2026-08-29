@@ -62,7 +62,7 @@ describe('AdminPlayers', () => {
     await screen.findByText('0 条');
     await user.click(screen.getByRole('button', { name: '导出 JSON' }));
 
-    await waitFor(() => expect(api.get).toHaveBeenCalledWith('/admin/players/export'));
+    await waitFor(() => expect(api.get).toHaveBeenCalledWith('/admin/players/export', { timeout: 120_000 }));
     expect(createObjectURL).toHaveBeenCalledWith(expect.any(Blob));
     expect(click).toHaveBeenCalledTimes(1);
     expect(revokeObjectURL).toHaveBeenCalledWith('blob:players');
