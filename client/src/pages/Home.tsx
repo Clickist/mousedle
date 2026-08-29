@@ -93,14 +93,13 @@ export default function Home() {
         {t('common.skipToContent')}
       </a>
       <div className="header-bar">
-          {/* 品牌位:34px logo 盒 + 双语字标 */}
+          {/* 品牌位:34px logo 盒 + 字标 */}
           <div className="home-brand">
             <span className="home-brand-logo" aria-hidden="true">
               <BrandLogo />
             </span>
             <span className="home-brand-copy">
               <b>{t('common.brand')}</b>
-              <small>MOUSEDLE</small>
             </span>
           </div>
         <span className="btns">

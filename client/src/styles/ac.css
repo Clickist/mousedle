@@ -158,12 +158,6 @@ html[data-theme='dark'] .btn-accent:hover:not(:disabled) { background: color-mix
   letter-spacing: 0.01em;
   white-space: nowrap;
 }
-.home-brand-copy small {
-  color: var(--on-surface-variant);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-}
 
 .status-bar {
   background: var(--surface-container);
