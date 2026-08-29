@@ -53,6 +53,10 @@ export function errorHandler(
   if (err instanceof Error && err.message === 'REDIS_UNAVAILABLE') {
     return res.status(503).json({ code: 'REDIS_UNAVAILABLE' });
   }
+  if (err instanceof Error && err.message === 'RESOURCE_BUSY') {
+    // withKeyLock 重试预算耗尽:可重试的服务繁忙,而非服务器故障
+    return res.status(503).json({ code: 'SERVICE_UNAVAILABLE' });
+  }
   if (err instanceof Error && err.message === 'PASSWORD_SERVICE_BUSY') {
     return res.status(503).json({ code: 'AUTH_BUSY' });
   }

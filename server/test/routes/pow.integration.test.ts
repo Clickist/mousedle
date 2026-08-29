@@ -196,9 +196,10 @@ describe('proof of work gateway', () => {
     expect(result.data.code).toBe('POW_FINGERPRINT_MISMATCH');
   });
 
-  it('binds a challenge to the requesting IP address', async () => {
+  it('binds a challenge to the requesting IP segment', async () => {
     const challengeResult = await request('/api/pow/challenge', { method: 'POST', body: '{}' });
     const nonce = solve(challengeResult.data.challenge, challengeResult.data.difficulty);
+    // 198.51.100.x 与 203.0.113.91 不在同一 /24,必须拒绝
     const result = await request('/api/pow/verify', {
       method: 'POST',
       body: JSON.stringify({ id: challengeResult.data.id, nonce }),
@@ -208,7 +209,29 @@ describe('proof of work gateway', () => {
     expect(result.data.code).toBe('POW_FINGERPRINT_MISMATCH');
   });
 
-  it('rejects a valid PoW cookie after the client IP changes', async () => {
+  it('accepts a challenge after the client IP drifts within the same IPv4 segment', async () => {
+    const challengeResult = await request('/api/pow/challenge', { method: 'POST', body: '{}' });
+    const nonce = solve(challengeResult.data.challenge, challengeResult.data.difficulty);
+    // 同一 /24 内漂移(CGNAT/换出口)不应打断已解出的票据
+    const verified = await request('/api/pow/verify', {
+      method: 'POST',
+      body: JSON.stringify({ id: challengeResult.data.id, nonce }),
+      headers: { 'X-Forwarded-For': `198.51.100.${(Date.now() % 250) + 1}` },
+    });
+    expect(verified.response.status).toBe(200);
+    const powCookie = setCookies(verified.response)
+      .map((value) => value.split(';')[0])
+      .find((value) => value.startsWith(`${POW_COOKIE}=`));
+    expect(powCookie).toBeTruthy();
+    const session = await request('/api/auth/session', {
+      method: 'POST',
+      body: '{}',
+      headers: { Cookie: powCookie!, 'X-Forwarded-For': '198.51.100.254' },
+    });
+    expect(session.response.status).toBe(200);
+  });
+
+  it('rejects a valid PoW cookie after the client IP changes segments', async () => {
     const challengeResult = await request('/api/pow/challenge', { method: 'POST', body: '{}' });
     const nonce = solve(challengeResult.data.challenge, challengeResult.data.difficulty);
     const verified = await request('/api/pow/verify', {
@@ -229,7 +252,7 @@ describe('proof of work gateway', () => {
     expect(session.data.code).toBe('POW_REQUIRED');
   });
 
-  it('rejects a registration proof after the client IP changes', async () => {
+  it('rejects a registration proof after the client IP changes segments', async () => {
     const challengeResult = await request('/api/pow/challenge', {
       method: 'POST',
       body: JSON.stringify({ profile: 'register' }),

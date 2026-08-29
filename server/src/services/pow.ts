@@ -46,11 +46,43 @@ function cookieOptions(maxAge: number) {
   };
 }
 
+// 大陆访客普遍经运营商 CGNAT/代理,出口 IP 会在同一网段内漂移(WiFi↔蜂窝切换、
+// 代理换节点、双栈 v4/v6 竞速);精确到整只 IP 会让正常用户反复 428。
+// 折中:指纹只绑定到 IPv4 /24、IPv6 /48 网段,跨网段重放仍会被拒绝。
+function ipSegmentForFingerprint(clientIp: string | undefined): string {
+  const value = (clientIp || 'unknown').trim().toLowerCase();
+  if (!value || value === 'unknown') return 'unknown';
+  // IPv4-mapped IPv6(::ffff:a.b.c.d)按 IPv4 处理
+  const unMapped = value.startsWith('::ffff:') ? value.slice(7) : value;
+  if (!unMapped.includes(':')) {
+    const octets = unMapped.split('.');
+    if (octets.length !== 4 || octets.some((part) => !/^\d{1,3}$/.test(part))) return unMapped;
+    return `${octets[0]}.${octets[1]}.${octets[2]}.0/24`;
+  }
+  const groups = expandIpv6Groups(unMapped);
+  if (!groups) return unMapped;
+  return `${groups.slice(0, 3).join(':')}::/48`;
+}
+
+/** 展开 IPv6 零压缩(::)为完整 8 组 hextet;无法解析时返回 null 原样兜底 */
+function expandIpv6Groups(value: string): string[] | null {
+  const halves = value.split('::');
+  if (halves.length > 2) return null;
+  const head = halves[0] ? halves[0].split(':') : [];
+  const tail = halves.length === 2 && halves[1] ? halves[1].split(':') : [];
+  if (halves.length === 1) {
+    return head.length === 8 ? head : null;
+  }
+  const missing = 8 - head.length - tail.length;
+  if (missing < 1) return null;
+  return [...head, ...Array<string>(missing).fill('0'), ...tail];
+}
+
 export function browserFingerprint(
   userAgent: string | undefined,
   clientIp: string | undefined
 ): string {
-  const key = `${userAgent || 'unknown'}\0${clientIp || 'unknown'}`;
+  const key = `${userAgent || 'unknown'}\0${ipSegmentForFingerprint(clientIp)}`;
   const cached = fingerprintCache.get(key);
   if (cached) return cached;
   const fingerprint = crypto

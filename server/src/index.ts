@@ -178,7 +178,8 @@ async function main() {
       runtime: getRuntimeSnapshot(),
     })
   );
-  app.use('/api', rateLimit({ name: 'api', limit: 600, windowSeconds: 60 }));
+  // 全局额度按 IP 计,大陆访客多经运营商 CGNAT 共享出口,需要容纳整层 NAT 的合法流量
+  app.use('/api', rateLimit({ name: 'api', limit: 1000, windowSeconds: 60 }));
   app.use('/api/pow', rejectOversizedBody(16 * 1024), parseJsonOnce('16kb'));
   app.use('/api/pow', powRoutes);
   // Public runtime configuration is deliberately mounted before the PoW gate.

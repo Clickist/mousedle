@@ -21,9 +21,11 @@ const challengeSchema = z.object({
   profile: z.enum(['default', 'register']).optional(),
 }).default({});
 
+  // 额度按 IP 计(访客身份服务端免费签发,不能作为此端点的反滥用维度)。
+  // 上限需容忍运营商 CGNAT:同一出口 IP 后面有大量真实访客同时补票。
 router.post(
   '/challenge',
-  rateLimit({ name: 'pow:challenge', limit: 20, windowSeconds: 60, failClosed: true }),
+  rateLimit({ name: 'pow:challenge', limit: 60, windowSeconds: 60, failClosed: true }),
   validateBody(challengeSchema),
   asyncHandler(async (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
@@ -54,7 +56,7 @@ router.post(
 
 router.post(
   '/verify',
-  rateLimit({ name: 'pow:verify', limit: 30, windowSeconds: 60, failClosed: true }),
+  rateLimit({ name: 'pow:verify', limit: 60, windowSeconds: 60, failClosed: true }),
   validateBody(verifySchema),
   asyncHandler(async (req, res) => {
     try {
