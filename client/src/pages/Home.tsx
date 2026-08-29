@@ -24,6 +24,7 @@ import { toast } from '../components/Toast';
 import { useTranslation } from 'react-i18next';
 import LanguageSelect from '../components/LanguageSelect';
 import PersonalSettings from '../components/PersonalSettings';
+import { mouseValueText } from '../i18n/dataValues';
 
 export default function Home() {
   const { t } = useTranslation();
@@ -92,16 +93,16 @@ export default function Home() {
         {t('common.skipToContent')}
       </a>
       <div className="header-bar">
-        {/* 品牌位:34px logo 盒 + 双语字标 */}
-        <div className="home-brand">
-          <span className="home-brand-logo" aria-hidden="true">
-            <BrandLogo />
-          </span>
-          <span className="home-brand-copy">
-            <b>{t('common.brand')}</b>
-            <small>MOUSEDLE</small>
-          </span>
-        </div>
+          {/* 品牌位:34px logo 盒 + 双语字标 */}
+          <div className="home-brand">
+            <span className="home-brand-logo" aria-hidden="true">
+              <BrandLogo />
+            </span>
+            <span className="home-brand-copy">
+              <b>{t('common.brand')}</b>
+              <small>MOUSEDLE</small>
+            </span>
+          </div>
         <span className="btns">
           <LanguageSelect />
           <span className="personal-settings-anchor">
@@ -163,12 +164,12 @@ export default function Home() {
             <span className="hero-hint-sep" aria-hidden="true">·</span>
             <GameRules />
           </p>
-          {/* 猜测反馈色带:首屏视觉符号,纯装饰 */}
+          {/* 猜测反馈色带:首屏视觉符号,纯装饰;字段值复用数据值翻译,随语言切换 */}
           <div className="brand-band" aria-hidden="true">
-            <span className="bb-name">罗技 G Pro X</span>
-            <span className="bb-hit">罗技</span>
-            <span className="bb-close">瑞士</span>
-            <span className="bb-miss">对称</span>
+            <span className="bb-name">{t('home.heroBandName')}</span>
+            <span className="bb-hit">{t('home.heroBandBrand')}</span>
+            <span className="bb-close">{mouseValueText('country', '瑞士')}</span>
+            <span className="bb-miss">{mouseValueText('shape', '对称')}</span>
             <span className="bb-hit">63g</span>
           </div>
           <div className="hero-cta">

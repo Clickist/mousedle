@@ -68,6 +68,8 @@ export const resources = {
       emailVerify: { title: '邮箱验证', loading: '正在验证邮箱…', success: '邮箱验证成功，现在可以使用已验证邮箱匹配。', error: '验证链接无效或已过期。', home: '返回首页' },
       home: {
         heroTitle: '猜出那只鼠标',
+        heroBandName: '罗技 G Pro X',
+        heroBandBrand: '罗技',
         guestHint: '无需登录即可游玩，战绩保存在本机；登录后自动同步到账号',
         startDaily: '开始今日挑战',
         dailyProgress: '今日 {{done}}/3 已完成',
@@ -332,6 +334,8 @@ export const resources = {
       },
       home: {
         heroTitle: 'Guess that mouse',
+        heroBandName: 'Logitech G Pro X',
+        heroBandBrand: 'Logitech',
         guestHint: 'Play without signing in. Results stay on this device and sync after login.',
         startDaily: 'Start today’s challenge',
         dailyProgress: '{{done}}/3 done today',
@@ -535,6 +539,8 @@ export const resources = {
       },
       home: {
         heroTitle: 'あのマウスを当てろ',
+        heroBandName: 'ロジクール G Pro X',
+        heroBandBrand: 'ロジクール',
         guestHint: 'ログインなしでプレイできます。戦績は端末に保存され、ログイン後に同期されます。',
         startDaily: '今日のチャレンジを開始',
         dailyProgress: '今日 {{done}}/3 完走',

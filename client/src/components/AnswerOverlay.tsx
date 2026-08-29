@@ -3,6 +3,7 @@ import { Globe, Crosshair, Factory, Weight, Ruler, Cpu, Zap, Layers3, MousePoint
 import ModalPortal from './ModalPortal';
 import { useTranslation } from 'react-i18next';
 import { difficultyLabel } from '../utils/difficulty';
+import { mouseValueText } from '../i18n/dataValues';
 import type { MouseDisplay } from '../types';
 
 export interface AnswerInfo {
@@ -33,14 +34,15 @@ function parseDisplay(raw: string | null | undefined): MouseDisplay | null {
 export function MouseInfoTable({ answer }: { answer: AnswerInfo }) {
   const { t } = useTranslation();
   const display = parseDisplay(answer.display);
+  const countryText = mouseValueText('country', answer.country) || '-';
   const geography = answer.continent
-    ? `${answer.country || '-'} (${answer.continent})`
-    : answer.country || '-';
+    ? `${countryText} (${mouseValueText('continent', answer.continent)})`
+    : countryText;
   const rows: [ReactNode, string, ReactNode][] = [
     [<Factory size={14} key="i" />, t('mouse.brand'), answer.brand || '-'],
     [<Globe size={14} key="i" />, t('mouse.country'), geography],
-    [<Crosshair size={14} key="i" />, t('mouse.shape'), answer.shape || '-'],
-    [<Layers3 size={14} key="i" />, t('mouse.size'), answer.size || '-'],
+    [<Crosshair size={14} key="i" />, t('mouse.shape'), mouseValueText('shape', answer.shape) || '-'],
+    [<Layers3 size={14} key="i" />, t('mouse.size'), mouseValueText('size', answer.size) || '-'],
     [<Weight size={14} key="i" />, t('mouse.weight'), answer.weight != null ? `${answer.weight} g` : '-'],
     [<Ruler size={14} key="i" />, t('mouse.length'), answer.lengthMm != null ? `${answer.lengthMm} mm` : '-'],
   ];
@@ -59,10 +61,10 @@ export function MouseInfoTable({ answer }: { answer: AnswerInfo }) {
     rows.push([<Cpu size={14} key="i" />, t('mouse.sensor'), display.sensor]);
   }
   if (display?.hump) {
-    rows.push([<MousePointer2 size={14} key="i" />, t('mouse.hump'), display.hump]);
+    rows.push([<MousePointer2 size={14} key="i" />, t('mouse.hump'), mouseValueText('hump', display.hump)]);
   }
   if (display?.hand) {
-    rows.push([<MousePointer2 size={14} key="i" />, t('mouse.hand'), display.hand]);
+    rows.push([<MousePointer2 size={14} key="i" />, t('mouse.hand'), mouseValueText('hand', display.hand)]);
   }
   if (answer.difficulties) {
     rows.push([

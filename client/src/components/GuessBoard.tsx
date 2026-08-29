@@ -7,6 +7,7 @@ import {
   MultiplayerGuessFeedback,
 } from '../types';
 import { useTranslation } from 'react-i18next';
+import { mouseValueText, type MouseDataField } from '../i18n/dataValues';
 
 type FeedbackAttr = AttributeFeedback | HiddenAttributeFeedback;
 
@@ -15,11 +16,13 @@ function Cell({
   label,
   bool,
   suffix,
+  field,
 }: {
   attr: FeedbackAttr;
   label: string;
   bool?: boolean;
   suffix?: string;
+  field?: MouseDataField;
 }) {
   const { t } = useTranslation();
   if (!('value' in attr)) {
@@ -33,23 +36,14 @@ function Cell({
       </td>
     );
   }
+  const text = attrDisplayText(attr, bool, suffix, t, field);
   if (attr.level === 'unknown') {
-    const unknownText =
-      'value' in attr && attr.value !== '' && attr.value != null
-        ? `${String(attr.value)}${suffix ?? ''}`
-        : t('common.unknown');
     return (
       <td className="unknown" data-label={label}>
-        {unknownText}
+        {text}
       </td>
     );
   }
-  const text =
-    typeof attr.value === 'boolean' || bool
-      ? attr.value
-        ? t('common.wireless')
-        : t('common.wired')
-      : `${String(attr.value)}${suffix ?? ''}`;
   return (
     <td className={attr.level} data-label={label}>
       {text}
@@ -72,14 +66,17 @@ function attrDisplayText(
   attr: FeedbackAttr,
   bool: boolean | undefined,
   suffix: string | undefined,
-  t: (key: string) => string
+  t: (key: string) => string,
+  field?: MouseDataField
 ): string {
   if (!('value' in attr)) return '';
   if (attr.level === 'unknown') {
-    return attr.value !== '' && attr.value != null ? `${String(attr.value)}${suffix ?? ''}` : t('common.unknown');
+    return attr.value !== '' && attr.value != null
+      ? `${mouseValueText(field, String(attr.value))}${suffix ?? ''}`
+      : t('common.unknown');
   }
   if (typeof attr.value === 'boolean' || bool) return attr.value ? t('common.wireless') : t('common.wired');
-  return `${String(attr.value)}${suffix ?? ''}`;
+  return `${mouseValueText(field, String(attr.value))}${suffix ?? ''}`;
 }
 
 /**
@@ -91,14 +88,16 @@ function MParam({
   label,
   bool,
   suffix,
+  field,
 }: {
   attr: FeedbackAttr;
   label: string;
   bool?: boolean;
   suffix?: string;
+  field?: MouseDataField;
 }) {
   const { t } = useTranslation();
-  const text = attrDisplayText(attr, bool, suffix, t);
+  const text = attrDisplayText(attr, bool, suffix, t, field);
   const mark = hintMark(attr);
   const level = 'value' in attr && attr.level !== 'unknown' ? attr.level : '';
   return (
@@ -110,9 +109,9 @@ function MParam({
 }
 
 /** 主判定带单元格:整格按判定水平连色;未知按未中灰带处理,保证色带连续 */
-function MBand({ attr }: { attr: FeedbackAttr }) {
+function MBand({ attr, field }: { attr: FeedbackAttr; field?: MouseDataField }) {
   const { t } = useTranslation();
-  const text = attrDisplayText(attr, undefined, undefined, t);
+  const text = attrDisplayText(attr, undefined, undefined, t, field);
   const mark = hintMark(attr);
   const level = 'value' in attr && attr.level !== 'unknown' ? attr.level : 'wrong';
   return <span className={level}>{text}{mark}</span>;
@@ -126,11 +125,11 @@ function GuessMrow({ g }: { g: MultiplayerGuessFeedback }) {
       <div className="mrow-t1">
         <span className={`nm${g.correct ? ' correct' : ''}`}>{'hidden' in g ? null : g.name}</span>
         <MBand attr={g.attributes.brand} />
-        <MBand attr={g.attributes.country} />
-        <MBand attr={g.attributes.shape} />
+        <MBand attr={g.attributes.country} field="country" />
+        <MBand attr={g.attributes.shape} field="shape" />
       </div>
       <div className="mrow-t2">
-        <MParam attr={g.attributes.size} label={t('guess.columns.size')} />
+        <MParam attr={g.attributes.size} label={t('guess.columns.size')} field="size" />
         <MParam attr={g.attributes.weight} label={t('guess.columns.weight')} suffix="g" />
         <MParam attr={g.attributes.lengthMm} label={t('guess.columns.length')} suffix="mm" />
         <MParam attr={g.attributes.width} label={t('guess.columns.width')} suffix="mm" />
@@ -200,9 +199,9 @@ function GuessBoard({
                   {'hidden' in g ? null : g.name}
                 </td>
                 <Cell attr={g.attributes.brand} label={columns[1]} />
-                <Cell attr={g.attributes.country} label={columns[2]} />
-                <Cell attr={g.attributes.shape} label={columns[3]} />
-                <Cell attr={g.attributes.size} label={columns[4]} />
+                <Cell attr={g.attributes.country} label={columns[2]} field="country" />
+                <Cell attr={g.attributes.shape} label={columns[3]} field="shape" />
+                <Cell attr={g.attributes.size} label={columns[4]} field="size" />
                 <Cell attr={g.attributes.weight} label={columns[5]} suffix="g" />
                 <Cell attr={g.attributes.lengthMm} label={columns[6]} suffix="mm" />
                 <Cell attr={g.attributes.width} label={columns[7]} suffix="mm" />
