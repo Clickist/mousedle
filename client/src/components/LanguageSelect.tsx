@@ -29,7 +29,7 @@ export default function LanguageSelect() {
     const selectedIndex = supportedLanguages.indexOf(language);
     requestAnimationFrame(() => optionRefs.current[selectedIndex]?.focus());
 
-    const onPointerDown = (event: PointerEvent) => {
+    const onDismiss = (event: Event) => {
       if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
     };
     const onKeyDown = (event: KeyboardEvent) => {
@@ -38,10 +38,13 @@ export default function LanguageSelect() {
       setOpen(false);
       triggerRef.current?.focus();
     };
-    document.addEventListener('pointerdown', onPointerDown);
+    // touchstart 兜底:老 iOS 无 PointerEvent,外部点按也要能收起菜单
+    document.addEventListener('pointerdown', onDismiss);
+    document.addEventListener('touchstart', onDismiss);
     document.addEventListener('keydown', onKeyDown);
     return () => {
-      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('pointerdown', onDismiss);
+      document.removeEventListener('touchstart', onDismiss);
       document.removeEventListener('keydown', onKeyDown);
     };
   }, [language, open]);
@@ -61,9 +64,14 @@ export default function LanguageSelect() {
     <div
       ref={rootRef}
       className={`language-select${open ? ' open' : ''}`}
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpen(false);
-      }}
+        onBlur={(event) => {
+          // iOS Safari 点按选项时不会把焦点移到被点的按钮上(焦点落回 body,
+          // relatedTarget 为 null);此时不能视作离开菜单收起,否则菜单先卸载、
+          // 随后的 click 落空,表现为"菜单内点语言切不动"。外部点按由全局
+          // pointerdown/touchstart 监听兜底关闭。
+          const nextTarget = event.relatedTarget as Node | null;
+          if (nextTarget && !event.currentTarget.contains(nextTarget)) setOpen(false);
+        }}
     >
       <button
         ref={triggerRef}
