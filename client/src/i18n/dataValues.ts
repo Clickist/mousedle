@@ -1,7 +1,8 @@
 /**
  * 鼠标数据字段值的按语言显示映射。
- * 种子数据(seeds/mice.json)中的国别/大洲/形状/尺寸/握持/驼峰/连接方式以中文存储,
- * 非中文界面下需经此映射显示,zh 直接使用原值。
+ * 种子数据(seeds/mice.json)中的属地/大洲/形状/尺寸/握持/驼峰/连接方式以中文存储,
+ * 非中文界面下需经此映射显示,zh 默认直接使用原值。
+ * 个别值的中文表述需与数据源区分时(如属地用「地区」口径),在条目上提供 zh 覆盖。
  * 未收录的值(品牌名、传感器型号等拉丁字符值)原样返回,数据新增值漏配映射时不会开天窗。
  */
 import i18n from './index';
@@ -9,10 +10,12 @@ import i18n from './index';
 interface ValueText {
   en: string;
   ja: string;
+  /** 中文界面下的改写显示;缺省时直接用数据原值 */
+  zh?: string;
 }
 
 const COUNTRY: Record<string, ValueText> = {
-  中国: { en: 'China', ja: '中国' },
+  中国: { zh: '中国大陆', en: 'Mainland China', ja: '中国大陸' },
   中国台湾: { en: 'Taiwan, China', ja: '台湾（中国）' },
   中国香港: { en: 'Hong Kong, China', ja: '香港（中国）' },
   韩国: { en: 'South Korea', ja: '韓国' },
@@ -101,8 +104,8 @@ function activeLanguage(): string {
 
 function lookup(table: Record<string, ValueText>, value: string): string {
   const language = activeLanguage();
-  if (language === 'zh') return value;
   const entry = table[value];
+  if (language === 'zh') return entry?.zh ?? value;
   if (!entry) return value;
   return language === 'en' ? entry.en : entry.ja;
 }

@@ -45,7 +45,7 @@ export const resources = {
           serbia: '塞尔维亚', kosovo: '塞尔维亚科索沃', slovakia: '斯洛伐克', turkey: '土耳其', guatemala: '危地马拉',
           ukraine: '乌克兰', uruguay: '乌拉圭', uzbekistan: '乌兹别克斯坦', spain: '西班牙', newZealand: '新西兰',
           hungary: '匈牙利', israel: '以色列', india: '印度', indonesia: '印度尼西亚', unitedKingdom: '英国',
-          jordan: '约旦', chile: '智利', china: '中国',
+          jordan: '约旦', chile: '智利', china: '中国大陆',
         },
         regions: {
           northAmerica: '北美洲', oceania: '大洋洲', cis: '独联体', africaIsrael: '非洲与以色列',
@@ -158,7 +158,7 @@ export const resources = {
         connection: '连接方式', hump: '背部隆起', hand: '握持兼容',
       },
       player: {
-        team: '战队', nationality: '国家或地区', age: '年龄', role: '位置',
+        team: '战队', nationality: '地区', age: '年龄', role: '位置',
         majorChampionships: 'Major 冠军数', majorAppearances: 'Major 次数', difficulties: '所属难度', status: '状态', nickname: '昵称',
       },
       guess: {
@@ -325,7 +325,7 @@ export const resources = {
           serbia: 'Serbia', kosovo: 'Kosovo', slovakia: 'Slovakia', turkey: 'Turkey', guatemala: 'Guatemala',
           ukraine: 'Ukraine', uruguay: 'Uruguay', uzbekistan: 'Uzbekistan', spain: 'Spain', newZealand: 'New Zealand',
           hungary: 'Hungary', israel: 'Israel', india: 'India', indonesia: 'Indonesia', unitedKingdom: 'United Kingdom',
-          jordan: 'Jordan', chile: 'Chile', china: 'China',
+          jordan: 'Jordan', chile: 'Chile', china: 'Mainland China',
         },
         regions: {
           northAmerica: 'North America', oceania: 'Oceania', cis: 'CIS', africaIsrael: 'Africa and Israel',
@@ -345,7 +345,7 @@ export const resources = {
         loginRegister: 'Log in / Sign up', singleMode: 'Solo mode', singleModeDescription: 'Choose a difficulty before starting a solo game',
         dailyChallenge: 'Daily Challenge', dailyChallengeDescription: 'Three fixed daily targets ranked by fewest guesses',
         emailVerificationReminder: 'Your email is not verified. Open settings to finish.',
-        search: 'Mouse search', searchDescription: 'Brand, origin country, and hardware specs', multiplayer: 'Multiplayer',
+        search: 'Mouse search', searchDescription: 'Brand, origin region, and hardware specs', multiplayer: 'Multiplayer',
         multiplayerDescription: 'Create a room or find a match', stats: 'Stats / Replays', leaderboard: 'Leaderboard', announcements: 'Updates', bilibili: 'Bilibili: 外设点击者', github: 'GitHub', specialThanks: 'Special Thanks', closeSpecialThanks: 'Close special thanks', friendLinks: 'Friends', closeFriendLinks: 'Close friends', noFriendLinks: 'No friend links yet',
       },
       rules: {
@@ -458,7 +458,7 @@ export const resources = {
         reportsTitle: 'Match Report Management', totalReports: '{{count}} reports', searchReports: 'Search reporter or reported player', reportCreatedAt: 'Reported at', reporter: 'Reporter', reportedUser: 'Reported player', reportMatch: 'Match', reportDescription: 'Description', reportNoDescription: 'No description provided', reportStatusLabel: 'Status', reportStatus: { all: 'All', pending: 'Pending', resolved: 'Resolved', dismissed: 'Dismissed' }, reporterFilterLabel: 'Reporter count', reporterFilter: { all: 'All reports', multiple: '2+ reporters', single: '1 reporter only' }, reportReporterCount: '{{count}} distinct reporters', quickActionLabel: 'Quick action', chooseQuickAction: 'Choose action', selectAllReports: 'Select all reports on this page', selectReport: 'Select report against {{reported}}', processSelectedReports: 'Process selected ({{count}})', selectedReportsHandled: 'Processed {{count}} selected reports', quickDismissSingleReporter: 'Dismiss page single-reporter reports', quickDismissSingleTitle: 'Dismiss single-reporter reports on this page?', quickDismissSingleMessage: 'Dismisses pending targets on this page that have only one distinct reporter.', quickDismissSingleNote: 'Quick dismiss: only one distinct reporter', quickDismissSingleDone: 'Dismissed {{reports}} reports across {{targets}} targets', viewReportedDetails: 'View reported player details', handleReport: 'Process report', reportHandled: 'Report status saved', reportBatchHandled: '{{count}} reports processed', reportAdminNote: 'Admin note', reportAdminNotePlaceholder: 'Record the outcome, up to 500 characters', saveReport: 'Save result', saveReportBatch: 'Save batch', reportBatchSameReported: 'Also process {{count}} pending reports for this reported identity', addReportWhitelist: 'Add to report whitelist', removeReportWhitelist: 'Remove from report whitelist', reportWhitelisted: 'Whitelist', reportWhitelistedAdded: 'Added to whitelist and dismissed {{count}} pending reports', reportWhitelistedRemoved: 'Removed from report whitelist', noReports: 'No matching reports',
         quickActionNoReports: 'There are no reports to process on this page',
         playerChangesTitle: 'Mouse Change Review', totalPlayerChanges: '{{count}} changes', searchPlayerChanges: 'Search mouse, field, or source', playerChangeStatusLabel: 'Review status', playerChangeStatus: { all: 'All', pending: 'Pending', approved: 'Approved', rejected: 'Cancelled', conflict: 'Conflict' }, playerChangeFields: { name: 'Name', brand: 'Brand', country: 'Brand origin', continent: 'Continent', shape: 'Shape', size: 'Size', weight: 'Weight', length_mm: 'Length', side_buttons: 'Side buttons', wireless: 'Connection', display: 'Specifications', is_enabled: 'Enabled', difficulties: 'Difficulties' }, playerChangeField: 'Changed field', playerChangeOldValue: 'Previous value', playerChangeNewValue: 'New value', playerChangeSource: 'Source', playerChangeSubmittedAt: 'Submitted at', playerChangeHandledBy: 'Handled by', playerChangeEmptyValue: 'Empty', selectAllPlayerChanges: 'Select pending changes on this page', selectPlayerChange: 'Select {{field}} change for {{player}}', approveSelectedChanges: 'Approve selected ({{count}})', rejectSelectedChanges: 'Reject selected ({{count}})', approvePlayerChangesTitle: 'Approve selected mouse changes?', rejectPlayerChangesTitle: 'Cancel selected mouse changes?', approvePlayerChangesMessage: 'Approved values are written to the live mouse data and kept in the review history. Values changed since submission are marked as conflicts.', rejectPlayerChangesMessage: 'Cancelled changes do not modify live mouse data. The review record is kept.', playerChangesReviewed: 'Review complete: approved {{approved}}, cancelled {{rejected}}, conflicts {{conflict}}', noPlayerChanges: 'No matching mouse changes',
-        playersTitle: 'Mouse Management', totalPlayers: '{{count}} mice', addPlayer: 'Add mouse', exportAction: 'Export JSON', exporting: 'Exporting...', exportDone: 'Exported {{count}} mice', searchPlayers: 'Search name, brand, origin country, or continent', pageSize: 'Per page', noMatchPlayers: 'No matching mice', noPlayers: 'No mice', pageOf: 'Page {{page}} / {{total}}', zeroItems: '0 items',
+        playersTitle: 'Mouse Management', totalPlayers: '{{count}} mice', addPlayer: 'Add mouse', exportAction: 'Export JSON', exporting: 'Exporting...', exportDone: 'Exported {{count}} mice', searchPlayers: 'Search name, brand, origin region, or continent', pageSize: 'Per page', noMatchPlayers: 'No matching mice', noPlayers: 'No mice', pageOf: 'Page {{page}} / {{total}}', zeroItems: '0 items',
         importTitle: 'JSON Batch Import', importDescription: 'Paste a mouse array. Use difficulties to assign one or more difficulty pools.',
         importPlaceholder: '[{"name":"G Pro X Superlight","brand":"Logitech","country":"Switzerland","continent":"Europe","shape":"Symmetric","size":"Medium","weight":63,"length_mm":125,"side_buttons":2,"wireless":true,"difficulties":["normal","easy"],"is_enabled":true}]', importAction: 'Import',
         saved: 'Changes saved', added: 'Mouse added', disableTitle: 'Disable {{player}}?', disableMessage: 'The mouse will be removed from the target pool and guess suggestions immediately. Historical games remain available.', disableConfirm: 'Disable mouse',
@@ -530,7 +530,7 @@ export const resources = {
           serbia: 'セルビア', kosovo: 'コソボ', slovakia: 'スロバキア', turkey: 'トルコ', guatemala: 'グアテマラ',
           ukraine: 'ウクライナ', uruguay: 'ウルグアイ', uzbekistan: 'ウズベキスタン', spain: 'スペイン', newZealand: 'ニュージーランド',
           hungary: 'ハンガリー', israel: 'イスラエル', india: 'インド', indonesia: 'インドネシア', unitedKingdom: 'イギリス',
-          jordan: 'ヨルダン', chile: 'チリ', china: '中国',
+          jordan: 'ヨルダン', chile: 'チリ', china: '中国大陸',
         },
         regions: {
           northAmerica: '北アメリカ', oceania: 'オセアニア', cis: 'CIS', africaIsrael: 'アフリカ・イスラエル',
@@ -581,7 +581,7 @@ export const resources = {
         connection: '接続方式', hump: 'バックハンプ', hand: '持ち手互換',
       },
       player: {
-        team: 'チーム', nationality: '国・地域', age: '年齢', role: '役割', majorChampionships: 'Major 優勝数', majorAppearances: 'Major 出場数', difficulties: '所属難易度', status: '状態', nickname: 'ニックネーム',
+        team: 'チーム', nationality: '地域', age: '年齢', role: '役割', majorChampionships: 'Major 優勝数', majorAppearances: 'Major 出場数', difficulties: '所属難易度', status: '状態', nickname: 'ニックネーム',
         roles: { rifler: 'ライフラー', awper: 'AWPer', coach: 'コーチ' },
       },
       guess: {
