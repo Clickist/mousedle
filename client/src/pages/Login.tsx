@@ -97,7 +97,7 @@ export default function Login() {
   };
 
   return (
-    <Page title={mode === 'login' ? t('auth.login') : t('auth.register')} icon={<KeyRound size={17} />}>
+    <Page title={mode === 'login' ? t('auth.login') : t('auth.register')} icon={<KeyRound size={17} />} noindex>
       <div className="card auth-card">
         <p className="muted" style={{ textAlign: 'center' }}>
           {t('auth.description')}

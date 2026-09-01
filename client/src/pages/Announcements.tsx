@@ -27,7 +27,7 @@ export default function Announcements() {
   }, []);
 
   return (
-    <Page title={t('announcements.title')} icon={<Megaphone size={17} />}>
+    <Page title={t('announcements.title')} description={t('meta.desc.announcements')} icon={<Megaphone size={17} />}>
       {loading && (
         <div className="card" role="status" aria-label={t('common.loading')}>
           <div className="table-skeleton"><i /><i /><i /></div>

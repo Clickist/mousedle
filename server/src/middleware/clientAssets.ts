@@ -2,6 +2,11 @@ import path from 'path';
 import { NextFunction, Request, Response } from 'express';
 
 export function setClientAssetCacheHeaders(res: Response, filePath: string): void {
+  // 百科静态资源文件名不带内容哈希,不能 immutable,给一周即可
+  if (filePath.includes(`${path.sep}mice${path.sep}assets${path.sep}`)) {
+    res.setHeader('Cache-Control', 'public, max-age=604800');
+    return;
+  }
   if (filePath.includes(`${path.sep}assets${path.sep}`)) {
     res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
     return;

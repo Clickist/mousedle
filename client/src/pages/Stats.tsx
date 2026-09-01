@@ -298,7 +298,7 @@ export default function Stats() {
   ];
 
   return (
-    <Page title={t('stats.title')} icon={<BarChart3 size={17} />}>
+    <Page title={t('stats.title')} description={t('meta.desc.stats')} icon={<BarChart3 size={17} />}>
       <div className="stats-content">
         {!stats && statsLoading && (
           <section className="stats-difficulty-section" aria-busy="true">

@@ -74,7 +74,7 @@ export default function DailyLobby() {
   };
 
   return (
-    <Page title={t('dailyLobby.title')} icon={<CalendarDays size={17} />} className="lobby-page">
+    <Page title={t('dailyLobby.title')} description={t('meta.desc.dailyLobby')} icon={<CalendarDays size={17} />} className="lobby-page">
       {loadError && (
         <div className="daily-lobby-error" role="status">
           <span>{loadError}</span>

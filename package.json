@@ -9,7 +9,7 @@
   "description": "鼠一把 - 类 Wordle 猜鼠标游戏与实时多人对战",
   "scripts": {
     "dev": "concurrently -n server,client -c blue,green \"pnpm --filter server dev\" \"pnpm --filter client dev\"",
-    "build": "pnpm build:pow && pnpm --filter client build && pnpm --filter server build",
+    "build": "pnpm build:pow && pnpm --filter client build && node scripts/build-mouse-pages.mjs --site https://play.gearclickist.com --fetch-images && pnpm --filter server build",
     "start": "pnpm --filter server start",
     "test": "pnpm --filter server test && pnpm --filter client test",
     "test:client": "pnpm --filter client test",

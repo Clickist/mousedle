@@ -268,6 +268,18 @@ export const resources = {
         details: '详情', userDetail: '用户详情', detailStats: '查看战绩', detailLeaderboards: '排行榜', detailAnalysis: '对局分析', guestsTitle: '访客管理', noGuests: '暂无访客', lastSeenAt: '最后活动', banStatus: '封禁状态', banned: '已封禁', notBanned: '正常', ban: '封禁', unban: '解除封禁', bannedSuccess: '已封禁该身份', unbannedSuccess: '已解除封禁', emailVerified: '邮箱已验证', emailUnverified: '邮箱未验证', noEmail: '未绑定邮箱', leaderboardVisibility: '排行榜显示', leaderboardVisibilityHint: '关闭后该用户不会出现在公开排行榜中，但管理员仍可查看其理论排名。', matchmakingRestriction: '多人匹配限制', matchmakingRestricted: '已限制', matchmakingNormal: '正常匹配', matchmakingRestrictedSuccess: '该用户已进入受限匹配池', matchmakingRestoredSuccess: '该用户已恢复普通匹配', rankPopulation: '参与排名 {{count}} 人', rankRecord: '{{wins}} 胜 / {{total}} 场 · {{rate}}', analysisNotRun: '尚未请求外部分析。', runAnalysis: '开始分析', rerunAnalysis: '重新分析', analysisRunning: '分析中…', analysisDecision: '分析结论', analysisScore: '风险分数', analysisModelVersion: '模型 {{version}}', analysisGeneratedAt: '生成于 {{time}}', analysisNoSections: '分析服务未返回详细项目',
         apiTokensTitle: '外部 API Token', apiTokensCount: '{{count}} 个有效 Token', apiTokenName: 'Token 名称', apiTokenNamePlaceholder: '例如：鼠标数据同步', apiTokenExpiresIn: '有效天数（1-365）', createApiToken: '生成 Token', creatingApiToken: '生成中...', apiTokenCreated: 'API Token 已生成', newApiToken: '新 API Token', apiTokenShownOnce: '明文仅显示这一次，请妥善保管。', copyApiToken: '复制 Token', apiTokenCopied: '已复制', apiTokenCopyFailed: '复制失败，请手动选择 Token', noApiTokens: '暂无有效 API Token', apiTokenCreatedAt: '创建：{{date}}', apiTokenExpiresAt: '到期：{{date}}', revokeApiToken: '撤销', revokeApiTokenTitle: '撤销 {{name}}？', revokeApiTokenMessage: '使用该 Token 的外部调用会立即失效。', apiTokenRevoked: 'API Token 已撤销',
       },
+      meta: {
+        desc: {
+          home: '根据颜色与箭头反馈猜出目标鼠标，支持每日挑战、单人多难度与多人实时对战。',
+          singleLobby: '选择小白、潮男、扫地僧难度，开始一局单人猜鼠标。',
+          multiLobby: '创建房间或随机匹配，与其他玩家实时对战猜鼠标。',
+          dailyLobby: '每日三档固定目标，按最少猜测步数排名。',
+          leaderboard: '查看单人与多人模式的胜场、胜率与平均猜测排名。',
+          stats: '个人与全站统计：胜率、平均猜测次数与对局回放。',
+          announcements: '查看游戏更新与公告。',
+          search: '查询鼠标的品牌、属地与规格参数。',
+        },
+      },
       errors: {
         GEETEST_REQUIRED: '请完成人机验证', GEETEST_FAILED: '人机验证失败，请重试', EMAIL_VERIFICATION_CODE_INVALID: '验证码无效或已过期',
         EMAIL_ALREADY_VERIFIED: '邮箱验证完成后不能再次修改', VALIDATION_FAILED: '输入格式不正确', REGISTER_USERNAME_REQUIRED: '请输入用户名', REGISTER_USERNAME_LENGTH: '用户名长度必须为 2-20 个字符', REGISTER_USERNAME_CHARACTERS: '用户名只能包含字母、数字、下划线、连字符和中文', REGISTER_PASSWORD_REQUIRED: '请输入密码', REGISTER_PASSWORD_LENGTH: '密码长度必须为 10-128 个字符', INVALID_REQUEST_BODY: '请求数据不完整，请重试', PAYLOAD_TOO_LARGE: '导入数据过大，请拆分后重试',
@@ -472,6 +484,18 @@ export const resources = {
         userStats: 'User Stats', closeUserStats: 'Close user stats', gamesTitle: 'Game History', closeGames: 'Close game history', gameType: 'Game type', single: 'Solo', multi: 'Multiplayer', opponent: 'Opponent', noSingleGames: 'No solo games', noMultiGames: 'No multiplayer games',
         details: 'Details', userDetail: 'User details', detailStats: 'Stats', detailLeaderboards: 'Leaderboards', detailAnalysis: 'Game analysis', guestsTitle: 'Guest management', noGuests: 'No guests', lastSeenAt: 'Last active', banStatus: 'Ban status', banned: 'Banned', notBanned: 'Active', ban: 'Ban', unban: 'Unban', bannedSuccess: 'Identity banned', unbannedSuccess: 'Ban removed', emailVerified: 'Email verified', emailUnverified: 'Email not verified', noEmail: 'No email linked', leaderboardVisibility: 'Leaderboard visibility', leaderboardVisibilityHint: 'When hidden, the user is excluded from public leaderboards, while admins can still inspect the calculated rank.', matchmakingRestriction: 'Multiplayer matchmaking restriction', matchmakingRestricted: 'Restricted', matchmakingNormal: 'Normal matching', matchmakingRestrictedSuccess: 'The user was moved to the restricted matchmaking pool', matchmakingRestoredSuccess: 'The user was restored to normal matchmaking', rankPopulation: '{{count}} ranked users', rankRecord: '{{wins}} wins / {{total}} games · {{rate}}', analysisNotRun: 'External analysis has not been requested.', runAnalysis: 'Run analysis', rerunAnalysis: 'Run again', analysisRunning: 'Analyzing…', analysisDecision: 'Decision', analysisScore: 'Risk score', analysisModelVersion: 'Model {{version}}', analysisGeneratedAt: 'Generated {{time}}', analysisNoSections: 'The analysis service returned no detail sections.',
         apiTokensTitle: 'External API Tokens', apiTokensCount: '{{count}} active tokens', apiTokenName: 'Token name', apiTokenNamePlaceholder: 'For example: mouse data sync', apiTokenExpiresIn: 'Valid days (1-365)', createApiToken: 'Generate token', creatingApiToken: 'Generating...', apiTokenCreated: 'API token generated', newApiToken: 'New API token', apiTokenShownOnce: 'The secret is shown only once. Store it securely.', copyApiToken: 'Copy token', apiTokenCopied: 'Copied', apiTokenCopyFailed: 'Copy failed. Select and copy the token manually.', noApiTokens: 'No active API tokens', apiTokenCreatedAt: 'Created: {{date}}', apiTokenExpiresAt: 'Expires: {{date}}', revokeApiToken: 'Revoke', revokeApiTokenTitle: 'Revoke {{name}}?', revokeApiTokenMessage: 'External calls using this token will stop working immediately.', apiTokenRevoked: 'API token revoked',
+      },
+      meta: {
+        desc: {
+          home: 'Identify the mystery mouse from color and arrow feedback. Daily challenge, solo difficulties, and real-time multiplayer.',
+          singleLobby: 'Choose Rookie, Hype, or Grandmaster and start a solo mouse game.',
+          multiLobby: 'Create a room or find a match and guess mice against other players in real time.',
+          dailyLobby: 'Three fixed daily targets, ranked by fewest guesses.',
+          leaderboard: 'Solo and multiplayer rankings by wins, win rate, and average guesses.',
+          stats: 'Personal and site-wide stats: win rates, average guesses, and replays.',
+          announcements: 'Game updates and announcements.',
+          search: 'Look up a mouse by brand, origin region, and hardware specs.',
+        },
       },
       errors: {
         GEETEST_REQUIRED: 'Please complete the human verification.', GEETEST_FAILED: 'Human verification failed. Try again.', EMAIL_VERIFICATION_CODE_INVALID: 'The verification code is invalid or expired.',
@@ -680,6 +704,18 @@ export const resources = {
         userStats: 'ユーザー戦績', closeUserStats: 'ユーザー戦績を閉じる', gamesTitle: '対局履歴', closeGames: '対局履歴を閉じる', gameType: '対局種別', single: 'ソロ', multi: 'マルチ', opponent: '対戦相手', noSingleGames: 'ソロ対局がありません', noMultiGames: 'マルチ対局がありません',
         details: '詳細', userDetail: 'ユーザー詳細', detailStats: '戦績', detailLeaderboards: 'ランキング', detailAnalysis: '対局分析', guestsTitle: 'ゲスト管理', noGuests: 'ゲストはいません', lastSeenAt: '最終活動', banStatus: 'BAN 状態', banned: 'BAN 済み', notBanned: '正常', ban: 'BAN', unban: 'BAN 解除', bannedSuccess: 'この ID を BAN しました', unbannedSuccess: 'BAN を解除しました', emailVerified: 'メール確認済み', emailUnverified: 'メール未確認', noEmail: 'メール未登録', leaderboardVisibility: 'ランキング表示', leaderboardVisibilityHint: '非表示にすると公開ランキングから除外されますが、管理者は計算上の順位を確認できます。', matchmakingRestriction: 'マルチプレイのマッチング制限', matchmakingRestricted: '制限中', matchmakingNormal: '通常マッチング', matchmakingRestrictedSuccess: 'ユーザーを制限マッチングプールへ移動しました', matchmakingRestoredSuccess: 'ユーザーを通常マッチングへ戻しました', rankPopulation: 'ランキング参加 {{count}} 人', rankRecord: '{{wins}} 勝 / {{total}} 試合 · {{rate}}', analysisNotRun: '外部分析はまだ実行されていません。', runAnalysis: '分析を開始', rerunAnalysis: '再分析', analysisRunning: '分析中…', analysisDecision: '分析結果', analysisScore: 'リスクスコア', analysisModelVersion: 'モデル {{version}}', analysisGeneratedAt: '生成日時 {{time}}', analysisNoSections: '分析サービスから詳細項目が返されませんでした。',
         apiTokensTitle: '外部 API トークン', apiTokensCount: '有効なトークン {{count}} 件', apiTokenName: 'トークン名', apiTokenNamePlaceholder: '例：マウスデータ同期', apiTokenExpiresIn: '有効日数（1-365）', createApiToken: 'トークンを生成', creatingApiToken: '生成中...', apiTokenCreated: 'API トークンを生成しました', newApiToken: '新しい API トークン', apiTokenShownOnce: 'シークレットは一度だけ表示されます。安全に保管してください。', copyApiToken: 'トークンをコピー', apiTokenCopied: 'コピーしました', apiTokenCopyFailed: 'コピーできませんでした。トークンを手動で選択してください。', noApiTokens: '有効な API トークンはありません', apiTokenCreatedAt: '作成：{{date}}', apiTokenExpiresAt: '期限：{{date}}', revokeApiToken: '無効化', revokeApiTokenTitle: '{{name}} を無効化しますか？', revokeApiTokenMessage: 'このトークンを使用する外部呼び出しは直ちに無効になります。', apiTokenRevoked: 'API トークンを無効化しました',
+      },
+      meta: {
+        desc: {
+          home: '色と矢印のヒントから正解のマウスを当てるゲーム。デイリーチャレンジ、ソロ、マルチプレイに対応。',
+          singleLobby: '初心者・トレンド・玄人から難易度を選び、ソロのマウス当てを開始します。',
+          multiLobby: 'ルーム作成またはランダムマッチで、ほかのプレイヤーとリアルタイム対戦します。',
+          dailyLobby: '3 難易度の固定ターゲットに毎日挑戦し、少ない予想数で競います。',
+          leaderboard: 'ソロとマルチプレイの勝利数、勝率、平均予想数のランキング。',
+          stats: '個人と全体の統計：勝率、平均予想数、リプレイ。',
+          announcements: 'ゲームの更新情報とお知らせ。',
+          search: 'マウスのブランド、発祥、ハードウェア仕様を検索します。',
+        },
       },
       errors: {
         GEETEST_REQUIRED: '本人確認を完了してください。', GEETEST_FAILED: '本人確認に失敗しました。もう一度お試しください。', EMAIL_VERIFICATION_CODE_INVALID: '確認コードが無効または期限切れです。',

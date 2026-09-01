@@ -47,7 +47,7 @@ export default function SingleLobby() {
   };
 
   return (
-    <Page title={t('singleLobby.title')} icon={<Gamepad2 size={17} />} className="lobby-page">
+    <Page title={t('singleLobby.title')} description={t('meta.desc.singleLobby')} icon={<Gamepad2 size={17} />} className="lobby-page">
       {difficulties.length ? (
         <>
           <div className="single-difficulty-grid">

@@ -13,6 +13,7 @@ import {
 import MenuCard from '../components/MenuCard';
 import GameRules from '../components/GameRules';
 import BrandLogo from '../components/BrandLogo';
+import { usePageMeta } from '../components/Page';
 import { useAuth } from '../store/auth';
 import { getGuestName, subscribeGuestName } from '../store/guest';
 import { api, errMsg } from '../api/client';
@@ -37,6 +38,9 @@ export default function Home() {
   // 每日挑战完成度:今日三档中已结束(胜/负)的局数,拉取失败则不展示状态行
   const [dailyDone, setDailyDone] = useState<number | null>(null);
   const guestName = useSyncExternalStore(subscribeGuestName, getGuestName, () => '访客');
+
+  // 首页不经过 Page 骨架,SEO 元信息单独走同一套 usePageMeta
+  usePageMeta({ description: t('meta.desc.home') });
 
   useEffect(() => {
     document.title = `${t('common.brand')} - ${t('home.heroTitle')}`;

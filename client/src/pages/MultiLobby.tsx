@@ -536,7 +536,7 @@ export default function MultiLobby() {
   };
 
   return (
-    <Page title={t('multi.title')} icon={<Globe size={17} />}>
+    <Page title={t('multi.title')} description={t('meta.desc.multiLobby')} icon={<Globe size={17} />}>
       {currentRoom && (
         <div className="card multi-lobby-message-card" style={{ borderColor: 'var(--warning)' }}>
           <h3>

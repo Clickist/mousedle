@@ -106,7 +106,7 @@ export default function Leaderboard() {
   });
 
   return (
-    <Page title={t('leaderboard.title')} icon={<Trophy size={17} />}>
+    <Page title={t('leaderboard.title')} description={t('meta.desc.leaderboard')} icon={<Trophy size={17} />}>
       {currentUserId != null && (
         <div
           className="leaderboard-self-summary"

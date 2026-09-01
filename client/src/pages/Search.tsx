@@ -31,6 +31,7 @@ export default function Search() {
   return (
     <Page
       title={t('search.title')}
+      description={t('meta.desc.search')}
       icon={<SearchIcon size={17} />}
       dock={
         <GuessInputBar

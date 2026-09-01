@@ -34,7 +34,7 @@ export default function Admin() {
   }, []);
 
   return (
-    <Page title={t('admin.title')} icon={<Wrench size={17} />}>
+    <Page title={t('admin.title')} icon={<Wrench size={17} />} noindex>
       <section className="presence-grid" aria-label={t('admin.presence')}>
         <div className="presence-item">
           <Users size={20} />

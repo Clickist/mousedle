@@ -213,6 +213,8 @@ async function main() {
   // 生产环境托管前端构建产物
   if (rawIndexHtml !== null) {
     const indexHtml = injectUmamiScript(rawIndexHtml, config.umami);
+    // 鼠标百科静态页:通用 static 关了目录 index,这里单独开启让 /mice/<handle>/ 命中 index.html
+    app.use('/mice', express.static(path.join(clientDist, 'mice'), { setHeaders: setClientAssetCacheHeaders }));
     app.use(express.static(clientDist, { index: false, setHeaders: setClientAssetCacheHeaders }));
     app.use(rejectMissingClientAsset);
     app.get(/^(?!\/api|\/socket\.io).*/, (_req, res) => {
