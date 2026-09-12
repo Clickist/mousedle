@@ -1,10 +1,11 @@
 import { ReactNode, useEffect } from 'react';
-import { Globe, Crosshair, Factory, Weight, Ruler, Cpu, Zap, Layers3, MousePointer2 } from 'lucide-react';
+import { Globe, Crosshair, Factory, Weight, Ruler, Cpu, Zap, Layers3, MousePointer2, ShoppingCart } from 'lucide-react';
 import ModalPortal from './ModalPortal';
 import { useTranslation } from 'react-i18next';
 import { difficultyLabel } from '../utils/difficulty';
 import { mouseValueText } from '../i18n/dataValues';
 import type { MouseDisplay } from '../types';
+import { usePurchaseLinks, type PurchaseLinks } from '../utils/usePurchaseLinks';
 
 export interface AnswerInfo {
   name: string;
@@ -30,9 +31,19 @@ function parseDisplay(raw: string | null | undefined): MouseDisplay | null {
   }
 }
 
-/** 鼠标信息表(答案卡片/查询结果共用):完整猜测字段 + 揭晓补充(hump/握持) */
-export function MouseInfoTable({ answer }: { answer: AnswerInfo }) {
+/** 鼠标信息表(答案卡片/查询结果共用):完整猜测字段 + 揭晓补充(hump/握持) + 购买直达 */
+export function MouseInfoTable({
+  answer,
+  purchase: purchaseProp,
+}: {
+  answer: AnswerInfo;
+  /** 外部已取链时传入（如查询页要同源渲染候选卡）；缺省时组件自行取链 */
+  purchase?: PurchaseLinks | null;
+}) {
   const { t } = useTranslation();
+  const selfFetch = purchaseProp === undefined;
+  const selfPurchase = usePurchaseLinks(selfFetch ? answer.brand : null, selfFetch ? answer.name : null);
+  const purchase = selfFetch ? selfPurchase : purchaseProp;
   const display = parseDisplay(answer.display);
   const countryText = mouseValueText('country', answer.country) || '-';
   const geography = answer.continent
@@ -73,6 +84,17 @@ export function MouseInfoTable({ answer }: { answer: AnswerInfo }) {
       answer.difficulties.length
         ? answer.difficulties.map((key) => difficultyLabel(t, key)).join(', ')
         : '-',
+    ]);
+  }
+  if (purchase?.taobao) {
+    const link = purchase.taobao;
+    rows.push([
+      <ShoppingCart size={14} key="i" />,
+      t('mouse.buy'),
+      <a className="buy-chip" href={link.url} target="_blank" rel="noopener noreferrer">
+        {link.official ? t('mouse.officialStore') : t('mouse.taobaoDirect')}
+        {link.price ? <span className="buy-price">¥{link.price}</span> : null}
+      </a>,
     ]);
   }
   return (

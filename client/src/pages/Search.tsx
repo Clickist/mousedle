@@ -3,15 +3,18 @@ import { Search as SearchIcon, CircleDot } from 'lucide-react';
 import Page from '../components/Page';
 import GuessInputBar from '../components/GuessInputBar';
 import { MouseInfoTable } from '../components/AnswerOverlay';
+import PurchaseCard from '../components/PurchaseCard';
 import { api, errMsg } from '../api/client';
 import { MouseInfo } from '../types';
 import { toast } from '../components/Toast';
 import { useTranslation } from 'react-i18next';
+import { usePurchaseLinks } from '../utils/usePurchaseLinks';
 
 /** 查选手:底部输入 + 自动补全,选中后在上方展示选手卡片(原版布局) */
 export default function Search() {
   const { t } = useTranslation();
   const [mouse, setMouse] = useState<MouseInfo | null>(null);
+  const purchase = usePurchaseLinks(mouse?.brand ?? null, mouse?.name ?? null);
 
   const lookup = async (name: string) => {
     try {
@@ -52,6 +55,7 @@ export default function Search() {
               </span>
             </h3>
             <MouseInfoTable
+              purchase={purchase}
               answer={{
                 name: mouse.name,
                 brand: mouse.brand,
@@ -67,6 +71,7 @@ export default function Search() {
                 difficulties: mouse.difficulties,
               }}
             />
+            {purchase ? <PurchaseCard purchase={purchase} /> : null}
           </div>
         ) : (
           <div style={{ textAlign: 'center', padding: '48px 16px', color: 'var(--text-light)' }}>

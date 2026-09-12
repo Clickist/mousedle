@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鼠一把 · 购买链接线框 v5（胶囊=主色实心；去顶部色条）</title>
+<style>
+  /* ── 取自 mousedle tokens.css 的关键变量（线框近似）── */
+  :root {
+    --primary: #c83d00;
+    --primary-soft: rgba(200, 61, 0, 0.10);
+    --primary-hover: #a33200;
+    --card: #ffffff;
+    --card-soft: #f6f4f1;
+    --border: #e6e1da;
+    --border-strong: #cfc8bf;
+    --text: #2b2723;
+    --text-sec: #6b645c;
+    --text-light: #8f877d;
+    --correct: #16875b;
+    --jd-red: #e1251b;
+    --shadow-lg: 0 18px 48px rgba(17, 32, 56, 0.16);
+  }
+  .dark {
+    --primary: #ff8a5c;
+    --primary-soft: rgba(255, 138, 92, 0.14);
+    --primary-hover: #ffab87;
+    --card: #221f1c;
+    --card-soft: #2b2723;
+    --border: #3a352f;
+    --border-strong: #554e46;
+    --text: #f0ece7;
+    --text-sec: #b3aaa0;
+    --text-light: #8f877d;
+    --correct: #34b184;
+    --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.5);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0;
+    font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: var(--card-soft); color: var(--text);
+    transition: background .25s, color .25s;
+  }
+  /* ── 线框控制条（非设计稿部分）── */
+  .wireframe-bar {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    padding: 10px 16px;
+    background: #111c38; color: #fff;
+    font-size: 0.82rem;
+  }
+  .wireframe-bar .tag {
+    background: rgba(255,255,255,0.12); border-radius: 999px; padding: 3px 10px;
+  }
+  .wireframe-bar button {
+    border: 1px solid rgba(255,255,255,0.35); background: transparent; color: #fff;
+    border-radius: 999px; padding: 5px 12px; cursor: pointer; font-size: 0.8rem;
+  }
+  .wireframe-bar button.on { background: #fff; color: #111c38; font-weight: 700; }
+  .stage { padding: 26px 16px 60px; display: flex; flex-direction: column; align-items: center; gap: 30px; }
+
+  /* ── 结算卡（对齐 game.css .overlay-card）── */
+  .overlay-demo { width: 100%; display: flex; justify-content: center; }
+  .overlay-card {
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    border-radius: 20px;
+    padding: 28px clamp(20px, 5vw, 36px);
+    max-width: 520px; width: 100%;
+    box-shadow: var(--shadow-lg);
+    transition: background .25s;
+  }
+  .overlay-card h2 { margin: 0 0 6px; font-size: 1.35rem; text-align: center; }
+  .overlay-card .answer-name {
+    text-align: center; font-size: 1.6rem; font-weight: 700; margin: 10px 0 14px;
+  }
+  .overlay-card-win h2 { color: var(--correct); }
+  /* 点点拍板：去掉卡片顶部色条，胜负靠标题颜色区分 */
+
+  /* ── 信息表（对齐 .player-info-table，新增购买行）── */
+  .player-info-table { width: 100%; border-collapse: collapse; font-size: 1rem; }
+  .player-info-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .player-info-table td.label { color: var(--text-light); width: 42%; white-space: nowrap; }
+  .player-info-table td.label svg { vertical-align: -2px; margin-right: 8px; }
+  .player-info-table td.value { font-weight: 600; text-align: right; }
+  .player-info-table tr:last-child td { border-bottom: none; }
+
+  /* ── 新增：购买行的直达按钮（干净按钮，无任何营销文案）── */
+  .buy-chips { display: inline-flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+  .buy-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    border-radius: 999px; padding: 7px 14px;
+    font-size: 0.9rem; font-weight: 700; cursor: pointer; text-decoration: none;
+    transition: transform .12s, box-shadow .12s;
+  }
+  .buy-chip:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(17,32,56,0.14); }
+  .buy-chip-taobao { background: var(--primary); border-color: var(--primary); color: #fff; }
+  .buy-chip-taobao:hover { background: var(--primary-hover); }
+  .buy-chip-taobao .price { font-weight: 800; }
+  .buy-chip-jd { background: transparent; border: 1.5px solid var(--border-strong); color: var(--text-sec); }
+  .buy-chip-jd .jd-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--jd-red); display: inline-block; }
+
+  /* ── 底部操作 ── */
+  .btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+  .btn {
+    border-radius: 999px; padding: 10px 22px; font-size: 0.95rem; font-weight: 700; cursor: pointer;
+    border: 1.5px solid var(--border-strong); background: var(--card); color: var(--text);
+  }
+  .btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+  /* ── Search 页形态 ── */
+  .section-title { width: 100%; max-width: 560px; font-size: 1.0rem; color: var(--text-sec); margin: 14px 0 -8px; }
+  .search-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+    padding: 22px; max-width: 560px; width: 100%; box-shadow: var(--shadow-lg);
+  }
+  .search-card h3 { margin: 0 0 12px; font-size: 1.05rem; }
+  .buy-panel {
+    border: 1px dashed var(--border-strong); border-radius: 14px; padding: 14px;
+    display: flex; gap: 14px; align-items: center;
+  }
+  .buy-thumb {
+    flex: 0 0 96px; height: 72px; border-radius: 10px; background: var(--card-soft);
+    display: grid; place-items: center; color: var(--text-light); font-size: 0.72rem; text-align: center;
+    border: 1px solid var(--border);
+  }
+  .buy-meta { flex: 1; min-width: 0; }
+  .buy-meta .t { font-weight: 700; font-size: 0.95rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .buy-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+  .buy-row .p { color: var(--primary-hover); font-weight: 800; }
+  .buy-row .buy-chip { margin-left: auto; }
+  .wireframe-note {
+    max-width: 640px; width: 100%; font-size: 0.8rem; color: var(--text-sec);
+    border-top: 1px dashed var(--border-strong); padding-top: 14px; line-height: 1.7;
+  }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+  <div class="wireframe-bar">
+    <span class="tag">线框控制台（非设计稿）</span>
+    <button id="tWin" class="on">胜局</button>
+    <button id="tLose">败局</button>
+    <button id="tNone">未命中（整行消失）</button>
+    <button id="tDark">明/暗</button>
+    <button id="tLang">中/EN</button>
+  </div>
+
+  <div class="stage">
+    <p class="section-title">① 结算卡（每日挑战 / 单机 / 多人房共用 AnswerOverlay）——单枚胶囊「淘宝直达 ¥359」同行不换行；京东暂不放（未接通）</p>
+    <div class="overlay-demo">
+      <div class="overlay-card overlay-card-win" id="card">
+        <h2 id="title">你猜对了！</h2>
+        <p class="answer-name" id="answerName">Darmoshark M3 Micro Pro</p>
+        <table class="player-info-table">
+          <tbody>
+            <tr><td class="label">🏭 品牌</td><td class="value">Darmoshark（达摩鲨）</td></tr>
+            <tr><td class="label">🌐 国家</td><td class="value">中国 (亚洲)</td></tr>
+            <tr><td class="label">✜ 形状</td><td class="value">对称</td></tr>
+            <tr><td class="label">📏 长度</td><td class="value">105.5 mm</td></tr>
+            <tr><td class="label">⚖ 重量</td><td class="value">42 g</td></tr>
+            <tr><td class="label">⚡ 连接</td><td class="value">无线</td></tr>
+            <tr id="buyRow">
+              <td class="label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1.6"/><circle cx="19" cy="21" r="1.6"/><path d="M2 3h3l2.6 12.4a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 2-1.6L22 7H6"/></svg>
+                <span data-i18n="buy">购买</span>
+              </td>
+              <td class="value">
+                <div class="buy-chips">
+                  <a class="buy-chip buy-chip-taobao" href="#" onclick="return false">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    <span data-i18n="tb">淘宝直达</span>
+                    <span class="price" id="tbPrice">¥359</span>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="btns">
+          <button class="btn primary" id="btnAgain">再来一局</button>
+          <button class="btn" id="btnShare">分享战绩</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="section-title">② 查询页（Search）形态——胶囊改主色实心（与「再来一局」同款）</p>
+    <div class="search-card">
+      <h3>查询结果：Darmoshark M3 Micro Pro</h3>
+      <table class="player-info-table" style="margin-bottom:14px">
+        <tbody>
+          <tr><td class="label">⚖ 重量</td><td class="value">42 g</td></tr>
+          <tr><td class="label">📏 长度</td><td class="value">105.5 mm</td></tr>
+        </tbody>
+      </table>
+      <div class="buy-panel">
+        <div class="buy-thumb">淘宝白底图<br>（item_basic_info.white_image）</div>
+        <div class="buy-meta">
+          <div class="t">达摩鲨（Darmoshark）M3 Micro Pro 无线鼠标</div>
+          <div class="buy-row"><span class="p">¥359</span><a class="buy-chip buy-chip-taobao" href="#" onclick="return false"><span data-i18n="tb">淘宝直达</span></a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wireframe-note">
+      <b>实现说明（非视觉）</b>：<br>
+      ① 购买行是 MouseInfoTable 的普通一行，随数据出现/消失——未命中就不渲染，不留空行；结算卡/回放/查询页五处共用，一处生效。<br>
+      ② <b>点点拍板：</b>"跳转商品页…"小字、月销文案砍；京东暂不放；结算卡顶部色条去掉；淘宝胶囊改「再来一局」同款实心主色。<br>
+      ③ 淘宝按钮=worker 短链（带佣金）；京东等联盟接通后再加回一枚按钮；实现=usePurchaseLinks hook + MouseInfoTable 末行，五处共用一次生效。<br>
+      ④ 数据：usePurchaseLinks(brand, name) 懒加载（卡片打开才请求），worker KV 缓存 7 天 + 前端 sessionStorage，二次打开零延迟；按钮文案走 i18n。
+    </div>
+  </div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const card = $("card");
+  const state = { win: true, lang: "zh" };
+
+  card.classList.add("overlay-card-win");
+
+  $("tWin").onclick = () => { state.win = true; card.className = "overlay-card overlay-card-win"; sync(); };
+  $("tLose").onclick = () => { state.win = false; card.className = "overlay-card overlay-card-lose"; sync(); };
+
+  function setMode(mode) {
+    $("buyRow").hidden = mode === "none";
+    for (const [id, on] of [["tBoth", mode === "both"], ["tTb", mode === "tb"], ["tNone", mode === "none"]])
+      $(id).classList.toggle("on", on);
+  }
+  $("tNone").onclick = () => setMode("none");
+
+  $("tDark").onclick = () => {
+    document.body.classList.toggle("dark");
+    $("tDark").classList.toggle("on");
+  };
+
+  const i18n = {
+    zh: { win: "你猜对了！", lose: "很遗憾", buy: "购买", tb: "淘宝直达", jd: "京东直达", again: "再来一局", share: "分享战绩" },
+    en: { win: "You got it!", lose: "Better luck next time", buy: "Buy", tb: "Taobao", jd: "JD.com", again: "Play again", share: "Share result" },
+  };
+  $("tLang").onclick = () => {
+    state.lang = state.lang === "zh" ? "en" : "zh";
+    $("tLang").classList.toggle("on", state.lang === "en");
+    sync();
+  };
+  function sync() {
+    const d = i18n[state.lang];
+    $("title").textContent = state.win ? d.win : d.lose;
+    document.querySelectorAll("[data-i18n]").forEach((el) => { el.textContent = d[el.dataset.i18n]; });
+    $("btnAgain").textContent = d.again;
+    $("btnShare").textContent = d.share;
+  }
+  sync();
+</script>
+</body>
+</html>

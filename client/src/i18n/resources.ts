@@ -156,6 +156,7 @@ export const resources = {
         weight: '重量', length: '长度', width: '宽度', height: '高度', sideButtons: '侧键数', wireless: '无线',
         difficulties: '所属难度', sensor: '传感器', dpi: 'DPI', pollingRate: '轮询率',
         connection: '连接方式', hump: '背部隆起', hand: '握持兼容',
+        buy: '购买', taobaoDirect: '淘宝直达', officialStore: '官方店直达',
       },
       player: {
         team: '战队', nationality: '地区', age: '年龄', role: '位置',
@@ -386,6 +387,7 @@ export const resources = {
         weight: 'Weight', length: 'Length', width: 'Width', height: 'Height', sideButtons: 'Side buttons', wireless: 'Wireless',
         difficulties: 'Difficulties', sensor: 'Sensor', dpi: 'DPI', pollingRate: 'Polling rate',
         connection: 'Connectivity', hump: 'Hump placement', hand: 'Hand compatibility',
+        buy: 'Buy', taobaoDirect: 'Taobao', officialStore: 'Official store',
       },
       guess: {
         placeholder: 'Enter a mouse name...', submit: 'Submit guess', submitting: 'Submitting...', siblingAnswer: 'Same specs: {{name}} matches the answer exactly',
