@@ -4,6 +4,7 @@ import { Route } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderAtRoute } from '../render';
 import { useAuth } from '../../src/store/auth';
+import { toast } from '../../src/components/Toast';
 import MultiLobby from '../../src/pages/MultiLobby';
 
 const socket = vi.hoisted(() => ({
@@ -161,15 +162,21 @@ describe('MultiLobby matchmaking', () => {
     expect(localStorage.getItem('csgofriberg.multi-lobby-presets')).toBe('[]');
   });
 
-  it('requires a verified email before starting quick match', () => {
+  it('requires a verified email before starting quick match', async () => {
+    const user = userEvent.setup();
+    const infoSpy = vi.spyOn(toast, 'info');
     useAuth.setState({
       user: { id: 8, username: 'unverified-user', role: 'user', email: 'unverified@example.com', emailVerified: false },
       initialized: true,
     });
     renderAtRoute(<MultiLobby />, { route: '/multi', path: '/multi' });
 
-    expect(screen.getByText('随机匹配仅对已登录且完成邮箱验证的用户开放。')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '开始匹配' })).toBeDisabled();
+    expect(screen.getByText('需要去首页顶部登录并验证邮箱。')).toBeInTheDocument();
+    const matchButton = screen.getByRole('button', { name: '开始匹配' });
+    expect(matchButton).toHaveAttribute('aria-disabled', 'true');
+    expect(matchButton).not.toBeDisabled();
+    await user.click(matchButton);
+    expect(infoSpy).toHaveBeenCalledWith('需要去首页顶部登录并验证邮箱。');
   });
 
   it('sends the verified-email restriction when creating a room', async () => {

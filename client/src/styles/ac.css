@@ -46,8 +46,8 @@ a:not([class]) { color: var(--on-surface); text-decoration: underline; text-unde
   transform: none;
 }
 
-.btn:active:not(:disabled) { transform: scale(0.97); }
-.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.btn:active:not(:disabled):not([aria-disabled='true']) { transform: scale(0.97); }
+.btn:disabled, .btn[aria-disabled='true'] { opacity: 0.55; cursor: not-allowed; }
 
 .btn-sm { min-height: var(--control-height-compact); padding: 0 var(--space-3); font-size: var(--text-ui); }
 .btn-lg { min-height: 44px; padding: 0 var(--space-5); font-size: var(--text-title); }

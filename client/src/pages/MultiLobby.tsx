@@ -885,7 +885,12 @@ export default function MultiLobby() {
               </div>
             ) : (
               <div style={{ textAlign: 'center', marginTop: 14 }}>
-                <button className="btn btn-accent btn-lg" onClick={startMatch} disabled={!authInitialized || matchCooldownSeconds > 0 || !canUseMatchmaking}>
+                <button
+                  className="btn btn-accent btn-lg"
+                  onClick={canUseMatchmaking ? startMatch : () => toast.info(t('multi.matchVerifiedRequired'))}
+                  disabled={!authInitialized || matchCooldownSeconds > 0}
+                  aria-disabled={!authInitialized || matchCooldownSeconds > 0 || !canUseMatchmaking}
+                >
                   <Dices size={16} />
                   {matchCooldownSeconds > 0
                     ? t('multi.matchmakingCooldownButton', { seconds: matchCooldownSeconds })
