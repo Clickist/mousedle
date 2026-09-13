@@ -62,7 +62,8 @@ openssl rand -hex 24
 因此密码只需配置一次。
 
 生产环境必须配置成对的 `GEETEST_CAPTCHA_ID` 和 `GEETEST_PRIVATE_KEY`。前者是
-浏览器使用的公开 ID，后者只保存在服务端；缺少任意一项时 Compose 或应用启动会失败。
+浏览器使用的公开 ID，后者只保存在服务端；缺少任意一项或只配其一时，应用容器
+启动会失败（Compose 本身不做该校验，由应用启动检查兜底）。
 
 `CORS_ORIGINS` 必须设置为精确的公网 origin（如 `https://game.example.com`），
 末尾不带斜杠。
@@ -199,6 +200,11 @@ location /socket.io/ {
 兜底——模块请求收到 HTML 会因 MIME 类型错误而失败。只有不带扩展名的应用
 路由才使用 SPA 兜底。
 
+注意：构建期生成的鼠标百科页 `/mice/<handle>/` 与其图片 `/mice/assets/img/*`
+不在 `/assets/` location 内。滚动更新窗口期，新增百科页在新实例健康前可能
+暂时返回应用首页内容（SPA 兜底），新增图片会 404；如需与 chunk 同等的兜底，
+可在 Nginx 为 `location /mice/assets/` 复制 `/assets/` 的重试规则。
+
 当前客户端的 Socket.IO 仅使用 WebSocket 传输，因此不需要粘性会话。若要
 启用 HTTP 长轮询，请先配置好会话亲和。
 
@@ -288,6 +294,8 @@ PostgreSQL 数据位于配置的 `PGDATA_PATH` bind mount，Redis 数据位于�
 
 ## 7. 备份
 
+生产推荐直接使用 `deploy/backup.sh`（放到 compose.yaml 旁运行，`BACKUP_KEEP`
+默认保留最近 14 份，cron 配置见 [`cloudflare.md`](cloudflare.md) §7）。手动备份
 PostgreSQL：
 
 ```bash
@@ -315,11 +323,16 @@ CPU 开销；成本不同的既有哈希会在下次登录成功后自动重新�
 推送到 `main`、`v1.2.3` 形式的版本标签以及手动触发还会构建 `linux/amd64`
 镜像并发布到 GHCR。
 
+注意：测试与镜像构建中的 `pnpm build` 会执行
+`scripts/build-mouse-pages.mjs --fetch-images`，构建期需要访问 supabase.co
+抓取鼠标产品照（本地缓存在 `data/mice-img`，CI 每次全量抓取），抓图失败会导致
+构建失败。
+
 发布的标签包括：
 
 - `latest`：默认分支
 - 分支名
-- `v*` 发布对应的语义化版本标签
+- `v*` 发布对应的语义化版本标签（`1.2.3`）及主次版本标签（`1.2`）
 - `sha-<短提交号>`：用于可确定性部署
 
 工作流使用 BuildKit 缓存，生成 provenance 并附带 SBOM。

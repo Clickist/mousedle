@@ -77,12 +77,19 @@ sudo ufw allow 22 && sudo ufw allow 80,443/tcp && sudo ufw enable
 | `CORS_ORIGINS` | ✅ | 精确公网 origin,如 `https://game.example.com`,末尾无斜杠 |
 | `IMAGE` | 建议 | 固定 `ghcr.io/clickist/mousedle:latest` 或 `sha-xxxx` 标签 |
 | `EMAIL_SMTP_*` | 可选 | 要开邮箱注册验证才需要 |
+| `CHEAT_ANALYSIS_API_URL` / `CHEAT_ANALYSIS_API_TOKEN` | 可选 | 管理端按需作弊分析服务,必须成对配置,留空时分析按钮返回未配置;`CHEAT_ANALYSIS_TIMEOUT_MS` 默认 15000 |
 
 ## 6. 验证清单
 
 ```bash
 curl https://game.example.com/api/health          # 应返回 ok
+curl https://game.example.com/robots.txt          # 应返回 200
+curl https://game.example.com/sitemap.xml         # 应返回 200
 ```
+
+> 若域名不是 `play.gearclickist.com`,需修改根 `package.json` 中 `build` 命令的
+> `--site` 参数并重新构建发版,否则 `robots.txt`/`sitemap.xml`/canonical 会指向
+> 错误域名。
 
 浏览器再过一遍:
 
@@ -116,8 +123,10 @@ curl https://game.example.com/api/health          # 应返回 ok
 - **所有人共用一个限流额度/IP**:real_ip 段被删,或 CF 发布了新网段没同步
   (核对 https://www.cloudflare.com/ips/)。
 - **静态资源偶发 404**:滚动更新期间正常现象,`/assets/` 的重试规则会兜住;
-  若关闭了该 location 就会出现用户白屏。
+  若关闭了该 location 就会出现用户白屏。鼠标百科页 `/mice/` 不在重试范围内,
+  更新窗口期新增页面可能短暂返回首页内容、新增图片 404(见 deploy/README.md §4)。
 - **以后想换首尔机房 / 不走 CF 代理**:nginx 配置的 real_ip 只对 CF 网段生效,
   灰云直连时无需改;只需换发 Let's Encrypt 证书并替换 `ssl_certificate` 两个路径。
 - **CF 缓存**:默认按扩展名缓存 `.js/.css`(带内容哈希,缓存无害),HTML 不缓存。
-  排障时可临时开 Development Mode 绕过缓存。
+  百科页图片 `/mice/assets/img/*` 为无哈希文件名,服务端给一周缓存,更新产品照后
+  最多一周全量生效。排障时可临时开 Development Mode 绕过缓存。
