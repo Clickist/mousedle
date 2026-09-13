@@ -111,6 +111,11 @@ export const config = {
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean),
+  // 购买链接商品图的图片 CDN 白名单（追加进 CSP img-src），逗号分隔
+  cspImageOrigins: (process.env.CSP_IMAGE_ORIGINS || '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean),
 };
 
 export function validateProductionConfig(): void {

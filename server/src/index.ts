@@ -131,6 +131,7 @@ async function main() {
         imgSrc: [
           "'self'",
           'data:',
+          ...config.cspImageOrigins,
           GEETEST_SCRIPT_ORIGIN,
           GEETEST_API_ORIGIN,
           GEETEST_GEEVISIT_ORIGIN,
