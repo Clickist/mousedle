@@ -51,26 +51,28 @@ pnpm test                      # 全量测试,需要 Redis 在跑
 
 ## 玩法
 
-输入鼠标名称,系统按 **品牌 / 产地 / 形状 / 尺寸 / 重量 / 长度 / 宽度 / 高度 / 连接方式 / 传感器** 逐属性给出对比反馈:
+输入鼠标名称,系统按 **品牌 / 品牌属地 / 形状 / 尺寸 / 重量 / 长度 / 宽度 / 高度 / 连接方式 / 传感器** 逐属性给出对比反馈:
 
 - 🟩 **绿色** —— 该属性与答案完全一致
-- 🟨 **黄色** —— 接近(产地同大洲、数值相差不大)
+- 🟨 **黄色** —— 接近(品牌属地同大洲、数值相差不大)
 - ↑↓ **箭头** —— 数值型属性提示答案更高或更低
 - 缺失字段(如部分鼠标没有传感器)会跳过判定,不按对错计
 
-8 次机会内猜出目标鼠标即获胜。
+8 次机会内猜出目标鼠标即获胜;猜中与答案同规格的兄弟款(品牌、规格指纹完全一致的不同条目)同样判胜。单人模式与每日挑战中,输入联想只提示当前难度池内的鼠标;查鼠标页可搜全库。
 
 ## 功能特性
 
-- 🎮 **单人模式** —— 简单版(知名鼠标)/ 完整版(全部鼠标),进行中对局可断线续玩
-- 🌐 **多人联机** —— BO1/3/5/7 赛制、随机匹配、5 位房间码、观战;每小局限时 120 秒,断线即时通知、同身份可重连,30 秒未归判负
-- 🔍 **查鼠标** —— 模糊搜索鼠标资料
+- 🎮 **单人模式** —— 小白 / 潮男 / 扫地僧三档难度池,进行中对局可断线续玩
+- 📅 **每日挑战** —— 每日一只目标鼠标,同样分三档难度,当日排行榜
+- 🌐 **多人联机** —— 经典对战 / 合作接力 / 2v2 接力三种模式,BO1/3/5/7 赛制、随机匹配、5 位房间码、观战;每小局限时 120 秒,断线即时通知、同身份可重连,30 秒未归判负
+- 🔍 **查鼠标** —— 模糊搜索鼠标资料,附购买直达卡片(联盟转链)
 - 📊 **统计与回放** / 🏆 **排行榜** / 📢 **公告**
-- 👤 **无需登录** —— 所有模式对匿名访客开放,战绩按浏览器本地标识记账,登录后自动并入账号
+- 👤 **免安装即玩** —— 游客可直接玩单人与每日挑战,战绩按浏览器本地标识记账,登录后自动并入账号;多人随机匹配需注册并完成邮箱验证
 - 🌏 **多语言** —— 简体中文 / English / 日本語;前后端交互仅传递错误码,文案统一在前端翻译
-- 🎨 **双主题** —— Blast 暗色 / 日间浅色,首次访问跟随系统偏好
-- 🛡 **PoW 人机验证** —— 公开接口由 WASM 工作量证明保护(Rust 编译,仓库内置预编译产物)
+- 🎨 **双主题** —— 深色 / 浅色,首次访问跟随系统偏好
+- 🛡 **人机验证** —— 公开接口由 WASM 工作量证明保护(Rust 编译,仓库内置预编译产物);注册等敏感操作另接入 GeeTest 行为验证
 - 🛠 **管理后台** —— 鼠标增删改、JSON 批量导入、外部 API Token、公告管理
+- 🖥 **SEO** —— 构建期生成 `robots.txt`、`sitemap.xml` 与 `/mice/<handle>/` 鼠标百科静态页,并为每路由输出 canonical
 
 ## 技术栈
 
@@ -104,7 +106,8 @@ ADMIN_USERNAME=admin ADMIN_PASSWORD='至少12位强密码' pnpm create-admin
 ### 运行时行为说明
 
 - Redis 默认连接 `redis://127.0.0.1:6379`;生产环境建议 `REDIS_REQUIRED=true`,避免 Redis 故障时降级为仅适合单实例的内存模式
-- 生产环境强制要求 PostgreSQL、至少 32 字节随机 `JWT_SECRET` 和 `REDIS_REQUIRED=true`
+- 生产环境强制要求 PostgreSQL、至少 32 字节随机 `JWT_SECRET` 和 `REDIS_REQUIRED=true`,并且必须配置 GeeTest(`GEETEST_CAPTCHA_ID`/`GEETEST_PRIVATE_KEY` 成对配置),否则应用启动即失败
+- 前端请求统一 20 秒超时;GET 与开局类幂等请求在断网/超时后自动补试一次,猜词不自动重试;管理后台批量导入/导出超时放宽到 120 秒
 - 访客显示 ID 使用 HMAC-SHA256 派生,可用 `GUEST_ID_SALT` 配置独立盐(未配置时复用 `JWT_SECRET`)
 - 单人进行中的对局只保存在 Redis,**1800 秒(30 分钟)** 无有效操作自动过期;猜中、次数耗尽或查看答案后才写入数据库,主动离开或重新开始只清理临时状态、不产生历史战绩
 
@@ -113,11 +116,11 @@ ADMIN_USERNAME=admin ADMIN_PASSWORD='至少12位强密码' pnpm create-admin
 | 命令                | 说明                                    |
 | ------------------- | --------------------------------------- |
 | `pnpm dev`          | 同时启动前后端开发服务                  |
-| `pnpm build`        | 构建 PoW WASM + 前端 + 编译后端         |
+| `pnpm build`        | 构建 PoW WASM + 前端 + 鼠标百科静态页/sitemap(联网抓产品图,缓存于 `data/mice-img`)+ 编译后端 |
 | `pnpm start`        | 生产模式启动(server 托管 client/dist)   |
 | `pnpm test`         | 运行前后端测试                          |
 | `pnpm migrate`      | 初始化数据库结构 + 种子鼠标             |
-| `pnpm seed`         | 补充种子数据集中缺失的鼠标               |
+| `pnpm seed`         | 按名称刷新已有种子规格,并补入缺失的鼠标  |
 | `pnpm create-admin` | 显式创建或重置管理员                    |
 | `pnpm loadtest`     | 运行 HTTP 缓存接口与多人建房负载测试    |
 
@@ -158,6 +161,8 @@ Docker Compose 部署、自动数据库迁移、管理员创建、更新和回�
 
 鼠标数据集来自 [eloshapes](https://github.com/eloshapes) 鼠标签名的快照，经 [`scripts/build-mouse-dataset.mjs`](scripts/build-mouse-dataset.mjs) 转换生成，当前种子数据为 `server/src/db/seeds/mice.json`（1617 只鼠标）。种子包含品牌、品牌属地、形状、尺寸、重量、长度、侧键、连接方式等猜测属性，以及传感器/DPI/轮询率等仅用于揭晓展示的字段。可用 `pnpm seed` 导入数据库。数据纠错与新增鼠标可重新生成该 JSON，或通过管理后台批量导入。
 
+构建前端时，[`scripts/build-mouse-pages.mjs`](scripts/build-mouse-pages.mjs) 会为每只鼠标生成 `/mice/<handle>/` 静态百科页与 `sitemap.xml`（站点域名由根 `package.json` 中 `build` 命令的 `--site` 参数控制），由服务端托管,图片资源缓存一周。
+
 ### 难度分级
 
 难度分档（小白/潮男/扫地僧/禁用）由 [`tier-assignment.json`](tier-assignment.json) 描述：品牌级名单之外，`modelOverrides` 支持按鼠标全名对个别型号调档（值为 `easy`/`normal`/`hard`/`disabled`，对应小白/潮男/扫地僧/禁用）。调整流程：
@@ -177,7 +182,7 @@ Authorization: Bearer csgf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Content-Type: application/json
 ```
 
-当前限流为全局每 IP 600 次/分钟、外部 API 鉴权前每 IP 120 次/分钟、鉴权后每 Token 60 次/分钟。外部 API 的专用限流失效关闭：超过限制返回 `429 RATE_LIMITED`，限流服务异常返回 `503 RATE_LIMIT_UNAVAILABLE`。
+当前限流为全局每 IP 1000 次/分钟、外部 API 鉴权前每 IP 120 次/分钟、鉴权后每 Token 60 次/分钟。外部 API 的专用限流失效关闭：超过限制返回 `429 RATE_LIMITED`，限流服务异常返回 `503 RATE_LIMIT_UNAVAILABLE`。
 
 可用端点如下：
 
@@ -187,7 +192,7 @@ Content-Type: application/json
 | `GET /api/external/players/export` | 导出全部鼠标及难度成员关系（含 `mouseId`），响应为 `players.json`；仅需 API Token，不需要 PoW |
 | `POST /api/external/players` | 直接新增单个鼠标，成功返回 `201 { "id": number }` |
 | `PUT /api/external/players/:id` | 按 ID 直接部分更新鼠标，成功返回 `200 { "ok": true }` |
-| `POST /api/external/players/import` | 按名称直接批量 upsert；单次 1-1000 只且请求内名称不可重复，返回 `created`/`updated` 数量 |
+| `POST /api/external/players/import` | 按名称直接批量 upsert；单次 1-2000 只且请求内名称不可重复，返回 `created`/`updated` 数量 |
 
 待审核接口适合外部数据源报送现有鼠标的纠错。每项使用 `mouseId`、`name` 或二者定位鼠标；同时提供时必须指向同一只鼠标，同一请求不能重复提交同一鼠标。`changes` 必须至少包含一个字段：
 
@@ -211,7 +216,7 @@ curl -X POST 'https://example.com/api/external/player-change-submissions' \
 
 有实际差异时返回 `201 { "submissionId": number, "submitted": number, "unchanged": number }`；所有值均未变化时返回 `200`，其中 `submissionId` 为 `null`。`submitted` 与 `unchanged` 统计的是字段数，不是鼠标数。管理员在 **鼠标变更审核** 页逐项批准或拒绝；批准前若该字段已被其他操作改动，该项会标记为 `conflict`，不会覆盖新值。
 
-可写字段为 `name`、`brand`、`country`、`continent`、`shape`、`size`、`weight`、`length_mm`、`side_buttons`、`wireless`、`is_enabled`、`difficulties`。其中 `shape` 仅接受 `对称`、`人体工学`、`非对称`、`垂直`，`size` 仅接受 `小型`、`指尖`、`中型`、`大型`，`difficulties` 当前仅接受 `easy`、`normal`、`hard`（难度池为累进式：easy ⊂ normal ⊂ hard）。
+可写字段为 `name`、`brand`、`country`、`continent`、`shape`、`size`、`weight`、`length_mm`、`side_buttons`、`wireless`、`display`(揭晓展示的规格对象：宽度/高度/传感器等)、`is_enabled`、`difficulties`。其中 `shape` 仅接受 `对称`、`人体工学`、`非对称`、`垂直`，`size` 仅接受 `小型`、`指尖`、`中型`、`大型`，`difficulties` 当前仅接受 `easy`、`normal`、`hard`（难度池为累进式：easy ⊂ normal ⊂ hard）。
 
 直接写入端点用于受信任的完整同步任务。新增鼠标至少需要 `name`、`brand` 和 `weight`；批量导入应按完整记录提交。更新已有鼠标时，导入项省略 `difficulties` 或 `is_enabled` 会保留原值，其他带默认值的字段若省略则可能写入默认值。部分更新接口只修改显式传入的字段。
 
@@ -224,15 +229,18 @@ server/src
 ├── config.ts          # 环境配置
 ├── db/                # Knex 实例、建表、种子数据
 ├── middleware/        # 认证、Zod 校验、限流、PoW、错误处理
-├── routes/            # auth / players / game / stats / leaderboard / announcements / admin
+├── routes/            # auth / players / game / daily-challenge / stats / leaderboard / announcements / admin / pow / runtime-config / external-players
 ├── services/          # 游戏判定、鼠标缓存、房间状态、战绩队列等
 └── socket/            # 多人房间系统
 client/src
 ├── api/               # axios 封装、socket 单例、鼠标列表缓存
+├── config/            # 难度、联盟购买链接、友链等前端配置
 ├── store/             # auth / theme / guest 等轻量状态
 ├── i18n/              # 中 / 英 / 日 文案与错误码翻译
-├── components/        # Page / GuessBoard / GuessInputBar / DataTable / admin/*
-└── pages/             # Home / SingleGame / MultiLobby / MultiRoom / Stats / ...
+├── utils/             # 难度/属地/购买链接等工具
+├── components/        # Page / GuessBoard / GuessInputBar / PurchaseCard / DataTable / admin/*
+├── assets/ styles/    # 静态资源与分层样式(tokens→shell→controls→游戏→响应式)
+└── pages/             # Home / SingleGame / DailyChallenge / MultiLobby / MultiRoom / Search / Stats / ...
 ```
 
 ## 贡献

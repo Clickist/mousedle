@@ -29,31 +29,31 @@ The external service should compare the bearer token using a timing-safe equalit
 ```json
 {
   "schemaVersion": 1,
-  "requestId": "uuid",
-  "generatedAt": "2026-08-02T12:00:00.000Z",
+  "requestId": "0f8b7b2e-6d4a-4a67-9a2e-1f3c5b7d9e01",
+  "generatedAt": "2026-09-13T12:00:00.000Z",
   "locale": "zh-CN",
   "trigger": "report",
   "subject": {
     "type": "user",
-    "opaqueId": "per-request-uuid"
+    "opaqueId": "a1c3e5f7-90bd-4c2e-8f60-2d4b6a8c0e12"
   },
   "playerPool": {
     "revision": "42",
     "players": [
       {
         "id": 1,
-        "nickname": "player",
-        "nationality": "China",
-        "region": "Asia",
-        "team": "Team",
-        "teamHistory": ["Former Team"],
-        "age": 24,
-        "role": "Rifler",
-        "majorChampionships": 1,
-        "majorAppearances": 4,
-        "isActive": true,
+        "name": "8BitDo Retro R8",
+        "country": "中国大陆",
+        "continent": "亚洲",
+        "brand": "8BitDo",
+        "weight": 77,
+        "shape": "对称",
+        "size": "中型",
+        "lengthMm": 120,
+        "sideButtons": 2,
+        "wireless": true,
         "isEnabled": true,
-        "difficulties": ["easy", "normal"],
+        "difficulties": ["hard"],
         "createdAt": "2026-01-01T00:00:00.000Z"
       }
     ]
@@ -61,30 +61,30 @@ The external service should compare the bearer token using a timing-safe equalit
   "singleGames": [
     {
       "recordId": 10,
-      "targetPlayerId": 1,
+      "targetMouseId": 1,
       "mode": "normal",
       "status": "won",
       "guessCount": 2,
-      "firstGuessPlayerId": 2,
+      "firstGuessMouseId": 2,
       "guessPlayerIds": [2, 1],
       "guessTimesMs": [900, 1750],
-      "startedAt": "2026-08-02T11:58:00.000Z",
-      "finishedAt": "2026-08-02T12:00:00.000Z"
+      "startedAt": "2026-09-13T11:58:00.000Z",
+      "finishedAt": "2026-09-13T12:00:00.000Z"
     }
   ],
   "matches": [
     {
       "recordId": 20,
-      "mode": "normal",
+      "mode": "classic",
       "boType": 3,
       "result": "won",
-      "winnerParticipantId": "same-as-subject-opaque-id",
+      "winnerParticipantId": "a1c3e5f7-90bd-4c2e-8f60-2d4b6a8c0e12",
       "forfeitedParticipantId": null,
       "finishReason": "score",
-      "finishedAt": "2026-08-02T12:00:00.000Z",
+      "finishedAt": "2026-09-13T12:00:00.000Z",
       "participants": [
         {
-          "participantId": "same-as-subject-opaque-id",
+          "participantId": "a1c3e5f7-90bd-4c2e-8f60-2d4b6a8c0e12",
           "isSubject": true,
           "score": 2,
           "isWinner": true,
@@ -95,14 +95,14 @@ The external service should compare the bearer token using a timing-safe equalit
       "rounds": [
         {
           "round": 1,
-          "targetPlayerId": 1,
-          "winnerParticipantId": "same-as-subject-opaque-id",
+          "targetMouseId": 1,
+          "winnerParticipantId": "a1c3e5f7-90bd-4c2e-8f60-2d4b6a8c0e12",
           "reason": "guessed",
           "guessesByParticipant": {
-            "same-as-subject-opaque-id": [2, 1]
+            "a1c3e5f7-90bd-4c2e-8f60-2d4b6a8c0e12": [2, 1]
           },
           "guessTimesMsByParticipant": {
-            "same-as-subject-opaque-id": [900, 1750]
+            "a1c3e5f7-90bd-4c2e-8f60-2d4b6a8c0e12": [900, 1750]
           }
         }
       ]
@@ -116,9 +116,27 @@ The external service should compare the bearer token using a timing-safe equalit
 }
 ```
 
-`playerPool.players` contains the complete current player pool, including disabled players, every difficulty membership, and each player's normalized historical teams. `teamHistory` is optional for rolling compatibility and defaults to an empty array when omitted. The snapshot contains the subject's latest 50 completed single-player games and latest 50 completed multiplayer matches. Each multiplayer match contains every participant and its complete stored replay; valid game records contain at most 8 guesses per player per round. Guess times are server-recorded milliseconds from game or round start.
+Field notes:
+
+- `locale` is one of `zh-CN`, `en-US`, `ja-JP`. `trigger` is one of `user-detail`, `guest-detail`, `report`, depending on which admin endpoint requested the snapshot.
+- `playerPool.players` is the complete current mouse pool, including disabled mice (`isEnabled: false`), every difficulty membership (`difficulties`, sorted, subset of `easy`/`normal`/`hard`), and the display spec fields exposed to guesses (`weight`, `shape`, `size`, `lengthMm`, `sideButtons`, `wireless`).
+- `firstGuessMouseId` is `null` when the subject made no guess. `guessTimesMs` and `guessTimesMsByParticipant` elements are nullable: invalid or missing timings are serialized as `null`.
+- `singleGames` covers the subject's latest 50 completed single-player games (`mode` is the difficulty key `easy`/`normal`/`hard`). `matches` covers the subject's latest 50 completed multiplayer matches and **only `classic` mode** (`mode` is always `classic`); each match contains every participant and its complete stored replay, capped at 50 rounds per match. Each player has at most 8 guesses per round. Guess times are server-recorded milliseconds from game or round start.
+- `winnerParticipantId`, `forfeitedParticipantId`, and per-round `winnerParticipantId` are nullable.
 
 The request excludes account usernames, emails, multiplayer display names, raw user/guest identity keys, report descriptions, admin notes, IP addresses, cookies, and authentication tokens. `subject.opaqueId` is generated independently for every request. Every multiplayer participant receives a per-request opaque ID, and the subject keeps the same opaque ID across `subject`, participants, winners, forfeits, guesses, and timings.
+
+## Size Limits, Idempotency, and Failure Handling
+
+- The request body is capped at 8 MB; larger snapshots are rejected with `413 ANALYSIS_SNAPSHOT_TOO_LARGE` and never sent to the external service.
+- There is no server-side idempotency: every click builds a fresh snapshot with a new `requestId` and new opaque IDs and pushes it again. Deduplication is the caller's responsibility.
+- Responses are not persisted anywhere; the app only forwards the validated JSON back to the admin UI.
+- Failure semantics (returned to the admin UI, no retry, no queue):
+  - `503 ANALYSIS_SERVICE_NOT_CONFIGURED` — URL/token missing.
+  - `413 ANALYSIS_SNAPSHOT_TOO_LARGE` — snapshot exceeds 8 MB.
+  - `504 ANALYSIS_SERVICE_TIMEOUT` — the external service did not answer within the clamped timeout.
+  - `502 ANALYSIS_SERVICE_UNAVAILABLE` — network error or non-2xx status from the external service.
+  - `502 ANALYSIS_SERVICE_INVALID_RESPONSE` — invalid JSON, failed strict schema validation, `requestId` mismatch, or response body exceeding 512 KB.
 
 ## Response Body
 

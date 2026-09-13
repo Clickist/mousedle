@@ -1,5 +1,7 @@
 # 任务：补齐 mousedle 鼠标品牌所属国家(产地)
 
+> **状态(2026-09):本任务已 100% 完成。** `mice.json` 现为 1617 条、`country` 缺失 0 条；文中「92 个品牌」清单与待办仅作历史记录保留。另注:文中仓库路径为原作者 Mac 环境(`/Users/clickist/...`),当前维护环境为 Windows;文案口径已从「国家」改为「地区/品牌属地」(见 commit dbf897e)。
+
 ## 项目背景
 这是 mousedle 猜鼠标游戏（仓库 `/Users/clickist/Projects/mouseberg`）。种子数据
 `server/src/db/seeds/mice.json` 里每只鼠标有 `brand`（品牌）、`country`（国家，中文）、

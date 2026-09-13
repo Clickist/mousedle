@@ -17,13 +17,13 @@
 |---|---|---|
 | `/` | Home | hero 大卡片（标题/副标题/游戏规则入口/访客提示/底部三个次级按钮）+ 四宫格菜单卡（每日挑战/单人/多人/查鼠标） |
 | `/single` | SingleLobby | 难度选择：三张横向卡片（小白/潮男/扫地僧，含推荐徽标/选中态）+ 底部「开始游戏」大按钮（与卡片同宽） |
-| `/single/:mode` | SingleGame | 核心玩法页：猜测输入条（带自动补全）+ 11 列反馈表格 + 揭晓卡片 |
+| `/single/:mode` | SingleGame | 核心玩法页：猜测输入条（带自动补全，仅当前难度池）+ 11 列反馈表格 + 揭晓卡片（含购买直达卡片，联盟转链） |
 | `/daily` | DailyLobby | 每日挑战难度选择（三档 + 完成状态） |
 | `/daily/:mode` | DailyChallenge | 同玩法 + 当日排行榜 |
 | `/multi`、`/multi/room` | 多人大厅/房间 | 房间列表、玩家面板、紧凑对局表格 |
 | `/stats` | Stats | 个人战绩、历史对局回放 |
 | `/leaderboard` | Leaderboard | 排行榜（难度 tab） |
-| `/search` | 查鼠标 | 全库检索 |
+| `/search` | 查鼠标 | 全库检索，候选结果附购买直达卡片（联盟转链，服务不可用时安静降级） |
 | `/announcement` | 公告 | |
 | `/login`、`/email-verify`、`/admin`、`404` | 辅助页 | 管理后台是数据密集型桌面界面 |
 
@@ -35,9 +35,9 @@
 
 ### 色板（语义 token，Light 为 :root，Dark 覆写 `html[data-theme='dark']`）
 
-- 背景/表面：`--background #f7f5f0`（暖灰米色底）、表面五级阶梯 `--surface #fffdf8` → `--surface-container-lowest/high/…`（米白到暖灰），文字 `--on-surface #24211d` / `--on-surface-variant #625c54`
+- 背景/表面：`--background #f7f5f0`（暖灰米色底）、表面五级阶梯 `--surface #fdfbf7` → `--surface-container-lowest/high/…`（米白到暖灰），文字 `--on-surface #24211d` / `--on-surface-variant #625c54`
 - 主色：`--primary #c83d00`（焦橙，唯一高压行动色，克制使用），容器色/反转色齐全
-- 辅助：`--tertiary #005fae`（蓝）、`--error #ba1a1a`、`--outline #7b746b` / `--outline-variant #cec6bc`（发丝线）
+- 辅助：`--tertiary #005fae`（蓝）、`--error #ba1a1a`、`--outline #7b746b` / `--outline-variant #d9d2c5`（发丝线）
 - **事件色**（只用于数据反馈，禁止当界面装饰）：`--event-kill #16875b`（绿=命中）、`--event-miss #c53442`（红=未中）、`--event-corrective #1769c2`（蓝=接近）、`--event-peak #c83d00`
 - Dark 主题整组覆写（背景 `#141413`、primary 变 `#ff8a5c` 等），双主题同构
 
@@ -45,7 +45,7 @@
 
 - 间距六阶：4/8/12/16/24/32px（`--space-1..6`）
 - 字号六阶：11/12/13/14/15/20px（`--text-micro..display`）+ 流式小字号三档（clamp）
-- 圆角：4/6/8px + pill
+- 圆角：4/6/10px + pill
 - 控件高：36px / 32px（compact）两档，移动端升到 40/42px 触控高度
 - 动效：150ms/200ms/120ms(reduced-motion) 三档 + `--ease-out: cubic-bezier(0.2,0,0,1)` 唯一曲线
 - 版心：`--content-max: 73.75rem`，页边距 clamp；`html { font-size: clamp(100%, 0.833333vw, 400%) }` 是全站唯一缩放刻度（1920px 设计基准），**所有 rem 尺寸都会随视口缩放**——这是本产品的独特机制，redesign 必须保留
@@ -66,7 +66,7 @@
 
 按现状代码与人工反馈，问题集中在：
 
-1. **首页 hero 大卡片**与四宫格菜单的视觉权重关系平淡，hero 偏空（尤其删除装饰元素后），需要重塑首页第一屏的层次与个性，但**不许**加回 AI 味装饰。
+1. **首页 hero 大卡片**与四宫格菜单的视觉权重关系仍平淡——hero 内已新增「猜测反馈色带」装饰（`Home.tsx` 的 `brand-band`，复用事件色语义）缓解空旷，redesign 可在此基础上重塑第一屏层次与个性，但**不许**加回 AI 味装饰，也不许把色带改回「带边小砖」。
 2. **核心玩法页**（11 列反馈表格 + 输入条 + 揭晓卡）在窄屏（<640px，占一半流量）下列宽极窄（每列 ~40px），信息密度与可读性的平衡需要重排（例如列优先级、可折叠列、移动端专用反馈形态——但反馈色带语义必须保留）。
 3. **多页头部/页头结构**功能正确但平淡：返回箭头 + 标题 + 右侧按钮组，需要更有识别度但克制的处理。
 4. 难度选择（小白/潮男/扫地僧）三卡的信息层次（图标/标题/描述/推荐徽标/选中态）可以更精致。
@@ -76,7 +76,7 @@
 
 1. **Design tokens 变更表**：只列改动项（token 名 / 现值 / 新值 / 理由），未提及的视为保留。
 2. **逐页布局规格**：每页给出区块结构（用什么 token、间距、圆角、层级）、桌面（≥1180px 版心）与移动（<640px）两档；用文字 + 结构描述，能被直接翻译成 CSS。
-3. **关键组件规格**：反馈表格行（色带）、难度选择卡、开始游戏按钮、揭晓卡片、头部栏、Toast。含全部交互态（default/hover/active/disabled/focus-visible）。
+3. **关键组件规格**：反馈表格行（色带）、难度选择卡、开始游戏按钮、揭晓卡片（含购买直达卡片 `PurchaseCard`，安静降级）、头部栏、Toast。含全部交互态（default/hover/active/disabled/focus-visible）。
 4. **动效规格**：沿用三时长 + 单曲线，只说明「哪里动、多快、为什么」。
 5. 明确标注哪些是「新增结构」哪些是「改参数」，方便我们按 diff 落地。
 
@@ -92,4 +92,4 @@
 
 ---
 
-*本提示词由代码库现状自动整理，token 值与 `client/src/styles/tokens.css` 逐一核对过。*
+*本提示词由代码库现状自动整理，token 值与 `client/src/styles/tokens.css` 逐一核对过（2026-09 复核更新：surface/outline-variant/圆角值、购买直达卡片、brand-band）。*

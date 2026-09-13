@@ -1,5 +1,11 @@
 # 交接提示词：创建 eloshapes 鼠标数据开源工具仓库
 
+> **状态(2026-09):本文档为时点快照,部分外围信息已过时:**
+> 1. 文中引用的本地快照 `data/eloshapes/eloshapes_mouse_catalog.json` 已不在仓库(被 gitignore),`build-mouse-dataset.mjs` 的默认输入路径仍指向它——重新生成种子需先自备快照。
+> 2. `BRAND_COUNTRY` 映射已从约 120 个品牌扩展到约 185 个。
+> 3. 文档写成后新增了**难度分档工具链**(`scripts/tier-editor.html` + `build-tier-editor.mjs` + `apply-tier-assignment.mjs` + 根目录 `tier-assignment.json`),不在本文范围,见 README「难度分级」。
+> 文中清洗规则与剔除清单经核对仍与代码一致。
+
 > 用途：在新项目/新 session 里，从零搭建一个**独立的开源仓库**，把「从 eloshapes 拉取 + 清洗鼠标数据 + 下载图片」整条管线打包成一个可自用、可分享的工具。
 > 本文档是给新 session 的**唯一交接依据**，读完即可开工，不依赖任何其它会话记忆。
 
