@@ -35,10 +35,13 @@ function parseDisplay(raw: string | null | undefined): MouseDisplay | null {
 export function MouseInfoTable({
   answer,
   purchase: purchaseProp,
+  hideBuyRow = false,
 }: {
   answer: AnswerInfo;
   /** 外部已取链时传入（如查询页要同源渲染候选卡）；缺省时组件自行取链 */
   purchase?: PurchaseLinks | null;
+  /** 查询页等已有独立购买卡的场景：隐藏信息表内的购买行，避免双按钮 */
+  hideBuyRow?: boolean;
 }) {
   const { t } = useTranslation();
   const selfFetch = purchaseProp === undefined;
@@ -86,7 +89,7 @@ export function MouseInfoTable({
         : '-',
     ]);
   }
-  if (purchase?.taobao) {
+  if (!hideBuyRow && purchase?.taobao) {
     const link = purchase.taobao;
     rows.push([
       <ShoppingCart size={14} key="i" />,

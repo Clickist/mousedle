@@ -56,6 +56,7 @@ export default function Search() {
             </h3>
             <MouseInfoTable
               purchase={purchase}
+              hideBuyRow
               answer={{
                 name: mouse.name,
                 brand: mouse.brand,
