@@ -33,9 +33,9 @@
 
 ### 3.1 Supabase API key（anon key，静态、公开）
 ```
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5amZmcm1maXJrd2N3ZW1wYXd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY3NzAyNzgsImV4cCI6MjA0MjM0NjI3OH0.clLm3KrW9nuWtWRgL4VXz2dH0zohot2Q3XqQ1lSRelI
+<anon key>
 ```
-> 这是 eloshapes 网站的 Supabase 项目 `qyjffrmfirkwcwempawu` 的公开 anon key，发给前端的，静态不变。
+> eloshapes 网站的 Supabase 项目 `qyjffrmfirkwcwempawu` 的公开 anon key，发给前端的，静态不变。anon key 设计上就是公开凭据；具体值请打开 eloshapes 网站，从浏览器 DevTools 里任意 API 请求的 `apikey` 请求头获取（原值曾直接写在本文档，为避免仓库明文存放第三方凭据已移除）。
 
 ### 3.2 数据端点
 ```
