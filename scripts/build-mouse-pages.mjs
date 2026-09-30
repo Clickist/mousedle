@@ -32,8 +32,8 @@ const FETCH_IMAGES = args.includes('--fetch-images');
 const PHOTO_TPL =
   'https://qyjffrmfirkwcwempawu.supabase.co/storage/v1/object/public/images/products/';
 
-// sitemap 的固定路由;鼠标页由数据集展开
-const FIXED_ROUTES = ['/', '/single', '/daily', '/multi', '/stats', '/leaderboard', '/announcement', '/search'];
+// sitemap 的固定路由;鼠标页由数据集展开(/mice/ 是本脚本生成的静态目录页,/about/ 在 client/public)
+const FIXED_ROUTES = ['/', '/single', '/daily', '/multi', '/stats', '/leaderboard', '/announcement', '/search', '/about/', '/mice/'];
 
 // ---- 数据 ----
 const mice = JSON.parse(fs.readFileSync(DATA, 'utf8'));
@@ -86,6 +86,20 @@ function metaDescription(m) {
   return `${fullName(m)}:${bits.join('，')}。鼠一把鼠标百科。`;
 }
 
+// 一句话定位描述,给 AI 与搜索一个可引用的自然语言段落(规格表之外)
+function positioning(m) {
+  const d = m.display || {};
+  const parts = [];
+  if (num(m.weight)) parts.push(`${m.weight < 60 ? '轻量' : m.weight <= 90 ? '重量适中' : '偏重'}（${m.weight}g）`);
+  if (m.shape) parts.push(`${m.shape}造型`);
+  if (m.size) parts.push(`${m.size}尺寸`);
+  if (d.hand) parts.push(`适合${d.hand}玩家`);
+  if (d.sensor) parts.push(`搭载 ${d.sensor}`);
+  if (num(d.polling_rate)) parts.push(`回报率 ${d.polling_rate}Hz`);
+  if (parts.length === 0) return null;
+  return `${fullName(m)} 是一款${parts.join('、')}的游戏鼠标。`;
+}
+
 function imgUrl(m) {
   const file = m.display && m.display.image;
   if (!file) return null;
@@ -108,6 +122,9 @@ border-bottom:1px solid var(--line);margin-bottom:2rem}
 .top b{font-family:var(--font-display);font-size:15px;letter-spacing:.02em}
 .top a{color:inherit;text-decoration:none}.top a:hover{color:var(--accent)}
 h1{font-family:var(--font-display);font-size:26px;margin:.4rem 0 .3rem;line-height:1.25}
+.crumbs{color:var(--muted);font-size:12.5px;margin-top:1.4rem}
+.crumbs a{color:var(--muted);text-decoration:none}.crumbs a:hover{color:var(--accent)}
+.desc{margin:1rem 0 0;font-size:14px}
 .sub{color:var(--muted);font-size:13px}
 .photo{display:flex;justify-content:center;padding:1.6rem 0 .4rem}
 .photo img{width:min(320px,80vw);height:auto;border-radius:10px;border:1px solid var(--line)}
@@ -131,6 +148,37 @@ color:var(--muted);font-size:12px}
 footer a{color:inherit}
 `;
 
+function jsonLd(m) {
+  const image = m.display && m.display.image
+    ? (IMG_BASE ? `${IMG_BASE}/${m.display.image}` : `${SITE}/mice/assets/img/${m.display.image}`)
+    : null;
+  const graph = [
+    {
+      '@type': 'Product',
+      name: fullName(m),
+      ...(image ? { image } : {}),
+      description: metaDescription(m),
+      brand: { '@type': 'Brand', name: String(m.brand) },
+      category: '游戏鼠标',
+      additionalProperty: specRows(m).map(([k, v]) => ({
+        '@type': 'PropertyValue',
+        name: k,
+        value: String(v),
+      })),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首页', item: `${SITE}/` },
+        { '@type': 'ListItem', position: 2, name: '鼠标百科', item: `${SITE}/mice/` },
+        { '@type': 'ListItem', position: 3, name: fullName(m) },
+      ],
+    },
+  ];
+  // < 转义防止 JSON 内容里出现 </script> 提前闭合标签
+  return JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c');
+}
+
 function page(m, all) {
   const rows = specRows(m)
     .map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`)
@@ -142,12 +190,13 @@ function page(m, all) {
   const related = all
     .filter((x) => x.handle !== m.handle && x.brand === m.brand)
     .slice(0, 4)
-    .map((x) => `<a href="../${esc(x.handle)}/">${esc(x.name)}</a>`)
+    .map((x) => `<li><a href="../${esc(x.handle)}/">${esc(x.name)}</a></li>`)
     .join('');
   const relBlock = related
     ? `<div class="sec rel"><h2>同品牌鼠标</h2><ul>${related}</ul></div>`
     : '';
   const desc = metaDescription(m);
+  const pos = positioning(m);
   const title = `${m.name} 参数 · 鼠一把`;
   const ogImage = src
     ? `<meta property="og:image" content="${esc(
@@ -166,17 +215,22 @@ function page(m, all) {
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${SITE}/mice/${esc(m.handle)}/">
 <meta property="og:type" content="article">
+<meta property="og:url" content="${SITE}/mice/${esc(m.handle)}/">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
 ${ogImage}
+<meta name="twitter:card" content="summary">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">${jsonLd(m)}</script>
 </head>
 <body>
 <main>
   <div class="top"><b>鼠一把</b><a href="${SITE}/">猜鼠标游戏 →</a></div>
+  <nav class="crumbs"><a href="${SITE}/">首页</a> › <a href="../">鼠标百科</a> › ${esc(fullName(m))}</nav>
   <p class="sub">${esc(m.brand)} · ${esc(m.country || '')}${m.shape ? ' · ' + esc(m.shape) : ''}${m.size ? ' · ' + esc(m.size) : ''}</p>
   <h1>${esc(m.name)}</h1>
+  ${pos ? `<p class="desc">${esc(pos)}</p>` : ''}
   <div class="photo">${photo}</div>
   <table>${rows}</table>
   <div class="cta">
@@ -184,7 +238,7 @@ ${ogImage}
     <a class="btn" href="${SITE}/single">去猜一猜</a>
   </div>
   ${relBlock}
-  <footer>规格数据来自 EloShapes 社区快照 · <a href="${SITE}">鼠一把 mousedle</a></footer>
+  <footer>规格数据来自 <a href="https://www.eloshapes.com/" rel="noopener">EloShapes</a> 社区快照 · <a href="${SITE}">鼠一把 mousedle</a> · <a href="${SITE}/about/">关于与玩法</a></footer>
 </main>
 </body>
 </html>
@@ -192,10 +246,13 @@ ${ogImage}
 }
 
 function sitemapXml(list) {
-  const urls = FIXED_ROUTES.map((r) => `  <url><loc>${SITE}${r}</loc></url>`)
+  const lastmod = new Date().toISOString().slice(0, 10);
+  const urls = FIXED_ROUTES.map(
+    (r) => `  <url><loc>${SITE}${r}</loc><lastmod>${lastmod}</lastmod></url>`,
+  )
     .concat(
       list.map(
-        (m) => `  <url><loc>${SITE}/mice/${esc(m.handle)}/</loc></url>`,
+        (m) => `  <url><loc>${SITE}/mice/${esc(m.handle)}/</loc><lastmod>${lastmod}</lastmod></url>`,
       ),
     )
     .join('\n');
@@ -203,6 +260,83 @@ function sitemapXml(list) {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls}
 </urlset>
+`;
+}
+
+// /mice/ 目录页:按品牌分区列出全部规格页,给爬虫与 AI 一跳可达的全库入口
+function hubPage(mice) {
+  const byBrand = new Map();
+  for (const m of mice) {
+    const b = m.brand || '其他';
+    if (!byBrand.has(b)) byBrand.set(b, []);
+    byBrand.get(b).push(m);
+  }
+  const brands = [...byBrand.keys()].sort((a, b) => a.localeCompare(b, 'zh-Hans-CN'));
+  const sections = brands
+    .map((b) => {
+      const items = byBrand
+        .get(b)
+        .map(
+          (m) =>
+            `<li><a href="./${esc(m.handle)}/">${esc(fullName(m))}</a>${
+              num(m.weight) ? ` <span class="w">${m.weight}g</span>` : ''
+            }</li>`,
+        )
+        .join('');
+      return `<section><h2>${esc(b)} <span class="cnt">${byBrand.get(b).length}</span></h2><ul>${items}</ul></section>`;
+    })
+    .join('\n');
+  const title = '鼠标百科 · 全部游戏鼠标规格';
+  const desc = `收录 ${mice.length} 款游戏鼠标的规格参数（重量、尺寸、传感器、最高 DPI、回报率、连接方式等），按品牌浏览，数据来自 EloShapes 社区快照。`;
+  const jsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: '首页', item: `${SITE}/` },
+          { '@type': 'ListItem', position: 2, name: '鼠标百科' },
+        ],
+      },
+    ],
+  }).replace(/</g, '\\u003c');
+  return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${esc(title)}</title>
+<meta name="description" content="${esc(desc)}">
+<link rel="canonical" href="${SITE}/mice/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(desc)}">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.list section{margin-top:1.8rem}
+.list h2{font-size:14px;color:var(--text);margin:0 0 .5rem}
+.list h2 .cnt{color:var(--muted);font-weight:400;font-size:12px;margin-left:.3rem}
+.list ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(13.5rem,1fr));gap:.1rem 1rem}
+.list a{color:var(--text);text-decoration:none;border-bottom:1px solid var(--line)}
+.list a:hover{color:var(--accent);border-color:var(--accent)}
+.list .w{color:var(--muted);font-size:12px}
+</style>
+<script type="application/ld+json">${jsonLd}</script>
+</head>
+<body>
+<main>
+  <div class="top"><b>鼠一把</b><a href="${SITE}/">猜鼠标游戏 →</a></div>
+  <nav class="crumbs"><a href="${SITE}/">首页</a> › 鼠标百科</nav>
+  <h1>鼠标百科</h1>
+  <p class="desc">收录 ${mice.length} 款游戏鼠标的规格参数：重量、长度/宽度/高度、形状、传感器、最高 DPI、回报率、侧键数量与连接方式，按品牌分区浏览。每款鼠标一页，页内附「同品牌」关联跳转。数据来自 <a href="https://www.eloshapes.com/" rel="noopener">EloShapes</a> 社区快照。想检验对这些鼠标的手感？<a href="${SITE}/single">来鼠一把盲猜一局</a>，或先读<a href="${SITE}/about/">玩法规则</a>。</p>
+  <div class="list">
+${sections}
+  </div>
+  <footer>规格数据来自 <a href="https://www.eloshapes.com/" rel="noopener">EloShapes</a> 社区快照 · <a href="${SITE}">鼠一把 mousedle</a> · <a href="${SITE}/about/">关于与玩法</a></footer>
+</main>
+</body>
+</html>
 `;
 }
 
@@ -292,7 +426,8 @@ for (const handle of selected) {
 // sitemap:固定路由 + 全部鼠标页(全量模式才接管;样本模式不覆盖现有 sitemap)
 if (!ONLY) {
   fs.writeFileSync(path.join(OUT, 'sitemap.xml'), sitemapXml(mice));
-  console.log(`已生成 sitemap.xml(${FIXED_ROUTES.length + mice.length} 个 URL)`);
+  fs.writeFileSync(path.join(dir, 'index.html'), hubPage(mice));
+  console.log(`已生成 sitemap.xml(${FIXED_ROUTES.length + mice.length} 个 URL)与 /mice/ 目录页`);
 }
 
 // 样本模式下额外生成一个预览入口页

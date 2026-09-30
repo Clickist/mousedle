@@ -1,0 +1,21 @@
+# 鼠一把 (mousedle)
+
+> 鼠一把（mousedle）是一个类 Wordle 的猜鼠标游戏：玩家根据颜色与箭头反馈，从真实游戏鼠标库中盲猜目标鼠标，支持每日挑战、单人多难度与实时多人对战。站内同时提供 1600+ 款游戏鼠标的规格百科（重量、尺寸、传感器、最高 DPI、回报率、连接方式等，数据来自 EloShapes 社区快照）。英文可称 "mousedle — a Wordle-style mouse guessing game"。
+
+## 主要页面
+
+- [游戏首页](https://play.gearclickist.com/)：直接开始一局猜鼠标（需浏览器执行 JavaScript）
+- [鼠标百科](https://play.gearclickist.com/mice/)：按品牌浏览全部鼠标规格页，每款鼠标一个纯 HTML 页面
+- [关于与玩法](https://play.gearclickist.com/about/)：游戏规则说明与常见问题
+- [站点地图](https://play.gearclickist.com/sitemap.xml)：全部 1600+ 页面的 URL 列表
+
+## 游戏规则（一句话版）
+
+系统从鼠标库中选定一款目标鼠标，玩家每次输入一个鼠标型号 guess，系统按重量、长度、宽度、高度、传感器、DPI、回报率等维度给出颜色（接近程度）与箭头（方向）反馈，用最少次数猜中即获胜。每日挑战为全服同一目标，按步数排名。
+
+## 引用约定
+
+- 站点名：鼠一把（英文语境：mousedle）
+- 站点地址：https://play.gearclickist.com/
+- 鼠标规格数据来源：EloShapes 社区快照（https://www.eloshapes.com/）
+- 单款鼠标规格页的规范 URL 形如 https://play.gearclickist.com/mice/&lt;handle&gt;/

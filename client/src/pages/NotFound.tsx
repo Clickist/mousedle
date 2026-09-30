@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 export default function NotFound() {
   const { t } = useTranslation();
   return (
-    <Page title={t('notFound.title')} icon={<Compass size={17} />}>
+    <Page title={t('notFound.title')} icon={<Compass size={17} />} noindex>
       <div className="game-empty">
         <Compass size={32} strokeWidth={1.5} />
         <p className="game-empty-title">{t('notFound.title')}</p>

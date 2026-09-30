@@ -7,16 +7,45 @@
       content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content"
     />
     <meta name="theme-color" content="#141413" />
-    <meta name="description" content="鼠一把 - 猜鼠标游戏，支持单人多难度与多人实时对战。" />
+    <meta
+      name="description"
+      content="鼠一把 - 猜鼠标游戏：像 Wordle 一样根据颜色与箭头反馈盲猜目标鼠标，支持每日挑战、单人多难度、多人实时对战，另有 1600+ 游戏鼠标参数百科。"
+    />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="鼠一把 mousedle" />
+    <meta property="og:url" content="https://play.gearclickist.com/" />
     <meta property="og:title" content="鼠一把 - 猜鼠标游戏" />
-    <meta property="og:description" content="猜鼠标游戏，支持单人多难度与多人实时对战。" />
+    <meta property="og:description" content="根据颜色与箭头反馈盲猜鼠标，支持每日挑战、单人多难度与多人实时对战，附 1600+ 鼠标参数百科。" />
     <meta property="og:image" content="https://play.gearclickist.com/og-image.png" />
     <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://play.gearclickist.com/#website",
+            "url": "https://play.gearclickist.com/",
+            "name": "鼠一把 mousedle",
+            "alternateName": "mousedle",
+            "description": "猜鼠标游戏与游戏鼠标规格百科。",
+            "inLanguage": "zh-CN"
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://play.gearclickist.com/#organization",
+            "name": "鼠一把 mousedle",
+            "url": "https://play.gearclickist.com/",
+            "logo": "https://play.gearclickist.com/icon-512.png"
+          }
+        ]
+      }
+    </script>
     <script>
       try {
         var storedUiTheme = localStorage.getItem('ui-theme');
@@ -46,7 +75,21 @@
     <title>鼠一把 - 猜鼠标游戏</title>
   </head>
   <body>
-    <noscript>需要启用 JavaScript 才能运行本应用。/ JavaScript is required to run this app.</noscript>
+    <noscript>
+      <div style="max-width:40rem;margin:4rem auto;padding:0 1.25rem;font-family:system-ui,sans-serif;line-height:1.7">
+        <h1>鼠一把 - 猜鼠标游戏</h1>
+        <p>
+          鼠一把（mousedle）是一个类 Wordle 的猜鼠标游戏：根据颜色与箭头反馈盲猜目标鼠标，
+          支持每日挑战、单人多难度与实时多人对战。站内还收录了 1600+ 款游戏鼠标的规格百科
+          （重量、尺寸、传感器、DPI、回报率等）。
+        </p>
+        <ul>
+          <li><a href="/about/">玩法规则与常见问题</a></li>
+          <li><a href="/mice/">鼠标百科：按品牌浏览全部规格页</a></li>
+        </ul>
+        <p>游玩需要启用 JavaScript。/ Please enable JavaScript to play.</p>
+      </div>
+    </noscript>
     <div id="root"></div>
     <link rel="stylesheet" href="/src/styles/index.css" />
     <script type="module" src="/src/main.tsx"></script>
