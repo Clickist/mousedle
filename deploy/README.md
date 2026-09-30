@@ -165,6 +165,20 @@ location /assets/ {
     proxy_next_upstream_tries 2;
 }
 
+# 鼠标百科页图片(/mice/assets/img/*)不带内容哈希,滚动更新期间新增图片
+# 在旧实例上 404;与 /assets/ 相同,对 404 跨实例重试兜底
+location /mice/assets/ {
+    proxy_pass http://csgofriberg_backend;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_connect_timeout 1s;
+    proxy_next_upstream error timeout http_404 http_502 http_503 http_504;
+    proxy_next_upstream_tries 2;
+}
+
 location / {
     proxy_pass http://csgofriberg_backend;
     proxy_http_version 1.1;
@@ -327,6 +341,12 @@ CPU 开销；成本不同的既有哈希会在下次登录成功后自动重新�
 `scripts/build-mouse-pages.mjs --fetch-images`，构建期需要访问 supabase.co
 抓取鼠标产品照（本地缓存在 `data/mice-img`，CI 每次全量抓取），抓图失败会导致
 构建失败。
+
+前端购买卡片的联盟门禁 token 默认使用源码内置值
+（`client/src/config/affiliate.ts`），对所有部署都相同且公开。如需轮换，在
+仓库 Settings → Secrets and variables → Actions → Variables 配置
+`VITE_AFFILIATE_SERVICE_URL` / `VITE_AFFILIATE_TOKEN` 后重新发版即可，无需改
+源码；未配置时构建参数为空串，构建会自动回退到内置默认值。
 
 发布的标签包括：
 

@@ -81,6 +81,8 @@ jobs:
             OCI_REVISION=${{ github.sha }}
             OCI_VERSION=${{ steps.meta.outputs.version }}
             RESOURCE_VERSION=${{ steps.resource_version.outputs.value }}
+            VITE_AFFILIATE_SERVICE_URL=${{ vars.VITE_AFFILIATE_SERVICE_URL }}
+            VITE_AFFILIATE_TOKEN=${{ vars.VITE_AFFILIATE_TOKEN }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           provenance: mode=max
